@@ -27,9 +27,21 @@ public class CommentResource {
         JSONArray comments = databaseHandler.getJSONArrayFor("SELECT * FROM comment_breeze.comments LIMIT 100");
         databaseHandler.closeConnection();
         System.out.println("Returning " + comments.length() + " comments");
-        Response response = Response.ok().entity(comments).build();
+        Response response = Response.ok(comments).build();
         return response;
     }
+
+//    @GET
+//    @Produces("application/json")
+//    public Response getComments() throws JSONException {
+//        System.out.println("In comment resource");
+//        DatabaseHandler databaseHandler = new DatabaseHandler();
+//        JSONArray comments = databaseHandler.getJSONArrayFor("SELECT * FROM comment_breeze.comments LIMIT 100");
+//        databaseHandler.closeConnection();
+//        System.out.println("Returning " + comments.length() + " comments");
+//        Response response = Response.ok().entity(comments).build();
+//        return response;
+//    }
 
 //    @GET
 //    @Produces("application/json")
