@@ -3,6 +3,7 @@ package com.rest;
 import org.codehaus.jettison.json.JSONArray;
 import com.utilities.DatabaseHandler;
 import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -26,19 +27,44 @@ public class CommentResource {
         JSONArray comments = databaseHandler.getJSONArrayFor("SELECT * FROM comment_breeze.comments LIMIT 100");
         databaseHandler.closeConnection();
         System.out.println("Returning " + comments.length() + " comments");
-        Response response = Response.ok(comments).build();
+        Response response = Response.ok().entity(comments).build();
         return response;
     }
+
+//    @GET
+//    @Produces("application/json")
+//    public Response getComments() throws JSONException {
+//        System.out.println("In comment resource");
+//        DatabaseHandler databaseHandler = new DatabaseHandler();
+//        JSONArray comments = databaseHandler.getJSONArrayFor("SELECT * FROM comment_breeze.comments LIMIT 100");
+//        databaseHandler.closeConnection();
+//        System.out.println("Returning " + comments.length() + " comments");
+//        Response response = Response.ok(comments, MediaType.APPLICATION_JSON_TYPE).build();
+//        return response;
+//    }
 
 //    @GET
 //    @Produces("application/json")
 //    public JSONArray getComments() throws JSONException {
 //        System.out.println("In comment resource");
 //        DatabaseHandler databaseHandler = new DatabaseHandler();
-//        JSONArray comments = databaseHandler.getJSONArrayFor("SELECT * FROM comment_breeze.comment_bank");
+//        JSONArray comments = databaseHandler.getJSONArrayFor("SELECT * FROM comment_breeze.comments");
 //        databaseHandler.closeConnection();
 //        System.out.println("Returning " + comments.length() + " comments");
 //        return comments;
+//    }
+
+//    @GET
+//    @Produces("application/json")
+//    public JSONObject getComments() throws JSONException {
+//        System.out.println("In comment resource");
+//        DatabaseHandler databaseHandler = new DatabaseHandler();
+//        JSONArray comments = databaseHandler.getJSONArrayFor("SELECT * FROM comment_breeze.comments");
+//        databaseHandler.closeConnection();
+//        System.out.println("Returning " + comments.length() + " comments");
+//        JSONObject jsonObject = new JSONObject();
+//        jsonObject.put("comments", comments);
+//        return jsonObject;
 //    }
 
     @PUT

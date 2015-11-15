@@ -21,6 +21,25 @@ commentApp.controller('CommentController', function($scope, $http) {
             });
     };
 
+    //$scope.getComments = function() {
+    //    console.log('trying to get comments');
+    //
+    //    $http({
+    //        method: 'GET',
+    //        url: '/rest/comments'
+    //    }).then(function success(response) {
+    //        console.log('returned success');
+    //
+    //        console.log(response.length + ' comments received');
+    //
+    //        $scope.comments = response;
+    //        $scope.commentsLoaded = true;
+    //    }, function error() {
+    //        console.error('returned error');
+    //    });
+    //
+    //};
+
     $scope.getComments();
 
 });
