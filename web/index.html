@@ -5,7 +5,8 @@
     <title>Comment Breeze</title>
 
     <link rel="stylesheet" type="text/css" href="styles.css">
-    <script src="js/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+    <script src="angular-clipboard/angular-clipboard.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
     <link rel="stylesheet" type="text/css" href="styles.css">
 
@@ -18,11 +19,53 @@
 
     <h3>Comment Breeze</h3>
 
-    <table ng-repeat="comment in comments">
-        <tr>
-            <td ng-bind="comment.comment_text"></td>
-        </tr>
-    </table>
+    <fieldset>
+        <legend>Your Comments</legend>
+        <input type="text" placeholder="Student Name" ng-model="studentName" title="">
+        <input type="text" placeholder="Class Name" ng-model="className">
+        <form name="genderForm">
+            <input type="radio" ng-model="studentGender" ng-change="fixCommentPronouns()" value="male">Male
+            <input type="radio" ng-model="studentGender" ng-change="fixCommentPronouns()" value="female">Female
+            <input type="radio" ng-model="studentGender" ng-change="fixCommentPronouns()" value="neutral">Neutral
+        </form>
+
+        <br/><textarea rows="7" type="text" ng-model="yourComment" class="comment-text-box"></textarea>
+
+        <button clipboard text="yourComment">Copy Comments</button>
+        <button ng-click="resetYourComment()">Reset Comments</button>
+        <button ng-click="makeSomethingUp()">Just Make Something Up</button>
+    </fieldset>
+
+    <fieldset>
+        <legend>Comment Bank</legend>
+
+        <input type="text" placeholder="Search Comments" ng-model="searchComments">
+        <hr>
+        <table ng-repeat="comment in comments | filter:searchComments | limitTo : commentViewLimit : commentViewBegin">
+            <tr>
+                <td ng-bind="comment.comment_text" ng-click="addComment(comment.comment_text)" class="comment-text"></td>
+                <!--<td>Edit Comment</td>-->
+            </tr>
+        </table>
+        <hr>
+        <label for="commentsPerPage">Per Page:</label>
+        <select id="commentsPerPage" ng-model="commentViewLimit" ng-change="changeCommentsPerPage()">
+            <option value="20" selected>20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="1000">1,000</option>
+        </select>
+
+        <a ng-show="totalCommentPages > 1" ng-click="changeCommentsPage(currentCommentsPage - 1)" style="display: inline-block; padding: .5em;">&#9664;</a>
+        <span style="font-size: smaller;">Page <span ng-bind="currentCommentsPage"></span> of <span ng-bind="totalCommentPages"></span></span>
+        <a ng-show="totalCommentPages > 1" ng-click="changeCommentsPage(currentCommentsPage + 1)" style="display: inline-block; padding: .5em;">&#9654;</a>
+
+
+    </fieldset>
+
+
+
+
 
 </body>
 </html>
