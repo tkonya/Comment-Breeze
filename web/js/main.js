@@ -1,14 +1,26 @@
-var commentApp = angular.module('commentApp', ['angular-clipboard']);
+var commentApp = angular.module('commentApp', ['angular-clipboard', 'ngMaterial'])
+    .config(function($mdThemingProvider) {
+        $mdThemingProvider.theme('default')
+            .primaryPalette('amber')
+            .accentPalette('deep-purple')
+            .backgroundPalette('grey').dark();
+    });
 
-commentApp.controller('CommentController', function($scope, $http) {
+commentApp.controller('CommentController', function($scope, $http, $timeout) {
 
     $scope.comments = [];
-    $scope.commentViewLimit = '20';
+    $scope.commentViewLimit = 20;
     $scope.commentViewBegin = 0;
+    $scope.currentCommentsPage = 1;
+    $scope.totalCommentPages = null;
 
     $scope.studentName = null;
+    $scope.oldStudentName = null;
+
     $scope.studentGender = 'male';
+
     $scope.className = null;
+    $scope.oldClassName = null;
 
     $scope.yourComment = '';
 
@@ -24,6 +36,7 @@ commentApp.controller('CommentController', function($scope, $http) {
                 $scope.comments = data;
                 $scope.commentsLoaded = true;
 
+                $scope.changeCommentsPerPage();
             }).
             error(function () {
                 console.error('returned error');
@@ -34,21 +47,9 @@ commentApp.controller('CommentController', function($scope, $http) {
 
         console.log('Adding comment: ' + comment);
 
-        var studentName;
-        if ($scope.studentName == null || $scope.studentName == '') {
-            studentName = 'Trevor';
-        } else {
-            studentName = $scope.studentName;
-        }
+        $scope.oldStudentName = $scope.studentName;
 
-        var className;
-        if ($scope.className == null || $scope.className == '') {
-            className = 'Software Development';
-        } else {
-            className = $scope.className;
-        }
-
-        comment = $scope.capitalizeFirstLetter($scope.fixGenderPronouns(comment.replace(/STUDENT_NAME/g, studentName).replace(/CLASS_NAME/g, className)));
+        comment = $scope.capitalizeFirstLetter($scope.fixGenderPronouns($scope.replaceClassName($scope.replaceStudentName(comment))));
 
         if ($scope.yourComment == '') {
             $scope.yourComment = comment;
@@ -58,7 +59,9 @@ commentApp.controller('CommentController', function($scope, $http) {
     };
 
     $scope.fixCommentPronouns = function() {
-        $scope.yourComment = $scope.fixGenderPronouns($scope.yourComment);
+        $timeout(function() {
+            $scope.yourComment = $scope.fixGenderPronouns($scope.yourComment);
+        }, 50);
     };
 
     $scope.fixGenderPronouns = function(text) {
@@ -95,21 +98,68 @@ commentApp.controller('CommentController', function($scope, $http) {
         return text;
     };
 
+    $scope.blurStudentName = function() {
+        $scope.yourComment = $scope.replaceStudentName($scope.yourComment);
+    };
+
+    $scope.blurClassName = function() {
+        $scope.yourComment = $scope.replaceClassName($scope.yourComment);
+    };
+
+    $scope.replaceStudentName = function(text) {
+        var studentName;
+        if ($scope.studentName == null || $scope.studentName == '') {
+            studentName = 'Trevor';
+        } else {
+            studentName = $scope.studentName;
+        }
+        console.log('Changing student name to ' + studentName);
+
+        if ($scope.oldStudentName != null) {
+            while (text.indexOf($scope.oldStudentName) > -1) {
+                text = text.replace($scope.oldStudentName, studentName);
+            }
+        }
+        $scope.oldStudentName = studentName;
+
+        return text.replace(/STUDENT_NAME/g, studentName);
+    };
+
+    $scope.replaceClassName = function(text) {
+        var className;
+        if ($scope.className == null || $scope.className == '') {
+            className = 'Software Development';
+        } else {
+            className = $scope.className;
+        }
+        console.log('Changing class name to ' + className);
+
+        if ($scope.oldClassName != null) {
+            while (text.indexOf($scope.oldClassName) > -1) {
+                text = text.replace($scope.oldClassName, className);
+            }
+        }
+        $scope.oldClassName = className;
+
+        return text.replace(/CLASS_NAME/g, className);
+    };
+
     $scope.capitalizeFirstLetter = function(text) {
         return text.charAt(0).toUpperCase() + text.slice(1);
     };
 
     $scope.changeCommentsPerPage = function() {
+        console.log('Changing comment limit to ' + $scope.commentViewLimit);
         $scope.currentCommentsPage = 1;
         $scope.totalCommentPages = Math.ceil($scope.comments.length / $scope.commentViewLimit);
-        $scope.reportLimitStart = 0;
-        $scope.reportLimitEnd = $scope.commentViewLimit;
+        $scope.commentViewBegin = 0;
     };
 
-    $scope.changeReportsPage = function(newPage) {
+    $scope.changeCommentsPage = function(newPage) {
+        console.log('Changing page to ' + newPage);
         if (newPage >= 1 && newPage <= $scope.totalCommentPages) {
-            $scope.currentReportPage = newPage;
-            $scope.reportLimitStart = ($scope.currentReportPage - 1) * $scope.commentViewLimit;
+            $scope.currentCommentsPage = newPage;
+            $scope.commentViewBegin = ($scope.currentCommentsPage - 1) * $scope.commentViewLimit;
         }
     };
 
@@ -127,8 +177,6 @@ commentApp.controller('CommentController', function($scope, $http) {
             var randomComment = $scope.comments[Math.floor(Math.random() * $scope.comments.length)];
             $scope.addComment(randomComment.comment_text);
         }
-
-
     };
 
     $scope.getComments();

@@ -5,67 +5,100 @@
     <title>Comment Breeze</title>
 
     <link rel="stylesheet" type="text/css" href="styles.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+
+    <script src="angular/angular.min.js"></script>
     <script src="angular-clipboard/angular-clipboard.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
     <link rel="stylesheet" type="text/css" href="styles.css">
+
+    <!--Angular Material Stuff-->
+    <link rel="stylesheet" href="angular-material/angular-material.css">
+    <script src="angular-aria/angular-aria.js"></script>
+    <script src="angular-animate/angular-animate.js"></script>
+    <script src="angular-material/angular-material.js"></script>
 
     <!--meta tags-->
     <meta name="title" content="Comment Breeze">
     <meta name="description" content="A tiny web-app for building report card comments">
 
 </head>
-<body ng-app="commentApp" ng-controller="CommentController">
-
-    <h3>Comment Breeze</h3>
+<body ng-app="commentApp" ng-controller="CommentController" class="darkula-background">
 
     <fieldset>
         <legend>Your Comments</legend>
-        <input type="text" placeholder="Student Name" ng-model="studentName" title="">
-        <input type="text" placeholder="Class Name" ng-model="className">
-        <form name="genderForm">
-            <input type="radio" ng-model="studentGender" ng-change="fixCommentPronouns()" value="male">Male
-            <input type="radio" ng-model="studentGender" ng-change="fixCommentPronouns()" value="female">Female
-            <input type="radio" ng-model="studentGender" ng-change="fixCommentPronouns()" value="neutral">Neutral
-        </form>
+        <div layout="row" layout-sm="column" layout-margin>
+            <div flex>
+                <md-input-container>
+                    <label>Class Name</label>
+                    <input type="text" ng-model="className" ng-blur="blurClassName()">
+                </md-input-container>
+            </div>
+            <div flex>
+                <md-input-container>
+                    <label>Student Name</label>
+                    <input type="text" ng-model="studentName" ng-blur="blurStudentName()">
+                </md-input-container>
+            </div>
+            <div flex>
+                <md-radio-group ng-model="studentGender" layout="row">
+                    <md-radio-button ng-model="studentGender" value="male" ng-click="fixCommentPronouns()" selected>Male</md-radio-button>
+                    <md-radio-button ng-model="studentGender" value="female" ng-click="fixCommentPronouns()" >Female</md-radio-button>
+                    <md-radio-button ng-model="studentGender" value="neutral" ng-click="fixCommentPronouns()" >Neutral</md-radio-button>
+                </md-radio-group>
+            </div>
+        </div>
 
-        <br/><textarea rows="7" type="text" ng-model="yourComment" class="comment-text-box"></textarea>
+        <br/><textarea rows="7" type="text" ng-model="yourComment" class="comment-text-box darkula-background"></textarea>
 
-        <button clipboard text="yourComment">Copy Comments</button>
-        <button ng-click="resetYourComment()">Reset Comments</button>
-        <button ng-click="makeSomethingUp()">Just Make Something Up</button>
+        <div layout="row" layout-sm="column" layout-margin>
+            <button flex class="md-button md-raised md-primary" md-ripple-size="auto" clipboard text="yourComment">Copy Comments</button>
+            <button flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="resetYourComment()">Reset Comments</button>
+            <button flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="makeSomethingUp()">Just Make Something Up</button>
+        </div>
     </fieldset>
 
-    <fieldset>
+    <fieldset class="darkula-background">
         <legend>Comment Bank</legend>
 
-        <input type="text" placeholder="Search Comments" ng-model="searchComments">
-        <hr>
+        <md-input-container>
+            <label>Search Comments</label>
+            <input type="text" ng-model="searchComments">
+        </md-input-container>
+
+        <!--<md-list>-->
+            <!--<md-list-item class="md-1-line" ng-repeat="comment in comments | filter:searchComments | limitTo : commentViewLimit : commentViewBegin">-->
+                <!--<p ng-click="addComment(comment.comment_text)" ng-bind="comment.comment_text"></p>-->
+            <!--</md-list-item>-->
+            <!--<md-divider ng-if="!$last"></md-divider>-->
+        <!--</md-list>-->
+
         <table ng-repeat="comment in comments | filter:searchComments | limitTo : commentViewLimit : commentViewBegin">
             <tr>
                 <td ng-bind="comment.comment_text" ng-click="addComment(comment.comment_text)" class="comment-text"></td>
                 <!--<td>Edit Comment</td>-->
             </tr>
         </table>
-        <hr>
-        <label for="commentsPerPage">Per Page:</label>
-        <select id="commentsPerPage" ng-model="commentViewLimit" ng-change="changeCommentsPerPage()">
-            <option value="20" selected>20</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-            <option value="1000">1,000</option>
-        </select>
 
-        <a ng-show="totalCommentPages > 1" ng-click="changeCommentsPage(currentCommentsPage - 1)" style="display: inline-block; padding: .5em;">&#9664;</a>
-        <span style="font-size: smaller;">Page <span ng-bind="currentCommentsPage"></span> of <span ng-bind="totalCommentPages"></span></span>
-        <a ng-show="totalCommentPages > 1" ng-click="changeCommentsPage(currentCommentsPage + 1)" style="display: inline-block; padding: .5em;">&#9654;</a>
+        <div layout="row" layout-sm="column" layout-margin>
+            <md-select flex ng-model="commentViewLimit" ng-change="changeCommentsPerPage()" width="50%">
+                <md-select-label>Per Page:</md-select-label>
+                <md-option ng-value="20">20</md-option>
+                <md-option ng-value="50">50</md-option>
+                <md-option ng-value="100">100</md-option>
+                <md-option ng-value="1000">1,000</md-option>
+            </md-select>
 
-
+            <div flex>
+                <div align="right">
+                    <button class="md-button" md-ink-ripple ng-show="totalCommentPages > 1 && currentCommentsPage > 1" ng-click="changeCommentsPage(currentCommentsPage - 1)" style="display: inline-block; padding: .5em;">&#9664;</button>
+                    <span style="font-size: smaller;">Page <span ng-bind="currentCommentsPage"></span> of <span ng-bind="totalCommentPages"></span></span>
+                    <button class="md-button" md-ink-ripple ng-show="totalCommentPages > 1 && currentCommentsPage < totalCommentPages" ng-click="changeCommentsPage(currentCommentsPage + 1)" style="display: inline-block; padding: .5em;">&#9654;</button>
+                </div>
+            </div>
+        </div>
     </fieldset>
 
-
-
-
+    <button flex class="md-button md-raised md-primary" md-ripple-size="auto" clipboard text="yourComment">Copy Comments</button>
 
 </body>
 </html>

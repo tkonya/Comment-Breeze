@@ -31,6 +31,14 @@ public class Comment {
         this.commentText = commentText;
     }
 
+    public String getOriginalCommentText() {
+        return originalCommentText;
+    }
+
+    public void setOriginalCommentText(String originalCommentText) {
+        this.originalCommentText = originalCommentText;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

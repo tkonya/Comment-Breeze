@@ -6,3 +6,18 @@
 .comment-text {
     cursor: pointer;
 }
+
+.darkula-background {
+    color: #A9B7C6;
+    background-color: #2b2b2b;
+}
+
+tr {
+    border-bottom: 1px solid #A9B7C6;
+    border-top: 1px solid #A9B7C6;
+    border-collapse: collapse;
+}
+
+td:hover {
+    color: #FFC107;
+}

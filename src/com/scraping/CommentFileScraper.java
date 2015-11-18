@@ -22,11 +22,12 @@ public class CommentFileScraper {
 
         DatabaseHandler databaseHandler = new DatabaseHandler();
         try {
-            PreparedStatement preparedStatement = databaseHandler.getConnection().prepareStatement("INSERT INTO comments (comment_text, origin) VALUES (?, ?)");
+            PreparedStatement preparedStatement = databaseHandler.getConnection().prepareStatement("INSERT INTO comments (comment_text, original_comment_text, origin) VALUES (?, ?, ?)");
 
             for (Comment comment : comments) {
                 preparedStatement.setString(1, comment.getCommentText());
-                preparedStatement.setString(2, comment.getOriginFile());
+                preparedStatement.setString(2, comment.getOriginalCommentText());
+                preparedStatement.setString(3, comment.getOriginFile());
                 preparedStatement.addBatch();
             }
 
@@ -196,8 +197,11 @@ public class CommentFileScraper {
         if (comment.startsWith("STUDENT_NAME-")) {
             comment = comment.replace("STUDENT_NAME-", "");
         }
+        if (comment.startsWith("STUDENT_NAME:")) {
+            comment = comment.replace("STUDENT_NAME:", "");
+        }
 
-        return comment;
+        return comment.trim();
     }
 
 }
