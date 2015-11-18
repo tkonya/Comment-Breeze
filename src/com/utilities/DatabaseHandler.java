@@ -5,6 +5,8 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Trevor on 10/16/2015.
@@ -90,6 +92,41 @@ public class DatabaseHandler {
         }
 
         return jsonArray;
+    }
+
+    public List<JSONObject> getJSONObjectList(String query) {
+        List<JSONObject> jsonObjectList = new ArrayList<>();
+        Statement statement = null;
+        try {
+
+            statement = connection.createStatement();
+            ResultSet results = statement.executeQuery(query);
+            ResultSetMetaData rsMD = results.getMetaData();
+
+            int colCount = rsMD.getColumnCount();
+            while(results.next()){
+                JSONObject mapping = new JSONObject();
+                for(int i = 1; i <= colCount; i++){
+                    String columnLabel = rsMD.getColumnLabel(i);
+                    String value = results.getString(i);
+                    mapping.put(columnLabel, value);
+                }
+                jsonObjectList.add(mapping);
+            }
+
+        } catch (SQLException | JSONException e) {
+            e.printStackTrace();
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return jsonObjectList;
     }
 
 

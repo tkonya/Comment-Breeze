@@ -18,11 +18,18 @@ public class CommentFileScraper {
 
     public static void main(String[] args) {
 
-        Set<Comment> comments = getComments();
+        Set<Comment> comments = getComments(true);
 
+        saveComments(comments);
+
+        System.out.println();
+
+    }
+
+    private static void saveComments(Set<Comment> comments) {
         DatabaseHandler databaseHandler = new DatabaseHandler();
         try {
-            PreparedStatement preparedStatement = databaseHandler.getConnection().prepareStatement("INSERT INTO comments (comment_text, original_comment_text, origin) VALUES (?, ?, ?)");
+            PreparedStatement preparedStatement = databaseHandler.getConnection().prepareStatement("INSERT INTO comments (comment_text, original_text, origin) VALUES (?, ?, ?)");
 
             for (Comment comment : comments) {
                 preparedStatement.setString(1, comment.getCommentText());
@@ -38,9 +45,6 @@ public class CommentFileScraper {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        System.out.println();
-
     }
 
     private static HashSet<String> getWordList() {
@@ -111,7 +115,7 @@ public class CommentFileScraper {
         return documentList;
     }
 
-    private static Set<Comment> getComments() {
+    private static Set<Comment> getComments(boolean saveAfterEach) {
         Set<Comment> comments = new HashSet<>();
         Map<String, String> documentList = getFileTextMap();
         Set<String> nameList = getNameList();
@@ -170,6 +174,12 @@ public class CommentFileScraper {
                 System.out.println("COMMENT: " + sentence);
                 comments.add(new Comment(entry.getKey(), cleanComment(sentence), originalCommentText));
 
+            }
+
+            if (saveAfterEach) {
+                System.out.println("saving comments for " + entry.getKey());
+                saveComments(comments);
+                comments = new HashSet<>();
             }
 
         }
