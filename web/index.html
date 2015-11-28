@@ -82,8 +82,8 @@
         <table class="comment-bank-table">
             <tr ng-repeat="comment in comments | filter:searchComments | limitTo : commentViewLimit : commentViewBegin">
                 <td ng-bind="comment.comment_text" ng-click="addComment(comment.comment_text, true)" class="comment-text"></td>
-                <!--<td class="comment-edit"><i title="Edit this comment" class="material-icons">mode_edit</i></td>-->
-                <!--<td class="comment-delete"><i title="Delete this comment" class="material-icons">delete</i></td>-->
+                <td class="comment-edit"><i title="Edit this comment" class="material-icons">mode_edit</i></td>
+                <td class="comment-delete"><i title="Delete this comment" class="material-icons">delete</i></td>
             </tr>
         </table>
 
