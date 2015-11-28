@@ -28,24 +28,6 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
 
     $scope.searchComments = '';
 
-    $scope.searchFilter = function(comment) {
-        if ($scope.searchComments == null || $scope.searchComments == '') {
-            return true;
-        }
-
-        console.log('searching ' + comment.comment_text + ' for ' + $scope.searchComments);
-
-        var searchTerms = $scope.searchComments.split(' ');
-
-        for (var i = 0; i < searchTerms.length; ++i) {
-            if (!comment.comment_text.search(/searchTerms[i]/i)) {
-                return false;
-            }
-        }
-
-        return true;
-    };
-
     $scope.getComments = function() {
         console.log('trying to get comments');
         $http.get('/rest/comments').
@@ -80,16 +62,35 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
         if (showToast) {
             $mdToast.show(
                 {
-                    template: '<md-toast style="overflow: hidden; position: fixed;">Comment Added</md-toast>',
+                    template: '<md-toast style="overflow: hidden; position: fixed;">Comment added</md-toast>',
                     position: 'top left'
                 }
             );
         }
     };
 
+    $scope.commentsCopied = function() {
+        $mdToast.show(
+            {
+                template: '<md-toast style="overflow: hidden; position: fixed;">Comments copied to clipboard</md-toast>',
+                position: 'top left'
+            }
+        );
+    };
+
     $scope.fixCommentPronouns = function() {
         $timeout(function() {
+            $scope.yourCommentIntroduction = $scope.fixGenderPronouns($scope.yourCommentIntroduction);
             $scope.yourComment = $scope.fixGenderPronouns($scope.yourComment);
+            $scope.yourCommentConclusion = $scope.fixGenderPronouns($scope.yourCommentConclusion);
+
+            $mdToast.show(
+                {
+                    template: '<md-toast style="overflow: hidden; position: fixed;">Gender pronouns changed</md-toast>',
+                    position: 'top left'
+                }
+            );
+
         }, 50);
     };
 
@@ -142,9 +143,11 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
 
         $scope.yourCommentIntroduction = $scope.replaceStudentName($scope.yourCommentIntroduction);
         $scope.yourComment = $scope.replaceStudentName($scope.yourComment);
-        $scope.yourCommentConclusion = $scope.replaceStudentName($scope.yourCommentConclusion);$mdToast.show(
+        $scope.yourCommentConclusion = $scope.replaceStudentName($scope.yourCommentConclusion);
+
+        $mdToast.show(
             {
-                template: '<md-toast style="overflow: hidden; position: fixed;">Student Name Changed</md-toast>',
+                template: '<md-toast style="overflow: hidden; position: fixed;">Student name changed</md-toast>',
                 position: 'top left'
             }
         );
@@ -160,9 +163,11 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
 
         $scope.yourCommentIntroduction = $scope.replaceClassName($scope.yourCommentIntroduction);
         $scope.yourComment = $scope.replaceClassName($scope.yourComment);
-        $scope.yourCommentConclusion = $scope.replaceClassName($scope.yourCommentConclusion);$mdToast.show(
+        $scope.yourCommentConclusion = $scope.replaceClassName($scope.yourCommentConclusion);
+
+        $mdToast.show(
             {
-                template: '<md-toast style="overflow: hidden; position: fixed;">Class Name Changed</md-toast>',
+                template: '<md-toast style="overflow: hidden; position: fixed;">Class name changed</md-toast>',
                 position: 'top left'
             }
         );
@@ -238,7 +243,7 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
 
         $mdToast.show(
             {
-                template: '<md-toast style="overflow: hidden; position: fixed;">Random Comment Generated</md-toast>',
+                template: '<md-toast style="overflow: hidden; position: fixed;">Random comment generated</md-toast>',
                 position: 'top left'
             }
         );
