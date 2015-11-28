@@ -32,10 +32,10 @@ public class CommentResource {
     public Response getComments() throws JSONException {
         System.out.println("In comment resource");
 
-        if (lastCached.isBefore(LocalDateTime.now().minusDays(1))) {
+        if (lastCached.isBefore(LocalDateTime.now().minusDays(1)) || commentsList == null || commentsList.isEmpty()) {
             System.out.println("Has been over 1 day, will reload cache");
             DatabaseHandler databaseHandler = new DatabaseHandler();
-            commentsList = databaseHandler.getJSONObjectList("SELECT * FROM comment_breeze.comments ORDER BY RAND()");
+            commentsList = databaseHandler.getJSONObjectList("SELECT id, comment_text FROM comment_breeze.comments WHERE deleted = FALSE ORDER BY RAND()");
             databaseHandler.closeConnection();
         } else {
             System.out.println("Has not been 1 day yet, will load from cache");

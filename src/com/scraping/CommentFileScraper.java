@@ -190,6 +190,7 @@ public class CommentFileScraper {
     private static String replaceNames(String wholeDocumentString, Set<String> nameList) {
         String cleanString = wholeDocumentString.replaceAll("[A-Z][a-z]{0,10} [A-Z]\\.", "STUDENT_NAME");
         for (String name : nameList) {
+            // todo: make this a regex search
             if (cleanString.contains(" " + name + " ")) {
                 System.out.println("replacing " + name);
                 cleanString = cleanString.replaceAll(name, "STUDENT_NAME");

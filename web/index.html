@@ -4,12 +4,16 @@
     <meta charset="UTF-8">
     <title>Comment Breeze</title>
 
+    <meta name="viewport" content="initial-scale=1" />
+
     <link rel="stylesheet" type="text/css" href="styles.css">
 
     <script src="angular/angular.min.js"></script>
     <script src="angular-clipboard/angular-clipboard.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
     <link rel="stylesheet" type="text/css" href="styles.css">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <!--Angular Material Stuff-->
     <link rel="stylesheet" href="angular-material/angular-material.css">
@@ -24,20 +28,25 @@
 </head>
 <body ng-app="commentApp" ng-controller="CommentController" class="darkula-background">
 
-    <fieldset>
-        <legend>Your Comments</legend>
-        <div layout="row" layout-sm="column" layout-margin>
+    <div class="darkula-background">
+        <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
             <div flex>
-                <md-input-container>
-                    <label>Class Name</label>
-                    <input type="text" ng-model="className" ng-blur="blurClassName()">
-                </md-input-container>
+                <form ng-submit="blurClassName()">
+                    <md-input-container class="input-container">
+                        <label>Class Name</label>
+                        <input type="text" ng-model="className" ng-blur="blurClassName()">
+                    </md-input-container>
+                    <button class="invisible-button" type="submit">Submit</button>
+                </form>
             </div>
             <div flex>
-                <md-input-container>
-                    <label>Student Name</label>
-                    <input type="text" ng-model="studentName" ng-blur="blurStudentName()">
-                </md-input-container>
+                <form ng-submit="blurStudentName()">
+                    <md-input-container class="input-container">
+                        <label>Student Name</label>
+                        <input type="text" ng-model="studentName" ng-blur="blurStudentName()">
+                    </md-input-container>
+                    <button class="invisible-button" type="submit">Submit</button>
+                </form>
             </div>
             <div flex>
                 <md-radio-group ng-model="studentGender" layout="row">
@@ -48,38 +57,37 @@
             </div>
         </div>
 
-        <br/><textarea rows="7" type="text" ng-model="yourComment" class="comment-text-box darkula-background"></textarea>
+        <br/>
 
-        <div layout="row" layout-sm="column" layout-margin>
-            <button flex class="md-button md-raised md-primary" md-ripple-size="auto" clipboard text="yourComment">Copy Comments</button>
-            <button flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="resetYourComment()">Reset Comments</button>
-            <button flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="makeSomethingUp()">Just Make Something Up</button>
+        <div class="your-comment-div">
+            <textarea width="98%" placeholder="Your custom introduction goes here, this will not be erased when you hit 'Reset Comments'" rows="2" type="text" ng-model="yourCommentIntroduction" class="comment-text-box darkula-background"></textarea>
+            <textarea width="98%" placeholder="Your comments go here, add comments by clicking below and edit them as needed" rows="7" type="text" ng-model="yourComment" class="comment-text-box darkula-background"></textarea>
+            <textarea width="98%" placeholder="Your custom conclusion goes here, this will not be erased when you hit 'Reset Comments'" rows="2" type="text" ng-model="yourCommentConclusion" class="comment-text-box darkula-background"></textarea>
         </div>
-    </fieldset>
 
-    <fieldset class="darkula-background">
-        <legend>Comment Bank</legend>
+        <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
+            <button md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" clipboard text="yourCommentIntroduction + ' ' + yourComment + ' ' + yourCommentConclusion">Copy Comments</button>
+            <button md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="resetYourComment()">Reset Comments</button>
+            <button md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="makeSomethingUp()">Just Make Something Up</button>
+        </div>
+    </div>
 
+
+    <div class="darkula-background">
         <md-input-container>
             <label>Search Comments</label>
             <input type="text" ng-model="searchComments">
         </md-input-container>
 
-        <!--<md-list>-->
-            <!--<md-list-item class="md-1-line" ng-repeat="comment in comments | filter:searchComments | limitTo : commentViewLimit : commentViewBegin">-->
-                <!--<p ng-click="addComment(comment.comment_text)" ng-bind="comment.comment_text"></p>-->
-            <!--</md-list-item>-->
-            <!--<md-divider ng-if="!$last"></md-divider>-->
-        <!--</md-list>-->
-
-        <table ng-repeat="comment in comments | filter:searchComments | limitTo : commentViewLimit : commentViewBegin">
-            <tr>
-                <td ng-bind="comment.comment_text" ng-click="addComment(comment.comment_text)" class="comment-text"></td>
-                <!--<td>Edit Comment</td>-->
+        <table class="comment-bank-table">
+            <tr ng-repeat="comment in comments | filter:searchComments | limitTo : commentViewLimit : commentViewBegin">
+                <td ng-bind="comment.comment_text" ng-click="addComment(comment.comment_text, true)" class="comment-text"></td>
+                <!--<td class="comment-edit"><i title="Edit this comment" class="material-icons">mode_edit</i></td>-->
+                <!--<td class="comment-delete"><i title="Delete this comment" class="material-icons">delete</i></td>-->
             </tr>
         </table>
 
-        <div layout="row" layout-sm="column" layout-margin>
+        <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
             <md-select flex ng-model="commentViewLimit" ng-change="changeCommentsPerPage()" width="50%">
                 <md-select-label>Per Page:</md-select-label>
                 <md-option ng-value="20">20</md-option>
@@ -96,7 +104,7 @@
                 </div>
             </div>
         </div>
-    </fieldset>
+    </div>
 
 </body>
 </html>
