@@ -43,7 +43,7 @@ td:hover {
     transform: translate(-50%, -50%);
 }
 
-tr:nth-child(even) {
+tr:nth-child(odd) {
     background-color: #383838;
 }
 

@@ -6,6 +6,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -129,5 +130,42 @@ public class DatabaseHandler {
         return jsonObjectList;
     }
 
+    /**
+     * Takes a collection and a query and puts the first column of every row into the collection
+     *
+     * @param collection
+     * @param query
+     * @return the results of your query added to whatever collection you passed in
+     */
+    public Collection<String> getCollection(Collection<String> collection, String query) {
+        Statement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(query);
+
+            while (resultSet.next()) {
+                collection.add(resultSet.getString(1));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ignore) {}
+            }
+
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException ignore) {}
+            }
+        }
+
+        return collection;
+    }
 
 }

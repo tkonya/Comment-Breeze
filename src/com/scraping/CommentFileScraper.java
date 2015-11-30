@@ -57,11 +57,17 @@ public class CommentFileScraper {
     }
 
     private static HashSet<String> getNameList() {
+
+        Set<String> nameList = new HashSet<>();
         try {
-            return fileToHashSet("C:\\Users\\Trevor\\Documents\\SpiderOak Hive\\Development\\Comment Scraper\\Given-Names.txt");
+            nameList = fileToHashSet("C:\\Users\\Trevor\\Documents\\SpiderOak Hive\\Development\\Comment Scraper\\Given-Names.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+
+        DatabaseHandler databaseHandler = new DatabaseHandler();
+        nameList.addAll(databaseHandler.getCollection(new HashSet<>(), "SELECT DISTINCT student_name FROM student_names"));
+
         return null;
     }
 

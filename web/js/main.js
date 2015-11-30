@@ -137,7 +137,7 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
         console.log('student name: ' + $scope.studentName);
         console.log('old student name: ' + $scope.oldStudentName);
 
-        if ($scope.studentName == '' || $scope.studentName == $scope.oldStudentName) {
+        if ($scope.studentName == '' || $scope.studentName == $scope.oldStudentName || ($scope.studentName == '' && $scope.oldStudentName == 'Trevor')) {
             return;
         }
 
@@ -157,7 +157,7 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
         console.log('class name: ' + $scope.className);
         console.log('old class name: ' + $scope.oldClassName);
 
-        if ($scope.className == '' || $scope.className == $scope.oldClassName) {
+        if ($scope.className == '' || $scope.className == $scope.oldClassName || ($scope.className == '' && $scope.oldClassName == 'Software Development')) {
             return;
         }
 
