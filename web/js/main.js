@@ -28,6 +28,11 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
 
     $scope.searchComments = '';
 
+    $scope.makeSomethingUpSize = 10;
+
+    $scope.defaultStudentName = 'Sung-hyun';
+    $scope.defaultClassName = 'English class';
+
     $scope.getComments = function() {
         console.log('trying to get comments');
         $http.get('/rest/comments').
@@ -137,12 +142,12 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
         console.log('student name: ' + $scope.studentName);
         console.log('old student name: ' + $scope.oldStudentName);
 
-        if ($scope.studentName == '' || $scope.studentName == $scope.oldStudentName || ($scope.studentName == '' && $scope.oldStudentName == 'Trevor')) {
+        if ($scope.studentName == null || $scope.studentName == '' || $scope.studentName == $scope.oldStudentName) {
             return;
         }
 
-        $scope.yourCommentIntroduction = $scope.replaceStudentName($scope.yourCommentIntroduction);
-        $scope.yourComment = $scope.replaceStudentName($scope.yourComment);
+        $scope.yourCommentIntroduction = $scope.replaceStudentName($scope.yourCommentIntroduction, true);
+        $scope.yourComment = $scope.replaceStudentName($scope.yourComment, true);
         $scope.yourCommentConclusion = $scope.replaceStudentName($scope.yourCommentConclusion);
 
         $mdToast.show(
@@ -157,12 +162,12 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
         console.log('class name: ' + $scope.className);
         console.log('old class name: ' + $scope.oldClassName);
 
-        if ($scope.className == '' || $scope.className == $scope.oldClassName || ($scope.className == '' && $scope.oldClassName == 'Software Development')) {
+        if ($scope.className == null || $scope.className == '' || $scope.className == $scope.oldClassName) {
             return;
         }
 
-        $scope.yourCommentIntroduction = $scope.replaceClassName($scope.yourCommentIntroduction);
-        $scope.yourComment = $scope.replaceClassName($scope.yourComment);
+        $scope.yourCommentIntroduction = $scope.replaceClassName($scope.yourCommentIntroduction, true);
+        $scope.yourComment = $scope.replaceClassName($scope.yourComment, true);
         $scope.yourCommentConclusion = $scope.replaceClassName($scope.yourCommentConclusion);
 
         $mdToast.show(
@@ -173,36 +178,40 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
         );
     };
 
-    $scope.replaceStudentName = function(text) {
+    $scope.replaceStudentName = function(text, dontSet) {
         var studentName;
         if ($scope.studentName == null || $scope.studentName == '') {
-            studentName = 'Trevor';
+            studentName = $scope.defaultStudentName;
         } else {
             studentName = $scope.studentName;
         }
-        console.log('Changing student name to ' + studentName);
 
         if ($scope.oldStudentName != null) {
             text = text.replace(new RegExp($scope.oldStudentName, 'g'), studentName);
         }
-        $scope.oldStudentName = studentName;
+
+        if (!dontSet) {
+            $scope.oldStudentName = studentName;
+        }
 
         return text.replace(/STUDENT_NAME/g, studentName);
     };
 
-    $scope.replaceClassName = function(text) {
+    $scope.replaceClassName = function(text, dontSet) {
         var className;
         if ($scope.className == null || $scope.className == '') {
-            className = 'Software Development';
+            className = $scope.defaultClassName;
         } else {
             className = $scope.className;
         }
-        console.log('Changing class name to ' + className);
 
         if ($scope.oldClassName != null) {
             text = text.replace(new RegExp($scope.oldClassName, 'g'), className);
         }
-        $scope.oldClassName = className;
+
+        if (!dontSet) {
+            $scope.oldClassName = className;
+        }
 
         return text.replace(/CLASS_NAME/g, className);
     };
@@ -236,14 +245,14 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
     $scope.makeSomethingUp = function() {
         $scope.yourComment = '';
 
-        for (var i = 0; i < 10; ++i) {
+        for (var i = 0; i < $scope.makeSomethingUpSize; ++i) {
             var randomComment = $scope.comments[Math.floor(Math.random() * $scope.comments.length)];
             $scope.addComment(randomComment.comment_text, false);
         }
 
         $mdToast.show(
             {
-                template: '<md-toast style="overflow: hidden; position: fixed;">Random comment generated</md-toast>',
+                template: '<md-toast class="toast-style">Random comment generated</md-toast>',
                 position: 'top left'
             }
         );

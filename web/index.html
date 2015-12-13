@@ -55,6 +55,12 @@
                     <md-radio-button ng-model="studentGender" value="neutral" ng-click="fixCommentPronouns()" >Neutral</md-radio-button>
                 </md-radio-group>
             </div>
+            <div flex>
+                <md-input-container>
+                    <label>Make Something Up Size</label>
+                    <input type="number" ng-model="makeSomethingUpSize" min="1" max="100">
+                </md-input-container>
+            </div>
         </div>
 
         <br/>
@@ -66,9 +72,24 @@
         </div>
 
         <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
-            <button md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" clipboard text="yourCommentIntroduction + ' ' + yourComment + ' ' + yourCommentConclusion">Copy Comments</button>
-            <button md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="resetYourComment()">Reset Comments</button>
-            <button md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="makeSomethingUp()">Just Make Something Up</button>
+            <md-button aria-label="Copy Comments" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" clipboard text="yourCommentIntroduction + ' ' + yourComment + ' ' + yourCommentConclusion">
+                Copy Comments
+                <md-tooltip class="tooltip">
+                    Copies the above report card comments, including the introduction and conclusion
+                </md-tooltip>
+            </md-button>
+            <md-button aria-label="Reset Comments" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="resetYourComment()">
+                Reset Comments
+                <md-tooltip class="tooltip">
+                    Erases the comments, but not the introduction or conclusion
+                </md-tooltip>
+            </md-button>
+            <md-button aria-label="Just Make Something Up" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="makeSomethingUp()">
+                Just Make Something Up
+                <md-tooltip class="tooltip">
+                    Generates {{makeSomethingUpSize}} random comments
+                </md-tooltip>
+            </md-button>
         </div>
     </div>
 
@@ -90,6 +111,7 @@
         <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
             <md-select flex ng-model="commentViewLimit" ng-change="changeCommentsPerPage()" width="50%">
                 <md-select-label>Per Page:</md-select-label>
+                <!--<md-option ng-value="10">10</md-option>-->
                 <md-option ng-value="20">20</md-option>
                 <md-option ng-value="50">50</md-option>
                 <md-option ng-value="100">100</md-option>
@@ -104,6 +126,14 @@
                 </div>
             </div>
         </div>
+
+        <!--<span>-->
+            <!--className = {{className}}<br>-->
+            <!--oldClassName = {{oldClassName}}<br>-->
+            <!--studentName = {{studentName}}<br>-->
+            <!--oldStudentName = {{oldStudentName}}<br>-->
+            <!--yourComment = {{yourComment}}<br>-->
+        <!--</span>-->
     </div>
 
 </body>
