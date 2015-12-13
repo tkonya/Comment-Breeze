@@ -37,6 +37,9 @@
                         <input type="text" ng-model="className" ng-blur="blurClassName()">
                     </md-input-container>
                     <button class="invisible-button" type="submit">Submit</button>
+                    <md-tooltip class="tooltip">
+                        Will replace instance of CLASS_NAME in comments
+                    </md-tooltip>
                 </form>
             </div>
             <div flex>
@@ -46,6 +49,9 @@
                         <input type="text" ng-model="studentName" ng-blur="blurStudentName()">
                     </md-input-container>
                     <button class="invisible-button" type="submit">Submit</button>
+                    <md-tooltip class="tooltip">
+                        Will replace instance of STUDENT_NAME in comments
+                    </md-tooltip>
                 </form>
             </div>
             <div flex>
@@ -54,11 +60,17 @@
                     <md-radio-button ng-model="studentGender" value="female" ng-click="fixCommentPronouns()" >Female</md-radio-button>
                     <md-radio-button ng-model="studentGender" value="neutral" ng-click="fixCommentPronouns()" >Neutral</md-radio-button>
                 </md-radio-group>
+                <md-tooltip class="tooltip">
+                    Will attempt to fix gendered pronouns
+                </md-tooltip>
             </div>
             <div flex>
                 <md-input-container>
                     <label>Make Something Up Size</label>
                     <input type="number" ng-model="makeSomethingUpSize" min="1" max="100">
+                    <md-tooltip class="tooltip">
+                        Number of comments to randomly generate
+                    </md-tooltip>
                 </md-input-container>
             </div>
         </div>
@@ -98,6 +110,9 @@
         <md-input-container>
             <label>Search Comments</label>
             <input type="text" ng-model="searchComments">
+            <md-tooltip class="tooltip">
+                Instant search on comments. This is the best way to find comments if you have an idea of what you want to say.
+            </md-tooltip>
         </md-input-container>
 
         <table class="comment-bank-table">
@@ -127,13 +142,6 @@
             </div>
         </div>
 
-        <!--<span>-->
-            <!--className = {{className}}<br>-->
-            <!--oldClassName = {{oldClassName}}<br>-->
-            <!--studentName = {{studentName}}<br>-->
-            <!--oldStudentName = {{oldStudentName}}<br>-->
-            <!--yourComment = {{yourComment}}<br>-->
-        <!--</span>-->
     </div>
 
 </body>
