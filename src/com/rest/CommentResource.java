@@ -24,30 +24,48 @@ import java.util.List;
 @Path("/comments")
 public class CommentResource {
 
-    static List<JSONObject> commentsList;
+//    static List<JSONObject> commentsList;
+    static JSONArray comments;
     static LocalDateTime lastCached = LocalDateTime.now();
+
+//    @GET
+//    @Produces("application/json")
+//    public Response getComments() throws JSONException {
+//        System.out.println("In comment resource");
+//
+//        if (lastCached.isBefore(LocalDateTime.now().minusDays(1)) || commentsList == null || commentsList.isEmpty()) {
+//            System.out.println("Has been over 1 day, will reload cache");
+//            DatabaseHandler databaseHandler = new DatabaseHandler();
+//            commentsList = databaseHandler.getJSONObjectList("SELECT comment_id, comment_text FROM comment_breeze.comments WHERE deleted = FALSE GROUP BY comment_text ORDER BY RAND()");
+//            databaseHandler.closeConnection();
+//        } else {
+//            System.out.println("Has not been 1 day yet, will load from cache");
+//        }
+//
+//        Collections.shuffle(commentsList);
+//
+//        JSONArray jsonArray = new JSONArray();
+//        commentsList.forEach(jsonArray::put);
+//
+//        System.out.println("Returning " + jsonArray.length() + " comments");
+//        return Response.ok(jsonArray.toString()).build();
+//    }
 
     @GET
     @Produces("application/json")
     public Response getComments() throws JSONException {
         System.out.println("In comment resource");
 
-        if (lastCached.isBefore(LocalDateTime.now().minusDays(1)) || commentsList == null || commentsList.isEmpty()) {
+        if (lastCached.isBefore(LocalDateTime.now().minusDays(1)) || comments == null || comments.length() == 0) {
             System.out.println("Has been over 1 day, will reload cache");
             DatabaseHandler databaseHandler = new DatabaseHandler();
-            commentsList = databaseHandler.getJSONObjectList("SELECT comment_id, comment_text FROM comment_breeze.comments WHERE deleted = FALSE ORDER BY RAND()");
+            comments = databaseHandler.getJSONArrayFor("SELECT comment_id, comment_text FROM comment_breeze.comments WHERE deleted = FALSE GROUP BY comment_text ORDER BY RAND()");
             databaseHandler.closeConnection();
         } else {
             System.out.println("Has not been 1 day yet, will load from cache");
         }
 
-        Collections.shuffle(commentsList);
-
-        JSONArray jsonArray = new JSONArray();
-        commentsList.forEach(jsonArray::put);
-
-        System.out.println("Returning " + jsonArray.length() + " comments");
-        return Response.ok(jsonArray.toString()).build();
+        return Response.ok(comments.toString()).build();
     }
 
     @PUT
