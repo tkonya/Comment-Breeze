@@ -9,6 +9,7 @@ var commentApp = angular.module('commentApp', ['angular-clipboard', 'ngMaterial'
 commentApp.controller('CommentController', function($scope, $http, $timeout, $mdToast) {
 
     $scope.comments = [];
+    $scope.commentsLengthFormatted = '20,000+';
     $scope.commentViewLimit = 20;
     $scope.commentViewBegin = 0;
     $scope.currentCommentsPage = 1;
@@ -33,6 +34,9 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
     $scope.defaultStudentName = 'Sung-hyun';
     $scope.defaultClassName = 'English class';
 
+    // multi student
+    $scope.students = [];
+
     $scope.getComments = function() {
         console.log('trying to get comments');
         $http.get('/rest/comments').
@@ -42,6 +46,7 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
                 console.log(data.length + ' comments received');
 
                 $scope.comments = data;
+                $scope.commentsLengthFormatted = $scope.comments.length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
                 $scope.changeCommentsPerPage();
             }).
@@ -256,6 +261,18 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
                 position: 'top left'
             }
         );
+    };
+
+    $scope.shuffleComment = function() {
+        var sentences = $scope.yourComment.match( /[^\.!\?]+[\.!\?]+/g );
+        console.log('Found ' + sentences.length + ' sentences');
+
+        for(var j, x, i = sentences.length; i; j = Math.floor(Math.random() * i), x = sentences[--i], sentences[i] = sentences[j], sentences[j] = x) {}
+
+        $scope.yourComment = '';
+        for (var k = 0; k < sentences.length; ++k) {
+            $scope.yourComment += sentences[k].trim() + ' ';
+        }
     };
 
     $scope.getComments();

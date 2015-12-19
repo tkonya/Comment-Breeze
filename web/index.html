@@ -28,121 +28,282 @@
 </head>
 <body ng-app="commentApp" ng-controller="CommentController" class="darkula-background">
 
-    <div class="darkula-background">
-        <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
-            <div flex>
-                <form ng-submit="blurClassName()">
-                    <md-input-container class="input-container">
-                        <label>Class Name</label>
-                        <input type="text" ng-model="className" ng-blur="blurClassName()">
+    <md-tabs md-dynamic-height="true" md-center-tabs="true">
+        <md-tab>
+            <md-tab-label>
+                Comment Breeze
+            </md-tab-label>
+            <md-tab-body>
+                <div class="all-tabs main-tab">
+                    <md-content>
+                        <h3>Welcome to Comment Breeze!</h3>
+
+                        <p class="paragraphs">
+                            I made this site to help my friends and other ESL / TESOL teachers build report card comments.
+                        </p>
+
+                        <h3>Why make this?</h3>
+
+                        <p class="paragraphs">
+                            There are other tools out there, but I thought I could do something different than what I've seen.
+                            One thing I've never seen on any other report card site is any kind of search functionality.
+                            I wanted to make it so you could search a giant bank of comments for words or phrases that you have in mind.
+                            I've never seen a site that had more than a couple hundred comments, so if you were to use that site repeatedly then there wouldn't be much variation in your comments.
+                        </p>
+
+                        <h3>What's different about Comment Breeze?</h3>
+
+                        <p class="paragraphs">
+                            There are currently <span ng-bind="commentsLengthFormatted"></span> comments in the database.
+                            This is the greatest strength and weakness of this site.
+                            The benefit is that there are tens of thousands more comments here than any other site I've seen.
+                            Since all of the comments are loaded into your browser upfront, it means that searching them is instantaneous.
+                            The downside is that since I don't have the time (or interest) in going through and editing and categorizing all of the comments manually they are not organized or formatted as well as other sites.
+                            I have written code to help me go through and format comments in a semi-automated way, but it's not perfect.
+                        </p>
+
+                        <!--<p>
+                            <img src="images/Logo-Black-128px-TM.png" height="40px">
+
+                            <img src="images/Octocat.png" height="90px">
+                        </p>-->
+                    </md-content>
+                    </div>
+            </md-tab-body>
+        </md-tab>
+        <md-tab>
+            <md-tab-label>
+                <i class="material-icons inline-icon">person</i>
+                Single Student
+            </md-tab-label>
+            <md-tab-body>
+                <div class="all-tabs">
+                    <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
+                        <div flex>
+                            <form ng-submit="blurClassName()">
+                                <md-input-container class="input-container">
+                                    <label>Class Name</label>
+                                    <input type="text" ng-model="className" ng-blur="blurClassName()">
+                                </md-input-container>
+                                <button class="invisible-button" type="submit">Submit</button>
+                                <md-tooltip class="tooltip">
+                                    Will replace instance of CLASS_NAME in comments
+                                </md-tooltip>
+                            </form>
+                        </div>
+                        <div flex>
+                            <form ng-submit="blurStudentName()">
+                                <md-input-container class="input-container">
+                                    <label>Student Name</label>
+                                    <input type="text" ng-model="studentName" ng-blur="blurStudentName()">
+                                </md-input-container>
+                                <button class="invisible-button" type="submit">Submit</button>
+                                <md-tooltip class="tooltip">
+                                    Will replace instance of STUDENT_NAME in comments
+                                </md-tooltip>
+                            </form>
+                        </div>
+                        <div flex>
+                            <md-radio-group ng-model="studentGender" layout="row">
+                                <md-radio-button ng-model="studentGender" value="male" ng-click="fixCommentPronouns()" selected>Male</md-radio-button>
+                                <md-radio-button ng-model="studentGender" value="female" ng-click="fixCommentPronouns()" >Female</md-radio-button>
+                                <md-radio-button ng-model="studentGender" value="neutral" ng-click="fixCommentPronouns()" >Neutral</md-radio-button>
+                            </md-radio-group>
+                            <md-tooltip class="tooltip">
+                                Will attempt to fix gendered pronouns
+                            </md-tooltip>
+                        </div>
+                        <div flex>
+                            <md-input-container>
+                                <label>Make Something Up Size</label>
+                                <input type="number" ng-model="makeSomethingUpSize" min="1" max="100">
+                                <md-tooltip class="tooltip">
+                                    Number of comments to randomly generate
+                                </md-tooltip>
+                            </md-input-container>
+                        </div>
+                    </div>
+
+                    <br/>
+
+                    <div class="your-comment-div">
+                        <textarea width="98%" placeholder="Your custom introduction goes here, this will not be erased when you hit 'Reset Comments'" rows="2" type="text" ng-model="yourCommentIntroduction" class="comment-text-box darkula-background"></textarea>
+                        <textarea width="98%" placeholder="Your comments go here, add comments by clicking below and edit them as needed" rows="7" type="text" ng-model="yourComment" class="comment-text-box darkula-background"></textarea>
+                        <textarea width="98%" placeholder="Your custom conclusion goes here, this will not be erased when you hit 'Reset Comments'" rows="2" type="text" ng-model="yourCommentConclusion" class="comment-text-box darkula-background"></textarea>
+                    </div>
+
+                    <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
+
+                        <md-button aria-label="Copy Comments" md-ink-ripple flex class="md-button md-raised md-primary three-buttons" md-ripple-size="auto" clipboard text="yourCommentIntroduction + ' ' + yourComment + ' ' + yourCommentConclusion">
+                            <i class="material-icons inline-icon">content_copy</i>
+                            <span>Copy Comments</span>
+                            <md-tooltip class="tooltip">
+                                Copies everything above to the clipboard
+                            </md-tooltip>
+                        </md-button>
+
+                        <md-button aria-label="Reset Comments" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="resetYourComment()">
+                            <i class="material-icons inline-icon">refresh</i>
+                            <span>Reset Comments</span>
+                            <md-tooltip class="tooltip">
+                                Erases the comments, but not the introduction or conclusion
+                            </md-tooltip>
+                        </md-button>
+
+                        <md-button aria-label="Reset Comments" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="shuffleComment()">
+                            <i class="material-icons inline-icon">shuffle</i>
+                            <span>Shuffle Comments</span>
+                            <md-tooltip class="tooltip">
+                                Rearranges the comment sentences in random order
+                            </md-tooltip>
+                        </md-button>
+
+                        <md-button aria-label="Just Make Something Up" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="makeSomethingUp()">
+                            <i class="material-icons inline-icon">warning</i>
+                            Just Make Something Up
+                            <md-tooltip class="tooltip">
+                                Generates {{makeSomethingUpSize}} random comments
+                            </md-tooltip>
+                        </md-button>
+
+                    </div>
+
+
+                    <md-input-container>
+                        <label>Search Comments</label>
+                        <input type="text" ng-model="searchComments">
+                        <md-tooltip class="tooltip">
+                            Instant search on comments. This is the best way to find comments if you have an idea of what you want to say.
+                        </md-tooltip>
                     </md-input-container>
-                    <button class="invisible-button" type="submit">Submit</button>
-                    <md-tooltip class="tooltip">
-                        Will replace instance of CLASS_NAME in comments
-                    </md-tooltip>
-                </form>
-            </div>
-            <div flex>
-                <form ng-submit="blurStudentName()">
-                    <md-input-container class="input-container">
-                        <label>Student Name</label>
-                        <input type="text" ng-model="studentName" ng-blur="blurStudentName()">
-                    </md-input-container>
-                    <button class="invisible-button" type="submit">Submit</button>
-                    <md-tooltip class="tooltip">
-                        Will replace instance of STUDENT_NAME in comments
-                    </md-tooltip>
-                </form>
-            </div>
-            <div flex>
-                <md-radio-group ng-model="studentGender" layout="row">
-                    <md-radio-button ng-model="studentGender" value="male" ng-click="fixCommentPronouns()" selected>Male</md-radio-button>
-                    <md-radio-button ng-model="studentGender" value="female" ng-click="fixCommentPronouns()" >Female</md-radio-button>
-                    <md-radio-button ng-model="studentGender" value="neutral" ng-click="fixCommentPronouns()" >Neutral</md-radio-button>
-                </md-radio-group>
-                <md-tooltip class="tooltip">
-                    Will attempt to fix gendered pronouns
-                </md-tooltip>
-            </div>
-            <div flex>
-                <md-input-container>
-                    <label>Make Something Up Size</label>
-                    <input type="number" ng-model="makeSomethingUpSize" min="1" max="100">
-                    <md-tooltip class="tooltip">
-                        Number of comments to randomly generate
-                    </md-tooltip>
-                </md-input-container>
-            </div>
-        </div>
 
-        <br/>
+                    <table class="comment-bank-table">
+                        <tr ng-repeat="comment in comments | filter:searchComments | limitTo : commentViewLimit : commentViewBegin">
+                            <td ng-bind="comment.comment_text" ng-click="addComment(comment.comment_text, true)" class="comment-text"></td>
+                            <!--<td>-->
+                                <!--<span ng-show="comment.pos_neg == -2">very negative</span>-->
+                                <!--<span ng-show="comment.pos_neg == -1">negative</span>-->
+                                <!--<span ng-show="comment.pos_neg == 0">neutral</span>-->
+                                <!--<span ng-show="comment.pos_neg == 1">positive</span>-->
+                                <!--<span ng-show="comment.pos_neg == 2">very positive</span>-->
+                                <!--<span ng-show="!comment.pos_neg">unrated</span>-->
+                                <!--<md-tooltip class="tooltip">-->
+                                    <!--Click to rate this comment-->
+                                <!--</md-tooltip>-->
+                            <!--</td>-->
+                            <!--<td class="comment-edit">-->
+                                <!--<i title="Edit this comment" class="material-icons">star_half</i>-->
+                                <!--<md-tooltip class="tooltip">-->
+                                    <!--Rate this comment from positive to negative-->
+                                <!--</md-tooltip>-->
+                            <!--</td>-->
+                            <!--<td class="comment-edit">-->
+                                <!--<i title="Edit this comment" class="material-icons">mode_edit</i>-->
+                                <!--<md-tooltip class="tooltip">-->
+                                    <!--Edit this comment-->
+                                <!--</md-tooltip>-->
+                            <!--</td>-->
+                            <!--<td class="comment-delete">-->
+                                <!--<i title="Delete this comment" class="material-icons">delete</i>-->
+                                <!--<md-tooltip class="tooltip">-->
+                                    <!--Delete this comment-->
+                                <!--</md-tooltip>-->
+                            <!--</td>-->
+                        </tr>
+                    </table>
 
-        <div class="your-comment-div">
-            <textarea width="98%" placeholder="Your custom introduction goes here, this will not be erased when you hit 'Reset Comments'" rows="2" type="text" ng-model="yourCommentIntroduction" class="comment-text-box darkula-background"></textarea>
-            <textarea width="98%" placeholder="Your comments go here, add comments by clicking below and edit them as needed" rows="7" type="text" ng-model="yourComment" class="comment-text-box darkula-background"></textarea>
-            <textarea width="98%" placeholder="Your custom conclusion goes here, this will not be erased when you hit 'Reset Comments'" rows="2" type="text" ng-model="yourCommentConclusion" class="comment-text-box darkula-background"></textarea>
-        </div>
+                    <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
+                        <md-select flex ng-model="commentViewLimit" ng-change="changeCommentsPerPage()" width="50%">
+                            <md-select-label>Per Page:</md-select-label>
+                            <!--<md-option ng-value="10">10</md-option>-->
+                            <md-option ng-value="20">20</md-option>
+                            <md-option ng-value="50">50</md-option>
+                            <md-option ng-value="100">100</md-option>
+                            <md-option ng-value="1000">1,000</md-option>
+                        </md-select>
 
-        <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
-            <md-button aria-label="Copy Comments" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" clipboard text="yourCommentIntroduction + ' ' + yourComment + ' ' + yourCommentConclusion">
-                Copy Comments
-                <md-tooltip class="tooltip">
-                    Copies the above report card comments, including the introduction and conclusion
-                </md-tooltip>
-            </md-button>
-            <md-button aria-label="Reset Comments" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="resetYourComment()">
-                Reset Comments
-                <md-tooltip class="tooltip">
-                    Erases the comments, but not the introduction or conclusion
-                </md-tooltip>
-            </md-button>
-            <md-button aria-label="Just Make Something Up" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="makeSomethingUp()">
-                Just Make Something Up
-                <md-tooltip class="tooltip">
-                    Generates {{makeSomethingUpSize}} random comments
-                </md-tooltip>
-            </md-button>
-        </div>
-    </div>
-
-
-    <div class="darkula-background">
-        <md-input-container>
-            <label>Search Comments</label>
-            <input type="text" ng-model="searchComments">
-            <md-tooltip class="tooltip">
-                Instant search on comments. This is the best way to find comments if you have an idea of what you want to say.
-            </md-tooltip>
-        </md-input-container>
-
-        <table class="comment-bank-table">
-            <tr ng-repeat="comment in comments | filter:searchComments | limitTo : commentViewLimit : commentViewBegin">
-                <td ng-bind="comment.comment_text" ng-click="addComment(comment.comment_text, true)" class="comment-text"></td>
-                <!--<td class="comment-edit"><i title="Edit this comment" class="material-icons">mode_edit</i></td>-->
-                <!--<td class="comment-delete"><i title="Delete this comment" class="material-icons">delete</i></td>-->
-            </tr>
-        </table>
-
-        <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
-            <md-select flex ng-model="commentViewLimit" ng-change="changeCommentsPerPage()" width="50%">
-                <md-select-label>Per Page:</md-select-label>
-                <!--<md-option ng-value="10">10</md-option>-->
-                <md-option ng-value="20">20</md-option>
-                <md-option ng-value="50">50</md-option>
-                <md-option ng-value="100">100</md-option>
-                <md-option ng-value="1000">1,000</md-option>
-            </md-select>
-
-            <div flex>
-                <div align="right">
-                    <button class="md-button" md-ink-ripple ng-show="totalCommentPages > 1 && currentCommentsPage > 1" ng-click="changeCommentsPage(currentCommentsPage - 1)" style="display: inline-block; padding: .5em;">&#9664;</button>
-                    <span style="font-size: smaller;">Page <span ng-bind="currentCommentsPage"></span> of <span ng-bind="totalCommentPages"></span></span>
-                    <button class="md-button" md-ink-ripple ng-show="totalCommentPages > 1 && currentCommentsPage < totalCommentPages" ng-click="changeCommentsPage(currentCommentsPage + 1)" style="display: inline-block; padding: .5em;">&#9654;</button>
+                        <div flex>
+                            <div align="right">
+                                <button class="md-button" md-ink-ripple ng-show="totalCommentPages > 1 && currentCommentsPage > 1" ng-click="changeCommentsPage(currentCommentsPage - 1)" style="display: inline-block; padding: .5em;">&#9664;</button>
+                                <span style="font-size: smaller;">Page <span ng-bind="currentCommentsPage"></span> of <span ng-bind="totalCommentPages"></span></span>
+                                <button class="md-button" md-ink-ripple ng-show="totalCommentPages > 1 && currentCommentsPage < totalCommentPages" ng-click="changeCommentsPage(currentCommentsPage + 1)" style="display: inline-block; padding: .5em;">&#9654;</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
+            </md-tab-body>
+        </md-tab>
 
-    </div>
+
+        <md-tab>
+            <md-tab-label>
+                <i class="material-icons inline-icon">group</i>
+                Multi Student
+            </md-tab-label>
+            <md-tab-body>
+                <div class="all-tabs">
+
+                    <p style="text-align: center;">Under Construction...</p>
+
+                    <!--<section>-->
+                        <!--<md-toolbar class="md-primary">-->
+                            <!--<h3>Students</h3>-->
+                        <!--</md-toolbar>-->
+
+                        <!--<md-list>-->
+                            <!--<md-list-item class="md-2-line" ng-repeat="student in students">-->
+                                <!--<md-checkbox ng-model="item.done"></md-checkbox>-->
+                                <!--<div class="md-list-item-text">-->
+                                    <!--<h3>{{student.name}}</h3>-->
+                                    <!--<p>{{item.description}}</p>-->
+                                <!--</div>-->
+                            <!--</md-list-item>-->
+                        <!--</md-list>-->
+
+                        <!--<form ng-submit="addStudent()">-->
+                            <!--<md-input-container class="input-container">-->
+                                <!--<label>Add Student</label>-->
+                                <!--<input type="text" ng-model="className" ng-blur="addStudent()">-->
+                            <!--</md-input-container>-->
+                            <!--<button class="invisible-button" type="submit">Submit</button>-->
+                            <!--<md-tooltip class="tooltip">-->
+                                <!--Add all the students that you would like to make comments for today-->
+                            <!--</md-tooltip>-->
+                        <!--</form>-->
+
+
+                    <!--</section>-->
+
+                </div>
+            </md-tab-body>
+        </md-tab>
+
+        <md-tab>
+            <md-tab-label>
+                <i class="material-icons inline-icon">mood</i>
+                Donate</md-tab-label>
+            <md-tab-body>
+                <div class="donate-tab">
+                    <p class="paragraphs">
+                        This site is 100% free to use, but it's not 100% free to run, plus it took a lot of time to code.
+                        Donations will help me pay for the server costs, and if there's enough maybe even buy me a coffee.
+                        Any amount is appreciated.
+                    </p>
+
+                    <br>
+
+                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+                        <input type="hidden" name="cmd" value="_s-xclick">
+                        <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----">
+                        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                        <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                    </form>
+
+                </div>
+            </md-tab-body>
+        </md-tab>
+    </md-tabs>
+
 
 </body>
 </html>
