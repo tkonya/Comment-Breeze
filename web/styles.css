@@ -97,3 +97,23 @@ tr:nth-child(odd) {
     padding-left: 1em;
     padding-right: 1em;
 }
+
+.positive {
+    color: #FFC107;
+}
+
+.negative {
+    color: #673AB7;
+}
+
+.neutral {
+    color: #A9B7C6;
+}
+
+.unrated {
+    color: black;
+}
+
+.edit-box {
+    padding: 2em;
+}

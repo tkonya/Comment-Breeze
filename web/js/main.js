@@ -6,9 +6,14 @@ var commentApp = angular.module('commentApp', ['angular-clipboard', 'ngMaterial'
             .backgroundPalette('grey').dark();
     });
 
-commentApp.controller('CommentController', function($scope, $http, $timeout, $mdToast) {
+commentApp.controller('CommentController', function($scope, $http, $timeout, $mdToast, $mdBottomSheet, $mdDialog) {
 
     $scope.comments = [];
+    $scope.allComments = []; // when 'filtering', put all comments in here, then we'll pull them back out when we switch back
+    $scope.editingComment = null;
+    $scope.editingPasswordTry = '';
+    $scope.showTextEdit = false;
+
     $scope.commentsLengthFormatted = '20,000+';
     $scope.commentViewLimit = 20;
     $scope.commentViewBegin = 0;
@@ -28,6 +33,8 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
     $scope.yourCommentConclusion = '';
 
     $scope.searchComments = '';
+    $scope.toneFilterSetting = 'Any';
+    $scope.toneFilterOptions = ['Any', 'Positive', 'Neutral', 'Negative', 'Unrated'];
 
     $scope.makeSomethingUpSize = 10;
 
@@ -273,6 +280,108 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
         for (var k = 0; k < sentences.length; ++k) {
             $scope.yourComment += sentences[k].trim() + ' ';
         }
+    };
+
+    $scope.showEditDialog = function(comment, justPosNeg) {
+
+        $scope.justPosNeg = justPosNeg;
+
+        console.log('showing custom greeting');
+        $scope.editingComment = comment;
+
+        $scope.originalPosNeg = comment.pos_neg;
+
+        $mdDialog.show({
+            clickOutsideToClose: true,
+            scope: $scope,        // use parent scope in template
+            preserveScope: true,  // do not forget this if use parent scope
+            templateUrl: '/edit-dialog.html',
+            controller: function DialogController($scope, $mdDialog) {
+                $scope.closeDialog = function () {
+                    $mdDialog.hide();
+                    $scope.editingComment.pos_neg = $scope.originalPosNeg;
+
+                    // if they don't have the right password then blank out the password and undo the showTextEdit
+                    if ($scope.editingPasswordTry.slice(0, 10) != 'industrial') {
+                        $scope.editingPasswordTry = '';
+                        $scope.showTextEdit = false;
+                    }
+
+                };
+                $scope.saveDialog = function() {
+
+                    console.log('in saveDialog');
+                    $mdDialog.hide();
+                    $http({
+                        url: "/rest/comments",
+                        method: "PUT",
+                        params: {comment: $scope.editingComment, editing_password_try: $scope.editingPasswordTry},
+                        headers: {'Content-Type': 'application/json'}
+                    }).success(function (data) {
+
+                        if (data.hasOwnProperty('address')) {
+                            console.log('got request from ' + data.address);
+                        }
+
+                        if (data.hasOwnProperty('passfail')) {
+                            $scope.editingPasswordTry = '';
+                            $scope.showTextEdit = false;
+                        } else {
+                            $mdToast.show(
+                                {
+                                    template: '<md-toast class="toast-style">' + data.message + '</md-toast>',
+                                    position: 'top left'
+                                }
+                            );
+                        }
+
+                    }).error(function () {
+                        $mdToast.show(
+                            {
+                                template: '<md-toast class="toast-style">Error updating comment</md-toast>',
+                                position: 'top left'
+                            }
+                        );
+                    });
+                };
+            }
+        });
+    };
+
+    $scope.changeFilter = function() {
+        console.log('changing the filter to ' + $scope.toneFilterSetting);
+
+        if ($scope.toneFilterSetting == 'Any') {
+
+            // put the comments back in
+            if ($scope.allComments.length > 0) {
+                $scope.comments = $scope.allComments;
+            }
+
+        } else {
+
+            // backup comments if you haven't already
+            if ($scope.allComments < 1) {
+                $scope.allComments = $scope.comments;
+            }
+
+            $scope.comments = [];
+            for (var i = 0; i < $scope.allComments.length; ++i) {
+
+                if ($scope.allComments[i].hasOwnProperty('pos_neg')) {
+                    if (($scope.allComments[i].pos_neg == 1 && $scope.toneFilterSetting == 'Positive') ||
+                        ($scope.allComments[i].pos_neg == 0 && $scope.toneFilterSetting == 'Neutral') ||
+                        ($scope.allComments[i].pos_neg == -1 && $scope.toneFilterSetting == 'Negative')) {
+                        $scope.comments.push($scope.allComments[i]);
+                    }
+                } else if ($scope.toneFilterSetting == 'Unrated') {
+                    $scope.comments.push($scope.allComments[i]);
+                }
+            }
+        }
+
+        $scope.changeCommentsPerPage();
+        console.log('done changing filter');
     };
 
     $scope.getComments();

@@ -14,14 +14,19 @@ public class AppProperties {
 
     public AppProperties() {
 
-        InputStream inputStream = getClass().getResourceAsStream(APP_PROPERTIES_FILE_NAME);
-
-        appProperties = new Properties();
+        InputStream inputStream = null;
         try {
+            appProperties = new Properties();
+            inputStream = getClass().getResourceAsStream(APP_PROPERTIES_FILE_NAME);
             appProperties.load(inputStream);
         } catch (IOException e) {
             System.out.println("Properties file failed to load");
             e.printStackTrace();
+        } finally {
+            try {
+                assert inputStream != null;
+                inputStream.close();
+            } catch (IOException ignore) {}
         }
 
     }
@@ -38,4 +43,7 @@ public class AppProperties {
         return appProperties.getProperty("database-password");
     }
 
+    public String getEditingPassword() {
+        return appProperties.getProperty("editing-password");
+    }
 }

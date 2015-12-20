@@ -1,0 +1,46 @@
+<md-dialog flex="80">
+    <md-dialog-content style="padding: 2em;">
+        <h2>Edit Comment</h2>
+
+        <p ng-show="!justPosNeg">
+            A password is currently required to edit comment text, but anybody may edit comment tone.<br><br>
+            Available variables are CLASS_NAME, SCHOOL_NAME, and STUDENT_NAME.
+        </p>
+
+        <p ng-show="justPosNeg">Select whether this comment is positive, neutral or negative in tone:</p>
+
+        <p ng-show="justPosNeg">"<span ng-bind="editingComment.comment_text"></span>"</p>
+
+        <md-input-container ng-show="!justPosNeg">
+            <label>Editing Password</label>
+            <input type="text" ng-model="editingPasswordTry">
+            <md-tooltip class="tooltip">
+                Enter the password to edit comment text
+            </md-tooltip>
+        </md-input-container>
+
+        <md-input-container ng-click="showTextEdit = true" ng-hide="justPosNeg">
+            <label>Comment Text</label>
+            <input type="text" required md-maxlength="255" ng-disabled="editingPasswordTry.length < 1" ng-model="editingComment.comment_text">
+            <md-tooltip class="tooltip">
+                A password is required to edit comment text
+            </md-tooltip>
+        </md-input-container>
+
+        <md-input-container>
+            <label>Comment Tone</label>
+            <md-select ng-model="editingComment.pos_neg">
+                <md-option ng-value="1">positive</md-option>
+                <md-option ng-value="0">neutral</md-option>
+                <md-option ng-value="-1">negative</md-option>
+            </md-select>
+            <md-tooltip class="tooltip">
+                Edit comment tone; no password required
+            </md-tooltip>
+        </md-input-container>
+
+        <md-button ng-click="closeDialog()">Cancel</md-button>
+        <md-button ng-click="saveDialog()">Save</md-button>
+
+    </md-dialog-content>
+</md-dialog>

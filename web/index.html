@@ -168,41 +168,62 @@
 
                     </div>
 
+                    <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
 
-                    <md-input-container>
-                        <label>Search Comments</label>
-                        <input type="text" ng-model="searchComments">
-                        <md-tooltip class="tooltip">
-                            Instant search on comments. This is the best way to find comments if you have an idea of what you want to say.
-                        </md-tooltip>
-                    </md-input-container>
+                        <md-input-container flex>
+                            <label>Search Comments</label>
+                            <input type="text" ng-model="searchComments">
+                            <md-tooltip class="tooltip">
+                                Instant search on comments. This is the best way to find comments if you have an idea of what you want to say.
+                            </md-tooltip>
+                        </md-input-container>
+
+                        <md-input-container flex>
+                            <label>Filter on Tone</label>
+                            <md-select ng-model="toneFilterSetting" md-on-close="changeFilter()">
+                                <md-option ng-value="option" ng-repeat="option in toneFilterOptions">{{option}}</md-option>
+                            </md-select>
+                        </md-input-container>
+
+                    </div>
+
 
                     <table class="comment-bank-table">
                         <tr ng-repeat="comment in comments | filter:searchComments | limitTo : commentViewLimit : commentViewBegin">
-                            <td ng-bind="comment.comment_text" ng-click="addComment(comment.comment_text, true)" class="comment-text"></td>
-                            <!--<td>-->
-                                <!--<span ng-show="comment.pos_neg == -2">very negative</span>-->
-                                <!--<span ng-show="comment.pos_neg == -1">negative</span>-->
-                                <!--<span ng-show="comment.pos_neg == 0">neutral</span>-->
-                                <!--<span ng-show="comment.pos_neg == 1">positive</span>-->
-                                <!--<span ng-show="comment.pos_neg == 2">very positive</span>-->
-                                <!--<span ng-show="!comment.pos_neg">unrated</span>-->
-                                <!--<md-tooltip class="tooltip">-->
-                                    <!--Click to rate this comment-->
-                                <!--</md-tooltip>-->
-                            <!--</td>-->
-                            <!--<td class="comment-edit">-->
-                                <!--<i title="Edit this comment" class="material-icons">star_half</i>-->
-                                <!--<md-tooltip class="tooltip">-->
-                                    <!--Rate this comment from positive to negative-->
-                                <!--</md-tooltip>-->
-                            <!--</td>-->
-                            <!--<td class="comment-edit">-->
-                                <!--<i title="Edit this comment" class="material-icons">mode_edit</i>-->
-                                <!--<md-tooltip class="tooltip">-->
-                                    <!--Edit this comment-->
-                                <!--</md-tooltip>-->
-                            <!--</td>-->
+                            <td ng-click="showEditDialog(comment, true)">
+                                <span ng-show="comment.pos_neg == -1" class="negative">
+                                    <i class="material-icons">thumb_down</i>
+                                    <md-tooltip class="tooltip" md-direction="right">
+                                        This comment has been rated as negative, click to edit
+                                    </md-tooltip>
+                                </span>
+                                <span ng-show="comment.pos_neg == 0" class="neutral">
+                                    <i class="material-icons">thumbs_up_down</i>
+                                    <md-tooltip class="tooltip" md-direction="right">
+                                        This comment has been rated as neutral, click to edit
+                                    </md-tooltip>
+                                </span>
+                                <span ng-show="comment.pos_neg == 1" class="positive">
+                                    <i class="material-icons">thumb_up</i>
+                                    <md-tooltip class="tooltip" md-direction="right">
+                                        This comment has been rated as positive, click to edit
+                                    </md-tooltip>
+                                </span>
+                                <span ng-show="!comment.pos_neg && comment.pos_neg != 0" class="unrated">
+                                    <i class="material-icons">rate_review</i>
+                                    <md-tooltip class="tooltip" md-direction="right">
+                                        This comment has not yet been rated, click to edit
+                                    </md-tooltip>
+                                </span>
+                            </td>
+                            <td ng-bind="comment.comment_text" ng-click="addComment(comment.comment_text, true)" class="comment-text">
+                            </td>
+                            <td class="comment-edit" class="comment-edit" ng-click="showEditDialog(comment, false)">
+                                <i title="Edit this comment" class="material-icons">mode_edit</i>
+                                <md-tooltip class="tooltip" md-direction="left">
+                                    Edit this comment
+                                </md-tooltip>
+                            </td>
                             <!--<td class="comment-delete">-->
                                 <!--<i title="Delete this comment" class="material-icons">delete</i>-->
                                 <!--<md-tooltip class="tooltip">-->
