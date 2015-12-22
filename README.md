@@ -7,7 +7,9 @@ This is a web app I made to help my friends and other ESL / TESOL teachers build
 Database connection properties should be in a file called app.properties in com.utilities. It should look like this:
 
 _database-host = jdbc:mysql://theaddressofyourdatabase:3306/comment_breeze
+
 database-user = awesome-admin-9000
+
 database-password = password1234_
 
 There should also be a setting in there for editing password like this:
