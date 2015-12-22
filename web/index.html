@@ -62,11 +62,32 @@
                             I have written code to help me go through and format comments in a semi-automated way, but it's not perfect.
                         </p>
 
-                        <!--<p>
+                        <h3 ng-show="isMobile">Mobile Warning</h3>
+
+                        <p class="paragraphs" ng-show="isMobile">
+                            I've done my best to make this site responsive and accessible on mobile devices as well as computers.
+                            But if you are visiting this on a mobile site you might want to note a couple things.
+                            Firstly the page is very javascript heavy, and may suffer from slow performance on mobile devices with limited computing power.
+                            The tooltips are turned off for mobile users due to not having a mouse to hover over things with and also them taking up a much higher percentage of the screen.
+                            I currently detect mobile users by looking at whether the screen is less than 1200px wide; if you're seeing this message it means you initially loaded the page under 1200px.
+                        </p>
+
+                        <h3>How is it made?</h3>
+
+                        <p class="paragraphs">
+                            Angular JS framework w/ Angular Material<br>
+                            Java backend, Jersey for REST<br>
+                            MySQL database<br>
+                            Everything is hosted on AWS<br>
+                        </p>
+
+                        <p>
                             <img src="images/Logo-Black-128px-TM.png" height="40px">
 
                             <img src="images/Octocat.png" height="90px">
-                        </p>-->
+                        </p>
+
+                        <br><br><br><br><br><br>
                     </md-content>
                     </div>
             </md-tab-body>
@@ -78,7 +99,7 @@
             </md-tab-label>
             <md-tab-body>
                 <div class="all-tabs">
-                    <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
+                    <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill class="darkula-background">
                         <div flex>
                             <form ng-submit="blurClassName()">
                                 <md-input-container class="input-container">
@@ -86,7 +107,7 @@
                                     <input type="text" ng-model="className" ng-blur="blurClassName()">
                                 </md-input-container>
                                 <button class="invisible-button" type="submit">Submit</button>
-                                <md-tooltip class="tooltip">
+                                <md-tooltip ng-hide="isMobile" class="tooltip">
                                     Will replace instance of CLASS_NAME in comments
                                 </md-tooltip>
                             </form>
@@ -98,7 +119,7 @@
                                     <input type="text" ng-model="studentName" ng-blur="blurStudentName()">
                                 </md-input-container>
                                 <button class="invisible-button" type="submit">Submit</button>
-                                <md-tooltip class="tooltip">
+                                <md-tooltip ng-hide="isMobile" class="tooltip">
                                     Will replace instance of STUDENT_NAME in comments
                                 </md-tooltip>
                             </form>
@@ -109,7 +130,7 @@
                                 <md-radio-button ng-model="studentGender" value="female" ng-click="fixCommentPronouns()" >Female</md-radio-button>
                                 <md-radio-button ng-model="studentGender" value="neutral" ng-click="fixCommentPronouns()" >Neutral</md-radio-button>
                             </md-radio-group>
-                            <md-tooltip class="tooltip">
+                            <md-tooltip ng-hide="isMobile" class="tooltip">
                                 Will attempt to fix gendered pronouns
                             </md-tooltip>
                         </div>
@@ -117,7 +138,7 @@
                             <md-input-container>
                                 <label>Make Something Up Size</label>
                                 <input type="number" ng-model="makeSomethingUpSize" min="1" max="100">
-                                <md-tooltip class="tooltip">
+                                <md-tooltip ng-hide="isMobile" class="tooltip">
                                     Number of comments to randomly generate
                                 </md-tooltip>
                             </md-input-container>
@@ -126,18 +147,18 @@
 
                     <br/>
 
-                    <div class="your-comment-div">
+                    <div class="your-comment-div" class="darkula-background">
                         <textarea width="98%" placeholder="Your custom introduction goes here, this will not be erased when you hit 'Reset Comments'" rows="2" type="text" ng-model="yourCommentIntroduction" class="comment-text-box darkula-background"></textarea>
                         <textarea width="98%" placeholder="Your comments go here, add comments by clicking below and edit them as needed" rows="7" type="text" ng-model="yourComment" class="comment-text-box darkula-background"></textarea>
                         <textarea width="98%" placeholder="Your custom conclusion goes here, this will not be erased when you hit 'Reset Comments'" rows="2" type="text" ng-model="yourCommentConclusion" class="comment-text-box darkula-background"></textarea>
                     </div>
 
-                    <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
+                    <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill class="darkula-background">
 
                         <md-button aria-label="Copy Comments" md-ink-ripple flex class="md-button md-raised md-primary three-buttons" md-ripple-size="auto" clipboard text="yourCommentIntroduction + ' ' + yourComment + ' ' + yourCommentConclusion">
                             <i class="material-icons inline-icon">content_copy</i>
                             <span>Copy Comments</span>
-                            <md-tooltip class="tooltip">
+                            <md-tooltip ng-hide="isMobile" class="tooltip">
                                 Copies everything above to the clipboard
                             </md-tooltip>
                         </md-button>
@@ -145,7 +166,7 @@
                         <md-button aria-label="Reset Comments" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="resetYourComment()">
                             <i class="material-icons inline-icon">refresh</i>
                             <span>Reset Comments</span>
-                            <md-tooltip class="tooltip">
+                            <md-tooltip ng-hide="isMobile" class="tooltip">
                                 Erases the comments, but not the introduction or conclusion
                             </md-tooltip>
                         </md-button>
@@ -153,7 +174,7 @@
                         <md-button aria-label="Reset Comments" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="shuffleComment()">
                             <i class="material-icons inline-icon">shuffle</i>
                             <span>Shuffle Comments</span>
-                            <md-tooltip class="tooltip">
+                            <md-tooltip ng-hide="isMobile" class="tooltip" md-autohide="true">
                                 Rearranges the comment sentences in random order
                             </md-tooltip>
                         </md-button>
@@ -161,96 +182,103 @@
                         <md-button aria-label="Just Make Something Up" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="makeSomethingUp()">
                             <i class="material-icons inline-icon">warning</i>
                             Just Make Something Up
-                            <md-tooltip class="tooltip">
+                            <md-tooltip ng-hide="isMobile" class="tooltip">
                                 Generates {{makeSomethingUpSize}} random comments
                             </md-tooltip>
                         </md-button>
 
                     </div>
 
-                    <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
+                    <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill class="darkula-background">
 
-                        <md-input-container flex>
+                        <md-input-container flex="75">
                             <label>Search Comments</label>
                             <input type="text" ng-model="searchComments">
-                            <md-tooltip class="tooltip">
+                            <md-tooltip ng-hide="isMobile" class="tooltip">
                                 Instant search on comments. This is the best way to find comments if you have an idea of what you want to say.
                             </md-tooltip>
                         </md-input-container>
 
-                        <md-input-container flex>
+                        <md-input-container flex="25">
                             <label>Filter on Tone</label>
                             <md-select ng-model="toneFilterSetting" md-on-close="changeFilter()">
                                 <md-option ng-value="option" ng-repeat="option in toneFilterOptions">{{option}}</md-option>
                             </md-select>
                         </md-input-container>
 
+                        <!--<md-button flex="25" ng-disabled="searchComments.length == 0 && toneFilterSetting == 'Any'" aria-label="Clear search and filter" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="makeSomethingUp()">-->
+                            <!--<i class="material-icons inline-icon">clear</i>-->
+                            <!--Clear Filters-->
+                            <!--<md-tooltip ng-hide="isMobile" class="tooltip">-->
+                                <!--Generates {{makeSomethingUpSize}} random comments-->
+                            <!--</md-tooltip>-->
+                        <!--</md-button>-->
+
+
                     </div>
 
+                    <md-progress-circular md-mode="indeterminate" ng-hide="commentsLoaded" class="waiting-spinner"></md-progress-circular>
 
-                    <table class="comment-bank-table">
-                        <tr ng-repeat="comment in comments | filter:searchComments | limitTo : commentViewLimit : commentViewBegin">
-                            <td ng-click="showEditDialog(comment, true)">
+                    <div ng-show="commentsLoaded">
+                        <table class="comment-bank-table">
+                            <tr ng-repeat="comment in comments | filter:searchComments | limitTo : commentViewLimit : commentViewBegin" class="darkula-background">
+                                <td ng-click="showEditCommentDialog(comment)">
                                 <span ng-show="comment.pos_neg == -1" class="negative">
                                     <i class="material-icons">thumb_down</i>
-                                    <md-tooltip class="tooltip" md-direction="right">
+                                    <md-tooltip ng-hide="isMobile" class="tooltip" md-direction="right">
                                         This comment has been rated as negative, click to edit
                                     </md-tooltip>
                                 </span>
                                 <span ng-show="comment.pos_neg == 0" class="neutral">
                                     <i class="material-icons">thumbs_up_down</i>
-                                    <md-tooltip class="tooltip" md-direction="right">
+                                    <md-tooltip ng-hide="isMobile" class="tooltip" md-direction="right">
                                         This comment has been rated as neutral, click to edit
                                     </md-tooltip>
                                 </span>
                                 <span ng-show="comment.pos_neg == 1" class="positive">
                                     <i class="material-icons">thumb_up</i>
-                                    <md-tooltip class="tooltip" md-direction="right">
+                                    <md-tooltip ng-hide="isMobile" class="tooltip" md-direction="right">
                                         This comment has been rated as positive, click to edit
                                     </md-tooltip>
                                 </span>
                                 <span ng-show="!comment.pos_neg && comment.pos_neg != 0" class="unrated">
                                     <i class="material-icons">rate_review</i>
-                                    <md-tooltip class="tooltip" md-direction="right">
+                                    <md-tooltip ng-hide="isMobile" class="tooltip" md-direction="right">
                                         This comment has not yet been rated, click to edit
                                     </md-tooltip>
                                 </span>
-                            </td>
-                            <td ng-bind="comment.comment_text" ng-click="addComment(comment.comment_text, true)" class="comment-text">
-                            </td>
-                            <td class="comment-edit" class="comment-edit" ng-click="showEditDialog(comment, false)">
-                                <i title="Edit this comment" class="material-icons">mode_edit</i>
-                                <md-tooltip class="tooltip" md-direction="left">
-                                    Edit this comment
-                                </md-tooltip>
-                            </td>
-                            <!--<td class="comment-delete">-->
-                                <!--<i title="Delete this comment" class="material-icons">delete</i>-->
-                                <!--<md-tooltip class="tooltip">-->
-                                    <!--Delete this comment-->
-                                <!--</md-tooltip>-->
-                            <!--</td>-->
-                        </tr>
-                    </table>
+                                </td>
+                                <td ng-bind="comment.comment_text" ng-click="addComment(comment.comment_text, true)" class="comment-text">
+                                </td>
+                                <td class="comment-edit" class="comment-edit" ng-click="showEditDialog(comment, false)">
+                                    <i title="Edit this comment" class="material-icons">mode_edit</i>
+                                    <md-tooltip ng-hide="isMobile" class="tooltip" md-direction="left">
+                                        Edit this comment
+                                    </md-tooltip>
+                                </td>
+                            </tr>
+                        </table>
 
-                    <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
-                        <md-select flex ng-model="commentViewLimit" ng-change="changeCommentsPerPage()" width="50%">
-                            <md-select-label>Per Page:</md-select-label>
-                            <!--<md-option ng-value="10">10</md-option>-->
-                            <md-option ng-value="20">20</md-option>
-                            <md-option ng-value="50">50</md-option>
-                            <md-option ng-value="100">100</md-option>
-                            <md-option ng-value="1000">1,000</md-option>
-                        </md-select>
+                        <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill class="darkula-background">
+                            <md-select flex ng-model="commentViewLimit" ng-change="changeCommentsPerPage()" width="50%">
+                                <md-select-label>Per Page:</md-select-label>
+                                <!--<md-option ng-value="10">10</md-option>-->
+                                <md-option ng-value="20">20</md-option>
+                                <md-option ng-value="50">50</md-option>
+                                <md-option ng-value="100">100</md-option>
+                                <md-option ng-value="1000">1,000</md-option>
+                            </md-select>
 
-                        <div flex>
-                            <div align="right">
-                                <button class="md-button" md-ink-ripple ng-show="totalCommentPages > 1 && currentCommentsPage > 1" ng-click="changeCommentsPage(currentCommentsPage - 1)" style="display: inline-block; padding: .5em;">&#9664;</button>
-                                <span style="font-size: smaller;">Page <span ng-bind="currentCommentsPage"></span> of <span ng-bind="totalCommentPages"></span></span>
-                                <button class="md-button" md-ink-ripple ng-show="totalCommentPages > 1 && currentCommentsPage < totalCommentPages" ng-click="changeCommentsPage(currentCommentsPage + 1)" style="display: inline-block; padding: .5em;">&#9654;</button>
+                            <div flex>
+                                <div align="right">
+                                    <button class="md-button" md-ink-ripple ng-show="totalCommentPages > 1 && currentCommentsPage > 1" ng-click="changeCommentsPage(currentCommentsPage - 1)" style="display: inline-block; padding: .5em;">&#9664;</button>
+                                    <span style="font-size: smaller;">Page <span ng-bind="currentCommentsPage"></span> of <span ng-bind="totalCommentPages"></span></span>
+                                    <button class="md-button" md-ink-ripple ng-show="totalCommentPages > 1 && currentCommentsPage < totalCommentPages" ng-click="changeCommentsPage(currentCommentsPage + 1)" style="display: inline-block; padding: .5em;">&#9654;</button>
+                                </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </md-tab-body>
         </md-tab>
@@ -287,7 +315,7 @@
                                 <!--<input type="text" ng-model="className" ng-blur="addStudent()">-->
                             <!--</md-input-container>-->
                             <!--<button class="invisible-button" type="submit">Submit</button>-->
-                            <!--<md-tooltip class="tooltip">-->
+                            <!--<md-tooltip ng-hide="isMobile" class="tooltip">-->
                                 <!--Add all the students that you would like to make comments for today-->
                             <!--</md-tooltip>-->
                         <!--</form>-->

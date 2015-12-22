@@ -2,16 +2,12 @@
     <md-dialog-content style="padding: 2em;">
         <h2>Edit Comment</h2>
 
-        <p ng-show="!justPosNeg">
-            A password is currently required to edit comment text, but anybody may edit comment tone.<br><br>
-            Available variables are CLASS_NAME, SCHOOL_NAME, and STUDENT_NAME.
+        <p ng-show>
+            A password is currently required to edit comment text, but anybody can edit comment tone.<br><br>
+            Available variables are CLASS_NAME and STUDENT_NAME.
         </p>
 
-        <p ng-show="justPosNeg">Select whether this comment is positive, neutral or negative in tone:</p>
-
-        <p ng-show="justPosNeg">"<span ng-bind="editingComment.comment_text"></span>"</p>
-
-        <md-input-container ng-show="!justPosNeg">
+        <md-input-container>
             <label>Editing Password</label>
             <input type="text" ng-model="editingPasswordTry">
             <md-tooltip class="tooltip">
@@ -19,7 +15,7 @@
             </md-tooltip>
         </md-input-container>
 
-        <md-input-container ng-click="showTextEdit = true" ng-hide="justPosNeg">
+        <md-input-container>
             <label>Comment Text</label>
             <input type="text" required md-maxlength="255" ng-disabled="editingPasswordTry.length < 1" ng-model="editingComment.comment_text">
             <md-tooltip class="tooltip">

@@ -42,7 +42,7 @@ public class CommentResource {
         if (updated || lastCached.isBefore(LocalDateTime.now().minusDays(1)) || comments == null || comments.length() == 0) {
             System.out.println("Has been over 1 day, will reload cache");
             DatabaseHandler databaseHandler = new DatabaseHandler();
-            comments = databaseHandler.getJSONArrayFor("SELECT comment_id, comment_text, pos_neg FROM comment_breeze.comments WHERE deleted = FALSE GROUP BY comment_text ORDER BY RAND()");
+            comments = databaseHandler.getJSONArrayFor("SELECT comment_id, comment_text, COALESCE(verified_pos_neg, pos_neg) as pos_neg FROM comment_breeze.comments WHERE deleted = FALSE GROUP BY comment_text ORDER BY RAND()");
             databaseHandler.closeConnection();
             updated = false;
         } else {
@@ -60,8 +60,7 @@ public class CommentResource {
         JSONObject jsonObject = new JSONObject();
 
         // TODO: implement ip level password attempt blocking as well as global password attempt blocking
-        System.out.println("Getting request from " + request.getRemoteAddr());
-        jsonObject.put("address", request.getRemoteAddr());
+        String ipAddress = request.getRemoteAddr();
 
         // see if we have the editing password set
         if (editingPasswordAnswer == null || editingPasswordAnswer.isEmpty()) {
@@ -69,50 +68,62 @@ public class CommentResource {
             editingPasswordAnswer = appProperties.getEditingPassword();
         }
 
-        DatabaseHandler databaseHandler = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            databaseHandler = new DatabaseHandler();
-            preparedStatement = databaseHandler.getConnection().prepareStatement(
-                "UPDATE comments SET comment_text = IFNULL(?, comment_text), pos_neg = IFNULL(?, pos_neg), deleted = IFNULL(?, deleted) WHERE comment_id = ?"
-            );
-
-            boolean canEdit = false;
-            if (editingPasswordAnswer != null && editingPasswordTry != null && !editingPasswordTry.isEmpty()) {
-                if (passwordLockoutUntil.isAfter(LocalDateTime.now())) {
-                    jsonObject.put("message", "Password attempts locked out until " + passwordLockoutUntil.toString());
+        boolean canEdit = false;
+        if (editingPasswordAnswer != null && editingPasswordTry != null && !editingPasswordTry.isEmpty()) {
+            if (passwordLockoutUntil.isAfter(LocalDateTime.now())) {
+                jsonObject.put("message", "Password attempts locked out until " + passwordLockoutUntil.toString());
+            } else {
+                if (editingPasswordAnswer.equals(editingPasswordTry)) {
+                    canEdit = true;
                 } else {
-                    if (editingPasswordAnswer.equals(editingPasswordTry)) {
-                        canEdit = true;
+                    jsonObject.put("passfail", true);
+                    if (incrementPasswordFail()) {
+                        jsonObject.put("message", "Max password fail attempts reached - locking out");
                     } else {
-                        jsonObject.put("passfail", true);
-                        if (incrementPasswordFail()) {
-                            jsonObject.put("message", "Max password fail attempts reached - locking out");
-                        } else {
-                            jsonObject.put("message", "Incorrect password; " + (MAX_PASSWORD_TRIES - passwordFails.size() + 1) + " more tries until lockout");
-                        }
+                        jsonObject.put("message", "Incorrect password; " + (MAX_PASSWORD_TRIES - passwordFails.size() + 1) + " more tries until lockout");
                     }
                 }
             }
+        }
+
+        DatabaseHandler databaseHandler = null;
+        PreparedStatement preparedStatement = null;
+        try {
 
             // if a password attempt ended in failure we don't try
             if (!jsonObject.has("passfail")) {
+
+                databaseHandler = new DatabaseHandler();
+                preparedStatement = databaseHandler.getConnection().prepareStatement(
+                    "UPDATE comments SET comment_text = IFNULL(?, comment_text), pos_neg = IFNULL(?, pos_neg), verified_pos_neg = IFNULL(?, pos_neg), deleted = IFNULL(?, deleted), last_update_ip = IFNULL(?, last_update_ip), last_update = CURRENT_TIMESTAMP WHERE comment_id = ?"
+                );
+
                 if (comment.has("comment_text") && canEdit) {
                     preparedStatement.setString(1, comment.getString("comment_text"));
                 } else {
                     preparedStatement.setNull(1, Types.VARCHAR);
                 }
-                if (comment.has("pos_neg")) {
+                if (comment.has("pos_neg") && !canEdit) {
                     preparedStatement.setInt(2, comment.getInt("pos_neg"));
                 } else {
                     preparedStatement.setNull(2, Types.INTEGER);
                 }
-                if (comment.has("deleted") && canEdit) {
-                    preparedStatement.setBoolean(3, comment.getBoolean("deleted"));
+                if (comment.has("pos_neg") && canEdit) {
+                    preparedStatement.setInt(3, comment.getInt("pos_neg"));
                 } else {
-                    preparedStatement.setBoolean(3, false);
+                    preparedStatement.setNull(3, Types.INTEGER);
                 }
-                preparedStatement.setInt(4, comment.getInt("comment_id"));
+                if (comment.has("deleted") && canEdit) {
+                    preparedStatement.setBoolean(4, comment.getBoolean("deleted"));
+                } else {
+                    preparedStatement.setBoolean(4, false);
+                }
+                if (ipAddress != null && !ipAddress.isEmpty()) {
+                    preparedStatement.setString(5, ipAddress);
+                } else {
+                    preparedStatement.setNull(5, Types.VARCHAR);
+                }
+                preparedStatement.setInt(6, comment.getInt("comment_id"));
 
                 System.out.println(preparedStatement);
                 int result = preparedStatement.executeUpdate();
