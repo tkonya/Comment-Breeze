@@ -28,7 +28,7 @@
 </head>
 <body ng-app="commentApp" ng-controller="CommentController" class="darkula-background">
 
-    <md-tabs md-dynamic-height="true" md-center-tabs="true">
+    <md-tabs md-dynamic-height="true" md-center-tabs="true" md-swipe-content="true">
         <md-tab>
             <md-tab-label>
                 Comment Breeze
@@ -36,6 +36,7 @@
             <md-tab-body>
                 <div class="all-tabs main-tab">
                     <md-content>
+                        <br>
                         <h3>Welcome to Comment Breeze!</h3>
 
                         <p class="paragraphs">
@@ -81,13 +82,13 @@
                             Everything is hosted on AWS<br>
                         </p>
 
-                        <p>
-                            <img src="images/Logo-Black-128px-TM.png" height="40px">
+                        <!--<p>-->
+                            <!--<img src="images/Logo-Black-128px-TM.png" height="40px">-->
 
-                            <img src="images/Octocat.png" height="90px">
-                        </p>
+                            <!--<img src="images/Octocat.png" height="90px">-->
+                        <!--</p>-->
 
-                        <br><br><br><br><br><br>
+                        <br><br><br><br>
                     </md-content>
                     </div>
             </md-tab-body>
@@ -100,7 +101,8 @@
             <md-tab-body>
                 <div class="all-tabs">
                     <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill class="darkula-background">
-                        <div flex>
+
+                        <div flex-gt-lg="30">
                             <form ng-submit="blurClassName()">
                                 <md-input-container class="input-container">
                                     <label>Class Name</label>
@@ -112,7 +114,8 @@
                                 </md-tooltip>
                             </form>
                         </div>
-                        <div flex>
+
+                        <div flex-gt-lg="30">
                             <form ng-submit="blurStudentName()">
                                 <md-input-container class="input-container">
                                     <label>Student Name</label>
@@ -124,7 +127,8 @@
                                 </md-tooltip>
                             </form>
                         </div>
-                        <div flex>
+
+                        <div flex-gt-lg="25">
                             <md-radio-group ng-model="studentGender" layout="row">
                                 <md-radio-button ng-model="studentGender" value="male" ng-click="fixCommentPronouns()" selected>Male</md-radio-button>
                                 <md-radio-button ng-model="studentGender" value="female" ng-click="fixCommentPronouns()" >Female</md-radio-button>
@@ -134,7 +138,8 @@
                                 Will attempt to fix gendered pronouns
                             </md-tooltip>
                         </div>
-                        <div flex>
+
+                        <div flex-gt-lg="15">
                             <md-input-container>
                                 <label>Make Something Up Size</label>
                                 <input type="number" ng-model="makeSomethingUpSize" min="1" max="100">
@@ -143,6 +148,7 @@
                                 </md-tooltip>
                             </md-input-container>
                         </div>
+
                     </div>
 
                     <br/>
@@ -191,7 +197,7 @@
 
                     <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill class="darkula-background">
 
-                        <md-input-container flex="75">
+                        <md-input-container flex-gt-lg="75">
                             <label>Search Comments</label>
                             <input type="text" ng-model="searchComments">
                             <md-tooltip ng-hide="isMobile" class="tooltip">
@@ -199,21 +205,12 @@
                             </md-tooltip>
                         </md-input-container>
 
-                        <md-input-container flex="25">
+                        <md-input-container flex-gt-lg="25">
                             <label>Filter on Tone</label>
                             <md-select ng-model="toneFilterSetting" md-on-close="changeFilter()">
                                 <md-option ng-value="option" ng-repeat="option in toneFilterOptions">{{option}}</md-option>
                             </md-select>
                         </md-input-container>
-
-                        <!--<md-button flex="25" ng-disabled="searchComments.length == 0 && toneFilterSetting == 'Any'" aria-label="Clear search and filter" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="makeSomethingUp()">-->
-                            <!--<i class="material-icons inline-icon">clear</i>-->
-                            <!--Clear Filters-->
-                            <!--<md-tooltip ng-hide="isMobile" class="tooltip">-->
-                                <!--Generates {{makeSomethingUpSize}} random comments-->
-                            <!--</md-tooltip>-->
-                        <!--</md-button>-->
-
 
                     </div>
 

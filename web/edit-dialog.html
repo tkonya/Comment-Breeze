@@ -2,7 +2,7 @@
     <md-dialog-content style="padding: 2em;">
         <h2>Edit Comment</h2>
 
-        <p ng-show>
+        <p>
             A password is currently required to edit comment text, but anybody can edit comment tone.<br><br>
             Available variables are CLASS_NAME and STUDENT_NAME.
         </p>
@@ -23,20 +23,33 @@
             </md-tooltip>
         </md-input-container>
 
-        <md-input-container>
-            <label>Comment Tone</label>
-            <md-select ng-model="editingComment.pos_neg">
-                <md-option ng-value="1">positive</md-option>
-                <md-option ng-value="0">neutral</md-option>
-                <md-option ng-value="-1">negative</md-option>
-            </md-select>
-            <md-tooltip class="tooltip">
+        <!--<md-input-container>-->
+            <!--<label>Comment Tone</label>-->
+            <!--<md-select ng-model="editingComment.pos_neg">-->
+                <!--<md-option ng-value="1">positive</md-option>-->
+                <!--<md-option ng-value="0">neutral</md-option>-->
+                <!--<md-option ng-value="-1">negative</md-option>-->
+            <!--</md-select>-->
+            <!--<md-tooltip class="tooltip">-->
+                <!--Edit comment tone; no password required-->
+            <!--</md-tooltip>-->
+        <!--</md-input-container>-->
+
+        Select comment tone:
+        <div>
+            <md-radio-group ng-model="editingComment.pos_neg" layout="row">
+                <md-radio-button ng-model="studentGender" value="1">Positive</md-radio-button>
+                <md-radio-button ng-model="studentGender" value="0">Neutral</md-radio-button>
+                <md-radio-button ng-model="studentGender" value="-1">Negative</md-radio-button>
+            </md-radio-group>
+            <md-tooltip ng-hide="isMobile" class="tooltip">
                 Edit comment tone; no password required
             </md-tooltip>
-        </md-input-container>
+        </div>
+        <br>
 
-        <md-button ng-click="closeDialog()">Cancel</md-button>
-        <md-button ng-click="saveDialog()">Save</md-button>
+        <md-button md-ink-ripple flex class="md-button md-raised md-primary" ng-click="saveDialog()">Save</md-button>
+        <md-button md-ink-ripple flex class="md-button md-raised md-primary" ng-click="closeDialog()">Cancel</md-button>
 
     </md-dialog-content>
 </md-dialog>

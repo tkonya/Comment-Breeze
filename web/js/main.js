@@ -106,7 +106,7 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
 
             $mdToast.show(
                 {
-                    template: '<md-toast style="overflow: hidden; position: fixed;">Gender pronouns changed</md-toast>',
+                    template: '<md-toast style="overflow: hidden; position: fixed;">Gender pronouns changed to ' + $scope.studentGender + '</md-toast>',
                     position: 'top left'
                 }
             );
@@ -167,7 +167,7 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
 
         $mdToast.show(
             {
-                template: '<md-toast style="overflow: hidden; position: fixed;">Student name changed</md-toast>',
+                template: '<md-toast style="overflow: hidden; position: fixed;">Student name changed to ' + $scope.studentName + '</md-toast>',
                 position: 'top left'
             }
         );
@@ -187,7 +187,7 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
 
         $mdToast.show(
             {
-                template: '<md-toast style="overflow: hidden; position: fixed;">Class name changed</md-toast>',
+                template: '<md-toast style="overflow: hidden; position: fixed;">Class name changed to ' + $scope.className + '</md-toast>',
                 position: 'top left'
             }
         );
@@ -290,8 +290,7 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
 
         console.log('showing custom greeting');
         $scope.editingComment = comment;
-
-        $scope.originalPosNeg = comment.pos_neg;
+        $scope.originalComment = comment;
 
         $mdDialog.show({
             clickOutsideToClose: true,
@@ -301,7 +300,7 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
             controller: function DialogController($scope, $mdDialog) {
                 $scope.closeDialog = function () {
                     $mdDialog.hide();
-                    $scope.editingComment.pos_neg = $scope.originalPosNeg;
+                    $scope.editingComment= $scope.originalComment;
 
                     // if they don't have the right password then blank out the password and undo the showTextEdit
                     if ($scope.editingPasswordTry.slice(0, 10) != 'industrial') {
