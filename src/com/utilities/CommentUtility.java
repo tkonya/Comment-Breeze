@@ -18,6 +18,8 @@ public class CommentUtility {
 
         DatabaseHandler databaseHandler = new DatabaseHandler();
 
+        addStudentName("Dylan", databaseHandler);
+
         // rescrubbing student names
 //        Collection<String> studentNames = databaseHandler.getCollection(new ArrayList<String>(), "SELECT student_name FROM student_names");
 //        for (String name : studentNames) {

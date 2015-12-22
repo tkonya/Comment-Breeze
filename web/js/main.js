@@ -104,12 +104,7 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
             $scope.yourComment = $scope.fixGenderPronouns($scope.yourComment);
             $scope.yourCommentConclusion = $scope.fixGenderPronouns($scope.yourCommentConclusion);
 
-            $mdToast.show(
-                {
-                    template: '<md-toast style="overflow: hidden; position: fixed;">Gender pronouns changed to ' + $scope.studentGender + '</md-toast>',
-                    position: 'top left'
-                }
-            );
+            $scope.illToastToThat('Gender pronouns changed to ' + $scope.studentGender)
 
         }, 50);
     };
@@ -165,12 +160,7 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
         $scope.yourComment = $scope.replaceStudentName($scope.yourComment, true);
         $scope.yourCommentConclusion = $scope.replaceStudentName($scope.yourCommentConclusion);
 
-        $mdToast.show(
-            {
-                template: '<md-toast style="overflow: hidden; position: fixed;">Student name changed to ' + $scope.studentName + '</md-toast>',
-                position: 'top left'
-            }
-        );
+        $scope.illToastToThat('Student name changed to ' + $scope.studentName);
     };
 
     $scope.blurClassName = function() {
@@ -265,12 +255,8 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
             $scope.addComment(randomComment.comment_text, false);
         }
 
-        $mdToast.show(
-            {
-                template: '<md-toast class="toast-style">Random comment generated</md-toast>',
-                position: 'top left'
-            }
-        );
+        $scope.illToastToThat('Random comment generated');
+
     };
 
     $scope.shuffleComment = function() {
@@ -323,20 +309,10 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
                             $scope.editingPasswordTry = '';
                         }
 
-                        $mdToast.show(
-                            {
-                                template: '<md-toast class="toast-style">' + data.message + '</md-toast>',
-                                position: 'top left'
-                            }
-                        );
+                        $scope.illToastToThat(data.message);
 
                     }).error(function () {
-                        $mdToast.show(
-                            {
-                                template: '<md-toast class="toast-style">Error updating comment</md-toast>',
-                                position: 'top left'
-                            }
-                        );
+                        $scope.illToastToThat('Error updating comment');
                     });
                 };
             }
@@ -371,20 +347,10 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
                             $scope.editingPasswordTry = '';
                         }
 
-                        $mdToast.show(
-                            {
-                                template: '<md-toast class="toast-style">' + data.message + '</md-toast>',
-                                position: 'top left'
-                            }
-                        );
+                        $scope.illToastToThat(data.message);
 
                     }).error(function () {
-                        $mdToast.show(
-                            {
-                                template: '<md-toast class="toast-style">Error updating comment</md-toast>',
-                                position: 'top left'
-                            }
-                        );
+                        $scope.illToastToThat('Error updating comment');
                     });
                 };
             }
@@ -431,6 +397,15 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
 
     $scope.detectMobile = function() {
         $scope.isMobile = $mdMedia('(max-width: 1199px)');
+    };
+
+    $scope.illToastToThat = function(text) {
+        $mdToast.show(
+            {
+                template: '<md-toast class="toast-style">' + text + '</md-toast>',
+                position: 'top left'
+            }
+        );
     };
 
     $scope.getComments();

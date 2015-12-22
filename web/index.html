@@ -22,8 +22,8 @@
     <script src="angular-material/angular-material.js"></script>
 
     <!--meta tags-->
-    <meta name="title" content="Comment Breeze">
-    <meta name="description" content="A tiny web-app for building report card comments">
+    <meta name="title" content="Comment Breeze | ESL / TESOL Report Card Comment Generator">
+    <meta name="description" content="A web-app to help ESL and TESOL teachers build report card comments">
 
 </head>
 <body ng-app="commentApp" ng-controller="CommentController" class="darkula-background">
@@ -259,11 +259,9 @@
                         <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill class="darkula-background">
                             <md-select flex ng-model="commentViewLimit" ng-change="changeCommentsPerPage()" width="50%">
                                 <md-select-label>Per Page:</md-select-label>
-                                <!--<md-option ng-value="10">10</md-option>-->
+                                <md-option ng-value="10">10</md-option>
                                 <md-option ng-value="20">20</md-option>
                                 <md-option ng-value="50">50</md-option>
-                                <md-option ng-value="100">100</md-option>
-                                <md-option ng-value="1000">1,000</md-option>
                             </md-select>
 
                             <div flex>
