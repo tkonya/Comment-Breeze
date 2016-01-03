@@ -10,7 +10,7 @@
         <md-input-container>
             <label>Editing Password</label>
             <input type="text" ng-model="editingPasswordTry">
-            <md-tooltip class="tooltip">
+            <md-tooltip class="tooltip" ng-hide="isMobile">
                 Enter the password to edit comment text
             </md-tooltip>
         </md-input-container>
@@ -18,7 +18,7 @@
         <md-input-container>
             <label>Comment Text</label>
             <input type="text" required md-maxlength="255" ng-disabled="editingPasswordTry.length < 1" ng-model="editingComment.comment_text">
-            <md-tooltip class="tooltip">
+            <md-tooltip class="tooltip" ng-hide="isMobile">
                 A password is required to edit comment text
             </md-tooltip>
         </md-input-container>
@@ -30,7 +30,7 @@
                 <!--<md-option ng-value="0">neutral</md-option>-->
                 <!--<md-option ng-value="-1">negative</md-option>-->
             <!--</md-select>-->
-            <!--<md-tooltip class="tooltip">-->
+            <!--<md-tooltip class="tooltip" ng-hide="isMobile">-->
                 <!--Edit comment tone; no password required-->
             <!--</md-tooltip>-->
         <!--</md-input-container>-->

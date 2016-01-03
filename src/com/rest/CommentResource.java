@@ -1,6 +1,7 @@
 package com.rest;
 
 import com.utilities.AppProperties;
+import com.utilities.LockoutHandler;
 import org.codehaus.jettison.json.JSONArray;
 import com.utilities.DatabaseHandler;
 import org.codehaus.jettison.json.JSONException;
@@ -15,8 +16,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.time.LocalDateTime;
-import java.util.LinkedList;
-import java.util.Queue;
 
 /**
  * Created by Trevor on 10/16/2015.
@@ -30,9 +29,7 @@ public class CommentResource {
     private static boolean updated = false;
     private static String editingPasswordAnswer;
 
-    private static final int MAX_PASSWORD_TRIES = 10;
-    private static Queue<LocalDateTime> passwordFails;
-    private static LocalDateTime passwordLockoutUntil = LocalDateTime.now().minusSeconds(1);
+    private static LockoutHandler lockoutHandler = new LockoutHandler();
 
     @GET
     @Produces("application/json")
@@ -59,7 +56,6 @@ public class CommentResource {
 
         JSONObject jsonObject = new JSONObject();
 
-        // TODO: implement ip level password attempt blocking as well as global password attempt blocking
         String ipAddress = request.getRemoteAddr();
 
         // see if we have the editing password set
@@ -70,17 +66,24 @@ public class CommentResource {
 
         boolean canEdit = false;
         if (editingPasswordAnswer != null && editingPasswordTry != null && !editingPasswordTry.isEmpty()) {
-            if (passwordLockoutUntil.isAfter(LocalDateTime.now())) {
-                jsonObject.put("message", "Password attempts locked out until " + passwordLockoutUntil.toString());
+            LocalDateTime ipLockOutEndTime = lockoutHandler.getIdLockoutEndTime(ipAddress);
+            if (ipLockOutEndTime != null) {
+                jsonObject.put("message", "Password attempts locked out until " + ipLockOutEndTime.toString());
+                jsonObject.put("passfail", true);
             } else {
                 if (editingPasswordAnswer.equals(editingPasswordTry)) {
                     canEdit = true;
                 } else {
                     jsonObject.put("passfail", true);
-                    if (incrementPasswordFail()) {
-                        jsonObject.put("message", "Max password fail attempts reached - locking out");
+                    lockoutHandler.addFail(ipAddress);
+                    writePasswordFail(ipAddress);
+
+                    ipLockOutEndTime = lockoutHandler.getIdLockoutEndTime(ipAddress);
+
+                    if (ipLockOutEndTime != null) {
+                        jsonObject.put("message", "Max password fail attempts reached - locking out until " + ipLockOutEndTime.toString());
                     } else {
-                        jsonObject.put("message", "Incorrect password; " + (MAX_PASSWORD_TRIES - passwordFails.size() + 1) + " more tries until lockout");
+                        jsonObject.put("message", "Incorrect password; " + lockoutHandler.getIdLockoutTriesLeft(ipAddress) + " more tries until lockout");
                     }
                 }
             }
@@ -139,6 +142,37 @@ public class CommentResource {
         } catch (SQLException | JSONException e) {
             e.printStackTrace();
         } finally {
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (databaseHandler != null) {
+                databaseHandler.closeConnection();
+            }
+        }
+
+        return Response.ok(jsonObject.toString()).build();
+    }
+
+    private void writePasswordFail(String ipAddress) {
+        DatabaseHandler databaseHandler = null;
+        PreparedStatement preparedStatement = null;
+        try {
+
+            databaseHandler = new DatabaseHandler();
+            preparedStatement = databaseHandler.getConnection().prepareStatement(
+                "INSERT INTO password_fails (ip, `time`) VALUES (?, CURRENT_TIMESTAMP)"
+            );
+
+            preparedStatement.setString(1, ipAddress);
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
             try {
                 assert preparedStatement != null;
                 preparedStatement.close();
@@ -148,34 +182,6 @@ public class CommentResource {
             assert databaseHandler != null;
             databaseHandler.closeConnection();
         }
-
-        return Response.ok(jsonObject.toString()).build();
-    }
-
-    /**
-     * Adds a failed attempt to the list
-     *
-     * @return true if editing is locked out, false if it is not locked out
-     */
-    private boolean incrementPasswordFail() {
-        // initialize the queue if it isn't initialized already
-        if (passwordFails == null) {
-            passwordFails = new LinkedList<>();
-        }
-
-        // add the current fail to the list
-        passwordFails.add(LocalDateTime.now());
-
-        // remove any that have rolled off
-        while (passwordFails.peek().isBefore(LocalDateTime.now().minusHours(1))) {
-            passwordFails.remove();
-        }
-
-        if (passwordFails.size() > MAX_PASSWORD_TRIES) {
-            passwordLockoutUntil = LocalDateTime.now().plusHours(4);
-            return true;
-        }
-        return false;
     }
 
 }
