@@ -37,7 +37,7 @@
 
         Select comment tone:
         <div>
-            <md-radio-group ng-model="editingComment.pos_neg" layout="row">
+            <md-radio-group ng-model="editingComment.pos_neg" layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
                 <md-radio-button ng-model="studentGender" value="1">Positive</md-radio-button>
                 <md-radio-button ng-model="studentGender" value="0">Neutral</md-radio-button>
                 <md-radio-button ng-model="studentGender" value="-1">Negative</md-radio-button>
@@ -49,7 +49,7 @@
         <br>
 
         <md-button md-ink-ripple flex class="md-button md-raised md-primary" ng-click="saveDialog()">Save</md-button>
-        <md-button md-ink-ripple flex class="md-button md-raised md-primary" ng-click="closeDialog()">Cancel</md-button>
+        <md-button ng-click="closeDialog()">Cancel</md-button>
 
     </md-dialog-content>
 </md-dialog>

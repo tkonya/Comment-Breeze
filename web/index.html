@@ -28,69 +28,72 @@
 </head>
 <body ng-app="commentApp" ng-controller="CommentController" class="darkula-background">
 
-    <md-tabs md-dynamic-height="true" md-center-tabs="true" md-swipe-content="true" md-selected="1">
+    <md-tabs md-dynamic-height="true" md-center-tabs="true" md-selected="0">
         <md-tab>
             <md-tab-label>
                 Comment Breeze
             </md-tab-label>
             <md-tab-body>
                 <div class="all-tabs main-tab">
-                    <md-content>
-                        <br>
-                        <h3>Welcome to Comment Breeze!</h3>
+                    <div class="front-page-content-container">
+                        <md-content class="front-page-content">
+                            <br>
+                            <h3>Welcome to Comment Breeze!</h3>
 
-                        <p class="paragraphs">
-                            I made this site to help my friends and other ESL / TESOL teachers build report card comments.
-                        </p>
+                            <p class="paragraphs">
+                                I made this site to help my girlfriend, friends and other ESL / TESOL teachers build report card comments. If you're an ESL or TESOL teacher I hope this makes your work easier.
+                            </p>
 
-                        <h3>Why make this?</h3>
+                            <h3>Why make this?</h3>
 
-                        <p class="paragraphs">
-                            There are other tools out there, but I thought I could do something different than what I've seen.
-                            One thing I've never seen on any other report card site is any kind of search functionality.
-                            I wanted to make it so you could search a giant bank of comments for words or phrases that you have in mind.
-                            I've never seen a site that had more than a couple hundred comments, so if you were to use that site repeatedly then there wouldn't be much variation in your comments.
-                        </p>
+                            <p class="paragraphs">
+                                There are other tools out there, but I thought I could do something different than what I've seen.
+                                One thing I've never seen on any other report card site is any kind of search functionality.
+                                I wanted to make it so you could search a giant bank of comments for words or phrases that you have in mind.
+                                I've never seen a site that had more than a couple hundred comments, so if you were to use that site repeatedly then there wouldn't be much variation in your comments.
+                            </p>
 
-                        <h3>What's different about Comment Breeze?</h3>
+                            <h3>What's different about Comment Breeze?</h3>
 
-                        <p class="paragraphs">
-                            There are currently <span ng-bind="commentsLengthFormatted"></span> comments in the database.
-                            This is the greatest strength and weakness of this site.
-                            The benefit is that there are tens of thousands more comments here than any other site I've seen.
-                            Since all of the comments are loaded into your browser upfront, it means that searching them is instantaneous.
-                            The downside is that since I don't have the time (or interest) in going through and editing and categorizing all of the comments manually they are not organized or formatted as well as other sites.
-                            I have written code to help me go through and format comments in a semi-automated way, but it's not perfect.
-                        </p>
+                            <p class="paragraphs">
+                                There are currently <span ng-bind="commentsLengthFormatted"></span> comments in the database.
+                                This is the greatest strength and weakness of this site.
+                                The benefit is that there are tens of thousands more comments here than any other site I've seen.
+                                Since all of the comments are loaded into your browser upfront, it means that searching them is instantaneous.
+                                The downside is that since I don't have the time (or interest) in going through and editing and categorizing all of the comments manually they are not organized or formatted as well as other sites.
+                                I have written code to help me go through and format comments in a semi-automated way, but it's not perfect.
+                            </p>
 
-                        <h3 ng-show="isMobile">Mobile Warning</h3>
+                            <h3 ng-show="isMobile">Mobile Warning</h3>
 
-                        <p class="paragraphs" ng-show="isMobile">
-                            I've done my best to make this site responsive and accessible on mobile devices as well as computers.
-                            But if you are visiting this on a mobile site you might want to note a couple things.
-                            Firstly the page is very javascript heavy, and may suffer from slow performance on mobile devices with limited computing power.
-                            The tooltips are turned off for mobile users due to not having a mouse to hover over things with and also them taking up a much higher percentage of the screen.
-                            I currently detect mobile users by looking at whether the screen is less than 1200px wide; if you're seeing this message it means you initially loaded the page under 1200px.
-                        </p>
+                            <p class="paragraphs" ng-show="isMobile">
+                                I've done my best to make this site responsive and accessible on mobile devices as well as computers.
+                                But if you are visiting this on a mobile site you might want to note a couple things.
+                                Firstly the page is very javascript heavy, and may suffer from slow performance on mobile devices with limited computing power.
+                                The tooltips are turned off for mobile users due to not having a mouse to hover over things with and also them taking up a much higher percentage of the screen.
+                                I currently detect mobile users by looking at whether the screen is less than 1200px wide; if you're seeing this message it means you initially loaded the page under 1200px.
+                            </p>
 
-                        <h3>How is it made?</h3>
+                            <h3>How is it made?</h3>
 
-                        <p class="paragraphs">
-                            Angular JS framework w/ Angular Material<br>
-                            Java backend, Jersey for REST<br>
-                            MySQL database<br>
-                            Everything is hosted on AWS<br>
-                        </p>
+                            <p class="paragraphs">
+                                Angular JS 1.x framework w/ Angular Material<br>
+                                Java backend, Jersey for REST<br>
+                                MySQL database<br>
+                                Everything is hosted on AWS<br>
+                            </p>
 
-                        <!--<p>-->
+                            <!--<p>-->
                             <!--<img src="images/Logo-Black-128px-TM.png" height="40px">-->
 
                             <!--<img src="images/Octocat.png" height="90px">-->
-                        <!--</p>-->
+                            <!--</p>-->
 
-                        <br><br><br><br>
-                    </md-content>
+                            <br><br><br><br>
+                        </md-content>
                     </div>
+
+                </div>
             </md-tab-body>
         </md-tab>
         <md-tab>
@@ -99,14 +102,14 @@
                 Single Student
             </md-tab-label>
             <md-tab-body>
-                <div class="all-tabs">
-                    <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill class="darkula-background">
+                <div class="all-tabs darkula-background">
+                    <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
 
                         <div flex-gt-lg="30">
                             <form ng-submit="blurClassName()">
                                 <md-input-container class="input-container">
                                     <label>Class Name</label>
-                                    <input type="text" ng-model="className" ng-blur="blurClassName()">
+                                    <input type="text" ng-model="className" ng-blur="blurClassName()" >
                                 </md-input-container>
                                 <button class="invisible-button" type="submit">Submit</button>
                                 <md-tooltip ng-hide="isMobile" class="tooltip">
@@ -151,17 +154,33 @@
 
                     </div>
 
-                    <br/>
-
-                    <div class="your-comment-div" class="darkula-background">
-                        <textarea width="98%" placeholder="Your custom introduction goes here, this will not be erased when you hit 'Reset Comments'" rows="2" type="text" ng-model="yourCommentIntroduction" class="comment-text-box darkula-background"></textarea>
-                        <textarea width="98%" placeholder="Your comments go here, add comments by clicking below and edit them as needed" rows="7" type="text" ng-model="yourComment" class="comment-text-box darkula-background"></textarea>
-                        <textarea width="98%" placeholder="Your custom conclusion goes here, this will not be erased when you hit 'Reset Comments'" rows="2" type="text" ng-model="yourCommentConclusion" class="comment-text-box darkula-background"></textarea>
+                    <div>
+                        <md-input-container>
+                            <label>Custom Introduction</label>
+                            <textarea ng-model="yourCommentIntroduction" class="comment-text-box darkula-background"></textarea>
+                            <md-tooltip ng-hide="isMobile" class="tooltip" md-direction="right">
+                                This will be copied when you hit 'Copy Comments' but will not be erased when you hit 'Reset Comments'
+                            </md-tooltip>
+                        </md-input-container>
+                        <md-input-container>
+                            <label>Your comments</label>
+                            <textarea ng-model="yourComment" class="comment-text-box darkula-background"></textarea>
+                            <md-tooltip ng-hide="isMobile" class="tooltip" md-direction="right">
+                                Add comments by clicking below and edit them as needed
+                            </md-tooltip>
+                        </md-input-container>
+                        <md-input-container>
+                            <label>Custom Conclusion</label>
+                            <textarea ng-model="yourCommentConclusion" class="comment-text-box darkula-background"></textarea>
+                            <md-tooltip ng-hide="isMobile" class="tooltip" md-direction="right">
+                                This will be copied when you hit 'Copy Comments' but will not be erased when you hit 'Reset Comments'
+                            </md-tooltip>
+                        </md-input-container>
                     </div>
 
-                    <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill class="darkula-background">
+                    <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
 
-                        <md-button aria-label="Copy Comments" md-ink-ripple flex class="md-button md-raised md-primary three-buttons" md-ripple-size="auto" clipboard text="yourCommentIntroduction + ' ' + yourComment + ' ' + yourCommentConclusion">
+                        <md-button aria-label="Copy Comments" md-ink-ripple flex class="md-button md-raised md-primary three-buttons" ng-click="commentsCopied()" md-ripple-size="auto" clipboard text="yourCommentIntroduction + ' ' + yourComment + ' ' + yourCommentConclusion">
                             <i class="material-icons inline-icon">content_copy</i>
                             <span>Copy Comments</span>
                             <md-tooltip ng-hide="isMobile" class="tooltip">
@@ -195,7 +214,7 @@
 
                     </div>
 
-                    <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill class="darkula-background">
+                    <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
 
                         <md-input-container flex-gt-lg="75">
                             <label>Search Comments</label>
@@ -218,32 +237,32 @@
 
                     <div ng-show="commentsLoaded">
                         <table class="comment-bank-table">
-                            <tr ng-repeat="comment in comments | filter:searchComments | limitTo : commentViewLimit : commentViewBegin" class="darkula-background">
+                            <tr ng-repeat="comment in comments | filter:searchComments | limitTo : commentViewLimit : commentViewBegin">
                                 <td ng-click="showEditCommentDialog(comment)">
-                                <span ng-show="comment.pos_neg == -1" class="negative">
-                                    <i class="material-icons">thumb_down</i>
-                                    <md-tooltip ng-hide="isMobile" class="tooltip" md-direction="right">
-                                        This comment has been rated as negative, click to edit
-                                    </md-tooltip>
-                                </span>
-                                <span ng-show="comment.pos_neg == 0" class="neutral">
-                                    <i class="material-icons">thumbs_up_down</i>
-                                    <md-tooltip ng-hide="isMobile" class="tooltip" md-direction="right">
-                                        This comment has been rated as neutral, click to edit
-                                    </md-tooltip>
-                                </span>
-                                <span ng-show="comment.pos_neg == 1" class="positive">
-                                    <i class="material-icons">thumb_up</i>
-                                    <md-tooltip ng-hide="isMobile" class="tooltip" md-direction="right">
-                                        This comment has been rated as positive, click to edit
-                                    </md-tooltip>
-                                </span>
-                                <span ng-show="!comment.pos_neg && comment.pos_neg != 0" class="unrated">
-                                    <i class="material-icons">rate_review</i>
-                                    <md-tooltip ng-hide="isMobile" class="tooltip" md-direction="right">
-                                        This comment has not yet been rated, click to edit
-                                    </md-tooltip>
-                                </span>
+                            <span ng-show="comment.pos_neg == -1" class="negative">
+                                <i class="material-icons">thumb_down</i>
+                                <md-tooltip ng-hide="isMobile" class="tooltip" md-direction="right">
+                                    This comment has been rated as negative, click to edit
+                                </md-tooltip>
+                            </span>
+                            <span ng-show="comment.pos_neg == 0" class="neutral">
+                                <i class="material-icons">thumbs_up_down</i>
+                                <md-tooltip ng-hide="isMobile" class="tooltip" md-direction="right">
+                                    This comment has been rated as neutral, click to edit
+                                </md-tooltip>
+                            </span>
+                            <span ng-show="comment.pos_neg == 1" class="positive">
+                                <i class="material-icons">thumb_up</i>
+                                <md-tooltip ng-hide="isMobile" class="tooltip" md-direction="right">
+                                    This comment has been rated as positive, click to edit
+                                </md-tooltip>
+                            </span>
+                            <span ng-show="!comment.pos_neg && comment.pos_neg != 0" class="unrated">
+                                <i class="material-icons">rate_review</i>
+                                <md-tooltip ng-hide="isMobile" class="tooltip" md-direction="right">
+                                    This comment has not yet been rated, click to edit
+                                </md-tooltip>
+                            </span>
                                 </td>
                                 <td ng-bind="comment.comment_text" ng-click="addComment(comment.comment_text, true)" class="comment-text">
                                 </td>
@@ -256,7 +275,7 @@
                             </tr>
                         </table>
 
-                        <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill class="darkula-background">
+                        <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
                             <md-select flex ng-model="commentViewLimit" ng-change="changeCommentsPerPage()" width="50%">
                                 <md-select-label>Per Page:</md-select-label>
                                 <md-option ng-value="10">10</md-option>
@@ -285,38 +304,156 @@
                 Multi Student
             </md-tab-label>
             <md-tab-body>
-                <div class="all-tabs">
+                <div class="all-tabs darkula-background">
 
-                    <p style="text-align: center;">Under Construction...</p>
+                    <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill class="darkula-background">
 
-                    <!--<section>-->
-                        <!--<md-toolbar class="md-primary">-->
-                            <!--<h3>Students</h3>-->
-                        <!--</md-toolbar>-->
+                        <div flex-gt-lg="20">
+                            <form ng-submit="blurClassName()">
+                                <md-input-container class="input-container">
+                                    <label>Class Name</label>
+                                    <input type="text" ng-model="className" ng-blur="blurClassName()">
+                                </md-input-container>
+                                <button class="invisible-button" type="submit">Submit</button>
+                                <md-tooltip ng-hide="isMobile" class="tooltip">
+                                    Will replace instance of CLASS_NAME in comments
+                                </md-tooltip>
+                            </form>
+                        </div>
 
-                        <!--<md-list>-->
-                            <!--<md-list-item class="md-2-line" ng-repeat="student in students">-->
-                                <!--<md-checkbox ng-model="item.done"></md-checkbox>-->
-                                <!--<div class="md-list-item-text">-->
-                                    <!--<h3>{{student.name}}</h3>-->
-                                    <!--<p>{{item.description}}</p>-->
-                                <!--</div>-->
-                            <!--</md-list-item>-->
-                        <!--</md-list>-->
+                        <md-input-container flex-gt-lg="40">
+                            <label>Your custom introduction</label>
+                            <input type="text" ng-model="yourCommentIntroduction">
+                            <md-tooltip ng-hide="isMobile" class="tooltip">
+                                The custom introduction to appear at the beginning of every comment
+                            </md-tooltip>
+                        </md-input-container>
 
-                        <!--<form ng-submit="addStudent()">-->
-                            <!--<md-input-container class="input-container">-->
-                                <!--<label>Add Student</label>-->
-                                <!--<input type="text" ng-model="className" ng-blur="addStudent()">-->
-                            <!--</md-input-container>-->
-                            <!--<button class="invisible-button" type="submit">Submit</button>-->
-                            <!--<md-tooltip ng-hide="isMobile" class="tooltip">-->
-                                <!--Add all the students that you would like to make comments for today-->
-                            <!--</md-tooltip>-->
-                        <!--</form>-->
+                        <md-input-container flex-gt-lg="40">
+                            <label>Your custom conclusion</label>
+                            <input type="text" ng-model="yourCommentConclusion">
+                            <md-tooltip ng-hide="isMobile" class="tooltip">
+                                The custom conclusion to appear at the end of every comment
+                            </md-tooltip>
+                        </md-input-container>
 
+                    </div>
 
-                    <!--</section>-->
+                    <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill class="darkula-background">
+
+                        <form ng-submit="addMultiStudent()" autocomplete="off" flex-gt-lg="40">
+                            <md-input-container class="input-container">
+                                <label>Add Student</label>
+                                <input type="text" ng-model="newMultiStudent" ng-blur="addMultiStudent()">
+                            </md-input-container>
+                            <button class="invisible-button" type="submit">Submit</button>
+                            <md-tooltip ng-hide="isMobile" class="tooltip">
+                                Add all the students that you would like to make comments for today
+                            </md-tooltip>
+                        </form>
+
+                        <div flex-gt-lg="40">
+                            <md-radio-group ng-model="defaultGender" layout="row" aria-label="Default Gender">
+                                <md-radio-button ng-model="defaultGender" value="male" selected>Male</md-radio-button>
+                                <md-radio-button ng-model="defaultGender" value="female" >Female</md-radio-button>
+                                <md-radio-button ng-model="defaultGender" value="neutral" >Neutral</md-radio-button>
+                            </md-radio-group>
+                            <md-tooltip ng-hide="isMobile" class="tooltip">
+                                The default gender of newly added students
+                            </md-tooltip>
+                        </div>
+
+                        <div flex-gt-lg="20">
+                            <md-input-container>
+                                <label>Make Something Up Size</label>
+                                <input type="number" ng-model="makeSomethingUpSize" min="1" max="100">
+                                <md-tooltip ng-hide="isMobile" class="tooltip">
+                                    Number of comments to randomly generate
+                                </md-tooltip>
+                            </md-input-container>
+                        </div>
+                    </div>
+
+                    <div class="multi-instructions-container">
+                        <div ng-hide="multiStudent.length > 0" class="multi-instructions">
+                            <h3>Multi Student Comment Generation</h3>
+
+                            <dl>
+                                <dt>Setup:</dt><br>
+                                <dd>Enter the class name and select how many sentences you would like the randomly generated comment to contain</dd>
+                                <br>
+                                <dt>Adding Students:</dt><br>
+                                <dd>Enter your student's names one after another by typing their name and hitting enter after each one.<br>
+                                    You may put a space after the students name and a "m", "f" or "n" to set their gender. For example I could enter in "Jimmy f" and the page would add a female student named "Jimmy".<br>
+                                    If you don't add a letter after the student's name to determine gender it will be whatever is currently selected for the default gender</dd>
+                                <br>
+                                <dt>Editing:</dt><br>
+                                <dd>Edit comment manually as needed or use the regenerate and shuffle buttons to modify them automatically.<br>
+                                    Please remember that the gendered pronoun fixing is not perfect due to "her" having 2 different male equivalents depending on how it is used. Proofreading is strongly advised.</dd>
+                                <br>
+                                <dt>Copying:</dt><br>
+                                <dd>Hit copy button at the bottom to copy all comments with introductions and conclusions.<br>
+                                    The student's name will be appended before each comment paragraph.</dd>
+                                <br>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <div ng-show="multiStudent.length > 0">
+                        <table class="comment-bank-table">
+                            <tr ng-repeat="student in multiStudent" class="darkula-background"  layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
+                                <td flex-gt-lg="80">
+                                    <md-input-container>
+                                        <label>Comment for <span ng-bind="student.name"></span> (<span ng-show="student.gender == 'male'">Male</span><span ng-show="student.gender == 'female'">Female</span><span ng-show="student.gender == 'neutral'">Neutral</span>)</label>
+                                        <textarea ng-model="student.comment" class="comment-text-box full-width"></textarea>
+                                    </md-input-container>
+                                </td>
+                                <td flex-gt-lg="20" class="multi-student-button-td">
+                                    <div class="multi-student-button-container" layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="column">
+                                        <md-button class="button-hover" ng-click="shuffleMultiStudentComment(student)">
+                                            <i class="material-icons inline-icon">shuffle</i>
+                                            <span>Shuffle Comments</span>
+                                            <md-tooltip ng-hide="isMobile" class="tooltip" md-direction="below">
+                                                Shuffle the current comments for this student
+                                            </md-tooltip>
+                                        </md-button>
+                                        <md-button class="button-hover" ng-click="regenerateMultiStudentComment(student)">
+                                            <i class="material-icons inline-icon">autorenew</i>
+                                            <span>Regenerate</span>
+                                            <md-tooltip ng-hide="isMobile" class="tooltip" md-direction="below">
+                                                Get a new set of random comments for this student
+                                            </md-tooltip>
+                                        </md-button>
+                                        <!--<md-button class="button-hover">-->
+                                            <!--<i class="material-icons inline-icon">mode_edit</i>-->
+                                            <!--<span>Edit Name or Gender</span>-->
+                                            <!--<md-tooltip ng-hide="isMobile" class="tooltip" md-direction="below">-->
+                                                <!--Edit this student's comments-->
+                                            <!--</md-tooltip>-->
+                                        <!--</md-button>-->
+                                        <md-button class="button-hover" ng-click="removeMultiStudent(student)">
+                                            <i class="material-icons inline-icon">delete</i>
+                                            <span>Delete Student</span>
+                                            <md-tooltip ng-hide="isMobile" class="tooltip" md-direction="below">
+                                                Edit this student's comments
+                                            </md-tooltip>
+                                        </md-button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div class="copy-all-container">
+                            <md-button aria-label="Copy All Comments" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="commentsCopied()" clipboard text="allMultiStudentComments">
+                                <i class="material-icons inline-icon">content_copy</i>
+                                <span>Copy All Comments</span>
+                                <md-tooltip ng-hide="isMobile" class="tooltip" md-direction="below">
+                                    Copy comments for all students including introduction and conclusion if applicable
+                                </md-tooltip>
+                            </md-button>
+                        </div>
+                    </div>
+
 
                 </div>
             </md-tab-body>

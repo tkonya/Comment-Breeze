@@ -7,6 +7,15 @@
     cursor: pointer;
 }
 
+td.comment-text:hover {
+    color: #FFC107;
+    /*color: #673AB7;*/
+}
+
+.button-hover:hover {
+    color: #FFC107;
+}
+
 .comment-edit {
     padding: .4em;
     cursor: pointer;
@@ -27,15 +36,14 @@
     background-color: #2b2b2b;
 }
 
+.yellow-color {
+    color: #FFC107;
+}
+
 .toast-style {
     color: #FFC107;
     overflow: hidden;
     position: fixed;
-}
-
-td:hover {
-    color: #FFC107;
-    /*color: #673AB7;*/
 }
 
 .centered {
@@ -81,8 +89,25 @@ tr:nth-child(odd) {
     text-align: center;
 }
 
+.tab-body-style {
+    background-color: #171717;
+}
+
+.front-page-content-container {
+    text-align: center;
+    margin: auto;
+}
+
+.front-page-content {
+    margin: auto;
+    border-radius: 5px;
+    max-width: 1000px;
+}
+
 .all-tabs {
     padding-top: 1em;
+    max-width: 1600px;
+    margin: auto;
 }
 
 .inline-icon {
@@ -120,4 +145,40 @@ tr:nth-child(odd) {
 
 .waiting-spinner {
     margin:auto;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.comment-column {
+    width: 80%;
+}
+
+.multi-student-button-td {
+    vertical-align: middle;
+    margin: auto;
+}
+
+.multi-student-button-container {
+    margin: auto;
+    max-height: 210px;
+}
+
+.multi-instructions-container {
+    text-align: center;
+    margin: auto;
+}
+
+.multi-instructions {
+    margin: auto;
+    text-align: left;
+    max-width: 1000px;
+    border-radius: 5px;
+}
+
+.copy-all-container {
+    padding-top: 1em;
+    text-align: center;
+    margin: auto;
 }

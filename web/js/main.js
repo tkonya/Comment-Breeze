@@ -6,7 +6,25 @@ var commentApp = angular.module('commentApp', ['angular-clipboard', 'ngMaterial'
             .backgroundPalette('grey').dark();
     });
 
-commentApp.controller('CommentController', function($scope, $http, $timeout, $mdToast, $mdBottomSheet, $mdDialog, $mdMedia) {
+commentApp.directive('elastic', [
+    '$timeout',
+    function($timeout) {
+        return {
+            restrict: 'A',
+            link: function($scope, element) {
+                $scope.initialHeight = $scope.initialHeight || element[0].style.height;
+                var resize = function() {
+                    element[0].style.height = $scope.initialHeight;
+                    element[0].style.height = "" + element[0].scrollHeight + "px";
+                };
+                element.on("input change", resize);
+                $timeout(resize, 0);
+            }
+        };
+    }
+]);
+
+commentApp.controller('CommentController', function($scope, $http, $timeout, $mdToast, $mdDialog, $mdMedia) {
 
     $scope.isMobile = false;
 
@@ -33,6 +51,11 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
     $scope.yourCommentIntroduction = '';
     $scope.yourComment = '';
     $scope.yourCommentConclusion = '';
+
+    $scope.newMultiStudent = null;
+    $scope.multiStudent = [];
+    $scope.defaultGender = 'male';
+    $scope.allMultiStudentComments = ''; // this must be updated any time it changes for the copy to work right, it has to already be correct by the time copy is hit
 
     $scope.searchComments = '';
     $scope.toneFilterSetting = 'Any';
@@ -80,22 +103,12 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
         }
 
         if (showToast) {
-            $mdToast.show(
-                {
-                    template: '<md-toast style="overflow: hidden; position: fixed;">Comment added</md-toast>',
-                    position: 'top left'
-                }
-            );
+            $scope.illToastToThat('Comment added');
         }
     };
 
     $scope.commentsCopied = function() {
-        $mdToast.show(
-            {
-                template: '<md-toast style="overflow: hidden; position: fixed;">Comments copied to clipboard</md-toast>',
-                position: 'top left'
-            }
-        );
+        $scope.illToastToThat('Comments copied to clipboard');
     };
 
     $scope.fixCommentPronouns = function() {
@@ -104,12 +117,18 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
             $scope.yourComment = $scope.fixGenderPronouns($scope.yourComment);
             $scope.yourCommentConclusion = $scope.fixGenderPronouns($scope.yourCommentConclusion);
 
-            $scope.illToastToThat('Gender pronouns changed to ' + $scope.studentGender)
+            $scope.illToastToThat('Gender pronouns changed to ' + $scope.studentGender);
 
         }, 50);
     };
 
-    $scope.fixGenderPronouns = function(text) {
+    $scope.fixGenderPronouns = function(text, gender) {
+
+        if (gender == undefined) {
+            gender = $scope.studentGender;
+            console.log('using single student gender of ' + $scope.studentGender);
+        }
+
         var subject;
         var object;
         var possessiveAdjectives;
@@ -117,15 +136,15 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
         var reflexivePronouns;
         var girlBoyChild;
 
-        console.log('Changing gender to ' + $scope.studentGender + ' for the text:\n' + text);
-        if ($scope.studentGender == 'male') {
+        console.log('Changing gender to ' + gender + ' for the text:\n' + text);
+        if (gender == 'male') {
             subject = 'he';
             object = 'him';
             possessiveAdjectives = 'his';
             possessivePronouns = 'his';
             reflexivePronouns = 'himself';
             girlBoyChild = 'boy';
-        } else if ($scope.studentGender == 'female') {
+        } else if (gender == 'female') {
             subject = 'she';
             object = 'her';
             possessiveAdjectives = 'her';
@@ -175,12 +194,7 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
         $scope.yourComment = $scope.replaceClassName($scope.yourComment, true);
         $scope.yourCommentConclusion = $scope.replaceClassName($scope.yourCommentConclusion);
 
-        $mdToast.show(
-            {
-                template: '<md-toast style="overflow: hidden; position: fixed;">Class name changed to ' + $scope.className + '</md-toast>',
-                position: 'top left'
-            }
-        );
+        $scope.illToastToThat('Class name changed to ' + $scope.className);
     };
 
     $scope.replaceStudentName = function(text, dontSet) {
@@ -199,6 +213,13 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
             $scope.oldStudentName = studentName;
         }
 
+        return text.replace(/STUDENT_NAME/g, studentName);
+    };
+
+    $scope.replaceMultiStudentName = function(text, studentName, oldStudentName) {
+        if (oldStudentName != null) {
+            text = text.replace(new RegExp($scope.oldStudentName, 'g'), studentName);
+        }
         return text.replace(/STUDENT_NAME/g, studentName);
     };
 
@@ -406,6 +427,88 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
                 position: 'top left'
             }
         );
+    };
+
+    $scope.addMultiStudent = function() {
+
+        if ($scope.newMultiStudent == null || $scope.newMultiStudent == '') {
+            return;
+        }
+
+        var student = {};
+
+        if ($scope.newMultiStudent.endsWith(' m') || $scope.newMultiStudent.endsWith(' M')) {
+            student.gender = "male";
+            student.name = $scope.newMultiStudent.replace(' m', '').replace(' M', '');
+            console.log('detected male');
+        } else if ($scope.newMultiStudent.endsWith(' f') || $scope.newMultiStudent.endsWith(' F')) {
+            student.gender = "female";
+            student.name = $scope.newMultiStudent.replace(' f', '').replace(' F', '');
+        } else if ($scope.newMultiStudent.endsWith(' n') || $scope.newMultiStudent.endsWith(' N')) {
+            student.gender = "neutral";
+            student.name = $scope.newMultiStudent.replace(' n', '').replace(' N', '');
+        } else {
+            student.name = $scope.newMultiStudent;
+            student.gender = $scope.defaultGender;
+            console.log('Setting to default gender of ' + $scope.defaultGender);
+        }
+        student.old_name = student.name;
+
+        student.comment = '';
+
+        for (var i = 0; i < $scope.makeSomethingUpSize; ++i) {
+            var randomComment = $scope.comments[Math.floor(Math.random() * $scope.comments.length)];
+            student.comment += $scope.capitalizeFirstLetter($scope.fixGenderPronouns($scope.replaceClassName($scope.replaceMultiStudentName(randomComment.comment_text, student.name, student.old_name), true), student.gender)) + ' ';
+        }
+
+        $scope.newMultiStudent = '';
+        $scope.multiStudent.push(student);
+
+        $scope.illToastToThat('Added student: ' + student.name + ' (' + student.gender + ')');
+
+        $scope.buildAllMultiStudentComments();
+    };
+
+    $scope.removeMultiStudent = function(student) {
+        var index = $scope.multiStudent.indexOf(student);
+        if (index > -1) {
+            $scope.multiStudent.splice(index, 1);
+        }
+
+        $scope.buildAllMultiStudentComments();
+    };
+
+    $scope.regenerateMultiStudentComment = function(student) {
+        student.comment = '';
+
+        for (var i = 0; i < $scope.makeSomethingUpSize; ++i) {
+            var randomComment = $scope.comments[Math.floor(Math.random() * $scope.comments.length)];
+            student.comment += $scope.capitalizeFirstLetter($scope.fixGenderPronouns($scope.replaceClassName($scope.replaceMultiStudentName(randomComment.comment_text, student.name, student.old_name), true), student.gender)) + ' ';
+        }
+
+        $scope.buildAllMultiStudentComments();
+    };
+
+    $scope.shuffleMultiStudentComment = function(student) {
+        var sentences = student.comment.match( /[^\.!\?]+[\.!\?]+/g );
+        console.log('Found ' + sentences.length + ' sentences');
+
+        for(var j, x, i = sentences.length; i; j = Math.floor(Math.random() * i), x = sentences[--i], sentences[i] = sentences[j], sentences[j] = x) {}
+
+        student.comment = '';
+        for (var k = 0; k < sentences.length; ++k) {
+            student.comment += sentences[k].trim() + ' ';
+        }
+
+        $scope.buildAllMultiStudentComments();
+    };
+
+    $scope.buildAllMultiStudentComments = function() {
+        $scope.allMultiStudentComments = '';
+        for (var i = 0; i < $scope.multiStudent.length; ++i) {
+            $scope.allMultiStudentComments += $scope.multiStudent[i].name + ':\n' + $scope.yourCommentIntroduction + ' ' + $scope.multiStudent[i].comment + ' ' + $scope.yourCommentConclusion + '\n\n\n';
+            $scope.allMultiStudentComments = $scope.allMultiStudentComments.replace(/  +/g, ' ');
+        }
     };
 
     $scope.getComments();

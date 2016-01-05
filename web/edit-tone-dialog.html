@@ -6,22 +6,24 @@
 
         <p>"<span ng-bind="editingComment.comment_text"></span>"</p>
 
-        <md-button aria-label="Reset Comments" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="setCommentTone(1)">
-            <i class="material-icons inline-icon">thumb_up</i>
-            <span>Positive</span>
-        </md-button>
+        <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row">
+            <md-button aria-label="Mark Positive" md-ink-ripple class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="setCommentTone(1)">
+                <i class="material-icons inline-icon">thumb_up</i>
+                <span>Positive</span>
+            </md-button>
 
-        <md-button aria-label="Reset Comments" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="setCommentTone(0)">
-            <i class="material-icons inline-icon">thumbs_up_down</i>
-            <span>Neutral</span>
-        </md-button>
+            <md-button aria-label="Mark Neutral" md-ink-ripple class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="setCommentTone(0)">
+                <i class="material-icons inline-icon">thumbs_up_down</i>
+                <span>Neutral</span>
+            </md-button>
 
-        <md-button aria-label="Reset Comments" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="setCommentTone(-1)">
-            <i class="material-icons inline-icon">thumb_down</i>
-            <span>Negative</span>
-        </md-button>
+            <md-button aria-label="Mark Negative" md-ink-ripple class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="setCommentTone(-1)">
+                <i class="material-icons inline-icon">thumb_down</i>
+                <span>Negative</span>
+            </md-button>
 
-        <md-button ng-click="closeDialog()">Cancel</md-button>
+            <md-button ng-click="closeDialog()">Cancel</md-button>
+        </div>
 
     </md-dialog-content>
 </md-dialog>
