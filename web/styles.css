@@ -191,3 +191,21 @@ tr:nth-child(odd) {
 .multi-student-comment-row {
     padding-top: 1em;
 }
+
+.settings-tab {
+    max-width: 800px;
+    border-radius: 5px;
+}
+
+.settings-header {
+    text-align: center;
+}
+
+.settings-text {
+    padding-left: 1em;
+}
+
+.make-up-size-setting {
+    padding-left: 0.4em;
+    max-width: 60%;
+}

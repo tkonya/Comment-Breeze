@@ -8,7 +8,11 @@ var commentApp = angular.module('commentApp', ['angular-clipboard', 'ngMaterial'
 
 commentApp.controller('CommentController', function($scope, $http, $timeout, $mdToast, $mdDialog, $mdMedia) {
 
+    // settings
     $scope.isMobile = false;
+    $scope.showTooltips = true;
+    $scope.makeSomethingUpSize = 10;
+    $scope.showEditButtons = true;
 
     $scope.comments = [];
     $scope.allComments = []; // when 'filtering', put all comments in here, then we'll pull them back out when we switch back
@@ -42,8 +46,6 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
     $scope.searchComments = '';
     $scope.toneFilterSetting = 'Any';
     $scope.toneFilterOptions = ['Any', 'Positive', 'Neutral', 'Negative', 'Unrated'];
-
-    $scope.makeSomethingUpSize = 10;
 
     $scope.defaultStudentName = 'Sung-hyun';
     $scope.defaultClassName = 'English class';
@@ -417,7 +419,11 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
     };
 
     $scope.detectMobile = function() {
-        $scope.isMobile = $mdMedia('(max-width: 1199px)');
+        var smallScreen = $mdMedia('(max-width: 1199px)');
+        if (smallScreen) {
+            $scope.isMobile = true;
+            $scope.showTooltips = false;
+        }
     };
 
     $scope.illToastToThat = function(text) {
