@@ -8,11 +8,16 @@ var commentApp = angular.module('commentApp', ['angular-clipboard', 'ngMaterial'
 
 commentApp.controller('CommentController', function($scope, $http, $timeout, $mdToast, $mdDialog, $mdMedia) {
 
+    $scope.selectedTab = 0;
+
     // settings
     $scope.isMobile = false;
     $scope.showTooltips = true;
     $scope.makeSomethingUpSize = 10;
     $scope.showEditButtons = true;
+    $scope.showTone = true;
+    $scope.reduceCommentsSize = 0;
+    $scope.fullCommentsSet = null;
 
     $scope.comments = [];
     $scope.allComments = []; // when 'filtering', put all comments in here, then we'll pull them back out when we switch back
@@ -40,6 +45,7 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
 
     $scope.newMultiStudent = null;
     $scope.multiStudent = [];
+    $scope.editingMultiStudent = null;
     $scope.defaultGender = 'male';
     $scope.allMultiStudentComments = ''; // this must be updated any time it changes for the copy to work right, it has to already be correct by the time copy is hit
 
@@ -62,6 +68,7 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
                 console.log(data.length + ' comments received');
 
                 $scope.comments = data;
+                $scope.reduceCommentsSize = Math.round($scope.comments.length / 5);
                 $scope.commentsLoaded = true;
                 $scope.commentsLengthFormatted = $scope.comments.length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
@@ -519,6 +526,56 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
 
             $scope.allMultiStudentComments = $scope.allMultiStudentComments.replace(/  +/g, ' ');
         }
+    };
+
+    $scope.editMultiStudentComment = function(student) {
+        $scope.editingMultiStudent = student;
+        $scope.studentName = student.name;
+        $scope.yourComment = student.comment;
+        $scope.studentGender = student.gender;
+        $scope.selectedTab = 1;
+    };
+
+    $scope.selectMultiStudentTab = function() {
+        if ($scope.editingMultiStudent != null) {
+            var index = $scope.multiStudent.indexOf($scope.editingMultiStudent);
+            console.log('Index of editing student is ' + index);
+            if (index > -1) {
+                $scope.multiStudent[index].name = $scope.studentName;
+                $scope.studentName = null;
+
+                $scope.multiStudent[index].comment = $scope.yourComment;
+                $scope.yourComment = null;
+
+                $scope.multiStudent[index].gender = $scope.studentGender;
+                $scope.studentGender = 'male';
+            }
+            $scope.editingMultiStudent = null;
+        }
+    };
+
+    $scope.resizeComments = function() {
+        if ($scope.fullCommentsSet == null) {
+            $scope.fullCommentsSet = $scope.comments;
+        }
+        $scope.comments = $scope.fullCommentsSet.slice(0, $scope.reduceCommentsSize);
+        $scope.illToastToThat('Comments reduced to ' + $scope.comments.length);
+        $scope.changeCommentsPerPage();
+        $scope.changeCommentsPage(1);
+    };
+
+    $scope.restoreComments = function() {
+        if ($scope.fullCommentsSet != null) {
+            $scope.comments = $scope.fullCommentsSet;
+        }
+        $scope.fullCommentsSet = null;
+        $scope.illToastToThat('Full comment set restored');
+        $scope.changeCommentsPerPage();
+        $scope.changeCommentsPage(1);
+    };
+
+    $scope.currentCommentsFormattedLength = function() {
+        return $scope.comments.length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     };
 
     $scope.getComments();

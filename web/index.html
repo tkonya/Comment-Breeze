@@ -47,7 +47,7 @@
 </head>
 <body ng-app="commentApp" ng-controller="CommentController" class="darkula-background">
 
-    <md-tabs md-dynamic-height="true" md-center-tabs="true" md-selected="0">
+    <md-tabs md-dynamic-height="true" md-center-tabs="true" md-selected="selectedTab">
         <md-tab>
             <md-tab-label>
                 Comment Breeze
@@ -82,6 +82,13 @@
                                     Since all of the comments are loaded into your browser upfront, it means that searching them is instantaneous.
                                     The downside is that since I don't have the time (or interest) in going through and editing and categorizing all of the comments manually they are not organized or formatted as well as other sites.
                                     I have written code to help me go through and format comments in a semi-automated way, but it's not perfect.
+                                </p>
+
+                                <h3>OK, how do I use it?</h3>
+
+                                <p class="paragraphs">
+                                    Go to either the Single Student or Multi Student tab. There is a help button in the upper right hand corner that will explain how to use each page.
+                                    I suggest reading these even if the interface looks intuitive enough at first because there are a couple tricks you should know about.
                                 </p>
 
                                 <h3 ng-show="isMobile">Mobile Warning</h3>
@@ -259,7 +266,7 @@
                         <div ng-show="commentsLoaded">
                             <table class="comment-bank-table">
                                 <tr ng-repeat="comment in comments | filter:searchComments | limitTo : commentViewLimit : commentViewBegin" class="rounded-corners">
-                                    <td ng-click="showEditCommentDialog(comment)">
+                                    <td ng-click="showEditCommentDialog(comment)" ng-show="showTone">
                                         <span ng-show="comment.pos_neg == -1" class="negative">
                                             <i class="material-icons">thumb_down</i>
                                             <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="right">
@@ -318,7 +325,7 @@
         </md-tab>
 
 
-        <md-tab>
+        <md-tab md-on-select="selectMultiStudentTab()">
             <md-tab-label>
                 <i class="material-icons inline-icon">group</i>
                 Multi Student
@@ -372,7 +379,7 @@
                             <form ng-submit="addMultiStudent()" autocomplete="off" flex-gt-lg="50">
                                 <md-input-container class="input-container">
                                     <label>Add Student</label>
-                                    <input type="text" ng-model="newMultiStudent" ng-blur="addMultiStudent()">
+                                    <input type="text" ng-model="newMultiStudent">
                                 </md-input-container>
                                 <button class="invisible-button" type="submit">Submit</button>
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
@@ -387,7 +394,7 @@
                                     <md-radio-button ng-model="defaultGender" value="neutral" >Neutral</md-radio-button>
                                 </md-radio-group>
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
-                                    The default gender of newly added students
+                                    The default gender added students
                                 </md-tooltip>
                             </div>
 
@@ -418,13 +425,13 @@
                                                     Get a new set of random comments for this student
                                                 </md-tooltip>
                                             </md-button>
-                                            <!--<md-button class="button-hover">-->
-                                            <!--<i class="material-icons inline-icon">mode_edit</i>-->
-                                            <!--<span>Edit Name or Gender</span>-->
-                                            <!--<md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">-->
-                                            <!--Edit this student's comments-->
-                                            <!--</md-tooltip>-->
-                                            <!--</md-button>-->
+                                            <md-button class="button-hover"  ng-click="editMultiStudentComment(student)">
+                                            <i class="material-icons inline-icon">mode_edit</i>
+                                            <span>Edit as Single Student</span>
+                                            <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
+                                            Edit this student's comments
+                                            </md-tooltip>
+                                            </md-button>
                                             <md-button class="button-hover" ng-click="removeMultiStudent(student)">
                                                 <i class="material-icons inline-icon">delete</i>
                                                 <span>Delete Student</span>
@@ -471,11 +478,19 @@
                         </div>
                         <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
                             <div flex-gt-lg="25">
-                                <md-checkbox ng-model="showEditButtons" aria-label="Hide or show the tooltips">
+                                <md-checkbox ng-model="showTone" aria-label="Hide or show the tone button and indicator">
+                                    Show Tone Buttons
+                                </md-checkbox>
+                            </div>
+                            <p flex-gt-lg="75" class="settings-text">Show or hide the tone buttons and indicators on the comments list. Gives a little extra space to those who are on small screens or are not going to edit comment tone.</p>
+                        </div>
+                        <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
+                            <div flex-gt-lg="25">
+                                <md-checkbox ng-model="showEditButtons" aria-label="Hide or show the edit buttons">
                                     Show Edit Buttons
                                 </md-checkbox>
                             </div>
-                            <p flex-gt-lg="75" class="settings-text">Show or hide the edit button on the comments list. Gives a little extra space to those who are on small screens or are not going to edit comments.</p>
+                            <p flex-gt-lg="75" class="settings-text">Show or hide the edit button on the comments list. Gives a little extra space to those who are on small screens or are not going to edit the comment text.</p>
                         </div>
 
                         <br>
@@ -483,18 +498,38 @@
                         <h3 class="settings-header">Make Something Up</h3>
                         <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
                             <div flex-gt-lg="25">
-                                <md-input-container class="make-up-size-setting">
+                                <md-input-container class="settings-number-input">
                                     <label>Size</label>
                                     <input type="number" ng-model="makeSomethingUpSize" min="1" max="100">
-                                    <md-tooltip ng-show="showTooltips" class="tooltip">
-                                        Number of comments to randomly generate
-                                    </md-tooltip>
                                 </md-input-container>
                             </div>
                             <p flex-gt-lg="75" class="settings-text">Adjust the number of comments generated by the "Just Make Something Up" button on the Single Student tab or by default on the Multi Student tab. Can be any number from 1 - 100.</p>
                         </div>
 
                         <br>
+
+                        <h3 class="settings-header">Resize Comments</h3>
+                        <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
+                            <div flex-gt-lg="25">
+                                <md-input-container class="settings-number-input">
+                                    <label>Target Size</label>
+                                    <input type="number" ng-model="reduceCommentsSize" min="1" max="comments.length">
+                                </md-input-container>
+
+                            </div>
+                            <p flex-gt-lg="75" class="settings-text">If searching is slow, generally on a mobile device, you can reduce the size of the comments you are searching through to increase speed. Select the number of comments you want to search (minimum 1; maximum <span ng-bind="commentsLengthFormatted"></span>) and hit reduce. You can change or restore this at any time. Current size: <span ng-bind="currentCommentsFormattedLength()"></span></p>
+                        </div>
+                        <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
+                            <md-button aria-label="Reduce to Set Size" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="resizeComments()" ng-disabled="reduceCommentsSize == comments.length">
+                                <i class="material-icons inline-icon">filter_list</i>
+                                <span ng-show="reduceCommentsSize <= comments.length">Reduce to Target Size</span>
+                                <span ng-show="reduceCommentsSize > comments.length">Increase to Target Size</span>
+                            </md-button>
+                            <md-button aria-label="Just Make Something Up" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="restoreComments()" ng-disabled="fullCommentsSet == null">
+                                <i class="material-icons inline-icon">cached</i>
+                                Restore Full Set
+                            </md-button>
+                        </div>
 
                     </div>
                 </div>

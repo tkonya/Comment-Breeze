@@ -46,6 +46,10 @@ td.comment-text:hover {
     position: fixed;
 }
 
+.center-aligned {
+    text-align: center;
+}
+
 .centered {
     position: fixed;
     top: 50%;
@@ -205,7 +209,21 @@ tr:nth-child(odd) {
     padding-left: 1em;
 }
 
-.make-up-size-setting {
-    padding-left: 0.4em;
+
+.settings-number-input {
+    padding-left: 1em;
+    padding-top: 1em;
     max-width: 60%;
+}
+
+.help-modal {
+    max-width: 1000px;
+}
+
+.fa-rotate-45 {
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    transform: rotate(180deg);
 }
