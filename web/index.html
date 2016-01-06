@@ -60,7 +60,7 @@
                             <h3>Welcome to Comment Breeze!</h3>
 
                             <p class="paragraphs">
-                                I made this site to help my girlfriend, friends and other ESL / TESOL teachers build report card comments. If you're an ESL or TESOL teacher I hope this makes your work easier.
+                                I made this site to help my girlfriend, friends and other ESL teachers build report card comments. If you're an ESL teacher I hope this makes your life easier.
                             </p>
 
                             <h3>Why make this?</h3>
@@ -129,31 +129,27 @@
                 <div class="all-tabs darkula-background">
                     <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
 
-                        <div flex-gt-lg="30">
-                            <form ng-submit="blurClassName()">
-                                <md-input-container class="input-container">
-                                    <label>Class Name</label>
-                                    <input type="text" ng-model="className" ng-blur="blurClassName()" >
-                                </md-input-container>
-                                <button class="invisible-button" type="submit">Submit</button>
-                                <md-tooltip ng-hide="isMobile" class="tooltip">
-                                    Will replace instance of CLASS_NAME in comments
-                                </md-tooltip>
-                            </form>
-                        </div>
+                        <form ng-submit="blurClassName()" flex-gt-lg="25">
+                            <md-input-container class="input-container">
+                                <label>Class Name</label>
+                                <input type="text" ng-model="className" ng-blur="blurClassName()" >
+                            </md-input-container>
+                            <button class="invisible-button" type="submit">Submit</button>
+                            <md-tooltip ng-hide="isMobile" class="tooltip">
+                                Will replace instance of CLASS_NAME in comments
+                            </md-tooltip>
+                        </form>
 
-                        <div flex-gt-lg="30">
-                            <form ng-submit="blurStudentName()">
-                                <md-input-container class="input-container">
-                                    <label>Student Name</label>
-                                    <input type="text" ng-model="studentName" ng-blur="blurStudentName()">
-                                </md-input-container>
-                                <button class="invisible-button" type="submit">Submit</button>
-                                <md-tooltip ng-hide="isMobile" class="tooltip">
-                                    Will replace instance of STUDENT_NAME in comments
-                                </md-tooltip>
-                            </form>
-                        </div>
+                        <form ng-submit="blurStudentName()" flex-gt-lg="25">
+                            <md-input-container class="input-container">
+                                <label>Student Name</label>
+                                <input type="text" ng-model="studentName" ng-blur="blurStudentName()">
+                            </md-input-container>
+                            <button class="invisible-button" type="submit">Submit</button>
+                            <md-tooltip ng-hide="isMobile" class="tooltip">
+                                Will replace instance of STUDENT_NAME in comments
+                            </md-tooltip>
+                        </form>
 
                         <div flex-gt-lg="25">
                             <md-radio-group ng-model="studentGender" layout="row">
@@ -176,6 +172,14 @@
                             </md-input-container>
                         </div>
 
+                        <md-button class="button-hover" ng-click="showSingleStudentHelp()" flex-gt-lg="10">
+                            <i class="material-icons inline-icon">help</i>
+                            <span>Help</span>
+                            <md-tooltip ng-hide="isMobile" class="tooltip" md-direction="left">
+                                Show instructions and settings
+                            </md-tooltip>
+                        </md-button>
+
                     </div>
 
                     <div>
@@ -187,7 +191,7 @@
                             </md-tooltip>
                         </md-input-container>
                         <md-input-container>
-                            <label>Your comments</label>
+                            <label>Your Comments</label>
                             <textarea ng-model="yourComment" class="comment-text-box darkula-background"></textarea>
                             <md-tooltip ng-hide="isMobile" class="tooltip" md-direction="right">
                                 Add comments by clicking below and edit them as needed
@@ -261,7 +265,7 @@
 
                     <div ng-show="commentsLoaded">
                         <table class="comment-bank-table">
-                            <tr ng-repeat="comment in comments | filter:searchComments | limitTo : commentViewLimit : commentViewBegin">
+                            <tr ng-repeat="comment in comments | filter:searchComments | limitTo : commentViewLimit : commentViewBegin" class="rounded-corners">
                                 <td ng-click="showEditCommentDialog(comment)">
                             <span ng-show="comment.pos_neg == -1" class="negative">
                                 <i class="material-icons">thumb_down</i>
@@ -345,7 +349,7 @@
                             </form>
                         </div>
 
-                        <md-input-container flex-gt-lg="40">
+                        <md-input-container flex-gt-lg="35">
                             <label>Your custom introduction</label>
                             <input type="text" ng-model="yourCommentIntroduction">
                             <md-tooltip ng-hide="isMobile" class="tooltip">
@@ -353,13 +357,21 @@
                             </md-tooltip>
                         </md-input-container>
 
-                        <md-input-container flex-gt-lg="40">
+                        <md-input-container flex-gt-lg="35">
                             <label>Your custom conclusion</label>
                             <input type="text" ng-model="yourCommentConclusion">
                             <md-tooltip ng-hide="isMobile" class="tooltip">
                                 The custom conclusion to appear at the end of every comment (optional)
                             </md-tooltip>
                         </md-input-container>
+
+                        <md-button class="button-hover" ng-click="showMultiStudentHelp()" flex-gt-lg="10">
+                            <i class="material-icons inline-icon">help</i>
+                            <span>Help</span>
+                            <md-tooltip ng-hide="isMobile" class="tooltip" md-direction="left">
+                                Show instructions and settings
+                            </md-tooltip>
+                        </md-button>
 
                     </div>
 
@@ -398,34 +410,9 @@
                         </div>
                     </div>
 
-                    <div class="multi-instructions-container">
-                        <div ng-hide="multiStudent.length > 0" class="multi-instructions">
-                            <h3>Multi Student Comment Generation</h3>
-
-                            <dl>
-                                <dt>Setup:</dt><br>
-                                <dd>Enter the class name and select how many sentences you would like the randomly generated comment to contain</dd>
-                                <br>
-                                <dt>Adding Students:</dt><br>
-                                <dd>Enter your student's names one after another by typing their name and hitting enter after each one.<br>
-                                    You may put a space after the students name and a "m", "f" or "n" to set their gender. For example I could enter in "Jimmy f" and the page would add a female student named "Jimmy".<br>
-                                    If you don't add a letter after the student's name to determine gender it will be whatever is currently selected for the default gender</dd>
-                                <br>
-                                <dt>Editing:</dt><br>
-                                <dd>Edit comment manually as needed or use the regenerate and shuffle buttons to modify them automatically.<br>
-                                    Please remember that the gendered pronoun fixing is not perfect due to "her" having 2 different male equivalents depending on how it is used. Proofreading is required.</dd>
-                                <br>
-                                <dt>Copying:</dt><br>
-                                <dd>Hit copy button at the bottom to copy all comments with introductions and conclusions.<br>
-                                    The student's name will be appended before each comment paragraph.</dd>
-                                <br>
-                            </dl>
-                        </div>
-                    </div>
-
                     <div ng-show="multiStudent.length > 0">
                         <table class="comment-bank-table">
-                            <tr ng-repeat="student in multiStudent" class="darkula-background"  layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
+                            <tr ng-repeat="student in multiStudent" class="rounded-corners multi-student-comment-row" layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
                                 <td flex-gt-lg="80">
                                     <md-input-container>
                                         <label>Comment for <span ng-bind="student.name"></span> (<span ng-show="student.gender == 'male'">Male</span><span ng-show="student.gender == 'female'">Female</span><span ng-show="student.gender == 'neutral'">Neutral</span>)</label>

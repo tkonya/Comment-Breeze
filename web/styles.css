@@ -55,6 +55,7 @@ td.comment-text:hover {
 }
 
 tr:nth-child(odd) {
+    border-radius: 5px;
     background-color: #383838;
 }
 
@@ -181,4 +182,12 @@ tr:nth-child(odd) {
     padding-top: 1em;
     text-align: center;
     margin: auto;
+}
+
+.rounded-corners {
+    border-radius: 5px;
+}
+
+.multi-student-comment-row {
+    padding-top: 1em;
 }

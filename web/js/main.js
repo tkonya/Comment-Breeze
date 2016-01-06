@@ -143,7 +143,7 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
         }
 
         text = text.replace(/\bboy\b|\bgirl\b|\bchild\b/g,girlBoyChild).replace(/\bBoy\b|\bGirl\b|\bChild\b/g,$scope.capitalizeFirstLetter(girlBoyChild));
-        text = text.replace(/\bhe\b|\bshe\b|\bthey\b/g,subject).replace(/\bhim\b|\bher\b|\bthem\b/g,object).replace(/\bhis\b|\bhers\b|\btheirs\b/g,possessivePronouns).replace(/\bhis\b|\bher\b|\btheir\b/g,possessiveAdjectives).replace(/\bhimself\b|\bherself\b|\btheirself\b/g,reflexivePronouns);
+        text = text.replace(/\bhe\b|\bshe\b|\bthey\b/g,subject).replace(/\bhis\b|\bhers\b|\btheirs\b/g,possessivePronouns).replace(/\bhim\b|\bher\b|\bthem\b/g,object).replace(/\bhis\b|\bher\b|\btheir\b/g,possessiveAdjectives).replace(/\bhimself\b|\bherself\b|\btheirself\b/g,reflexivePronouns);
         text = text.replace(/\bHe\b|\bShe\b|\bThey\b/g,$scope.capitalizeFirstLetter(subject)).replace(/\bHim\b|\bHer\b|\bThem\b/g,$scope.capitalizeFirstLetter(object)).replace(/\bHis\b|\bHers\b|\bTheirs\b/g,$scope.capitalizeFirstLetter(possessivePronouns)).replace(/\bHis\b|\bHer\b|\bTheir\b/g,$scope.capitalizeFirstLetter(possessiveAdjectives)).replace(/\bHimself\b|\bHerself\b|\bTheirself\b/g,$scope.capitalizeFirstLetter(reflexivePronouns));
         console.log('Fixed text: ' + text);
         return text;
@@ -244,9 +244,7 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
     };
 
     $scope.resetYourComment = function() {
-        $scope.studentName = null;
-        $scope.studentGender = 'male';
-        $scope.className = null;
+        $scope.studentName = '';
         $scope.yourComment = '';
     };
 
@@ -276,8 +274,6 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
 
     $scope.showEditDialog = function(comment) {
 
-
-        console.log('showing custom greeting');
         $scope.editingComment = comment;
         $scope.originalComment = comment;
 
@@ -290,12 +286,6 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
                 $scope.closeDialog = function () {
                     $mdDialog.hide();
                     $scope.editingComment= $scope.originalComment;
-
-                    // if they don't have the right password then blank out the password and undo the showTextEdit
-                    if ($scope.editingPasswordTry.slice(0, 10) != 'industrial') {
-                        $scope.editingPasswordTry = '';
-                    }
-
                 };
                 $scope.saveDialog = function() {
 
@@ -355,6 +345,34 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
                     }).error(function () {
                         $scope.illToastToThat('Error updating comment');
                     });
+                };
+            }
+        });
+    };
+
+    $scope.showSingleStudentHelp = function() {
+        $mdDialog.show({
+            clickOutsideToClose: true,
+            scope: $scope,        // use parent scope in template
+            preserveScope: true,  // do not forget this if use parent scope
+            templateUrl: '/single-student-help.html',
+            controller: function DialogController($scope, $mdDialog) {
+                $scope.closeDialog = function () {
+                    $mdDialog.hide();
+                };
+            }
+        });
+    };
+
+    $scope.showMultiStudentHelp = function() {
+        $mdDialog.show({
+            clickOutsideToClose: true,
+            scope: $scope,        // use parent scope in template
+            preserveScope: true,  // do not forget this if use parent scope
+            templateUrl: '/multi-student-help.html',
+            controller: function DialogController($scope, $mdDialog) {
+                $scope.closeDialog = function () {
+                    $mdDialog.hide();
                 };
             }
         });
@@ -488,7 +506,11 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
     $scope.buildAllMultiStudentComments = function() {
         $scope.allMultiStudentComments = '';
         for (var i = 0; i < $scope.multiStudent.length; ++i) {
-            $scope.allMultiStudentComments += $scope.multiStudent[i].name + ':\n' + $scope.yourCommentIntroduction + ' ' + $scope.multiStudent[i].comment + ' ' + $scope.yourCommentConclusion + '\n\n\n';
+            $scope.allMultiStudentComments += $scope.multiStudent[i].name + ':\n' +
+                $scope.fixGenderPronouns($scope.replaceClassName($scope.replaceMultiStudentName($scope.yourCommentIntroduction, $scope.multiStudent[i].name, $scope.multiStudent[i].old_name), true), $scope.multiStudent[i].gender) + ' ' +
+                $scope.multiStudent[i].comment + ' ' +
+                $scope.fixGenderPronouns($scope.replaceClassName($scope.replaceMultiStudentName($scope.yourCommentConclusion, $scope.multiStudent[i].name, $scope.multiStudent[i].old_name), true), $scope.multiStudent[i].gender) + '\n\n\n';
+
             $scope.allMultiStudentComments = $scope.allMultiStudentComments.replace(/  +/g, ' ');
         }
     };
