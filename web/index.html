@@ -25,6 +25,25 @@
     <meta name="title" content="Comment Breeze | ESL / TESOL Report Card Comment Generator">
     <meta name="description" content="A web-app to help ESL and TESOL teachers build report card comments">
 
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/android-chrome-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
 </head>
 <body ng-app="commentApp" ng-controller="CommentController" class="darkula-background">
 
@@ -34,7 +53,7 @@
                 Comment Breeze
             </md-tab-label>
             <md-tab-body>
-                <div class="all-tabs main-tab">
+                <div class="all-tabs main-tab darkula-background">
                     <div class="front-page-content-container">
                         <md-content class="front-page-content">
                             <br>
@@ -83,10 +102,15 @@
                                 Everything is hosted on AWS<br>
                             </p>
 
+                            <br><br>
+
                             <!--<p>-->
+                            <a href="https://github.com/tkonya/Comment-Breeze" target="_blank">
+                                <img src="images/Octocat.png" height="90px">
+                            </a>
+
                             <!--<img src="images/Logo-Black-128px-TM.png" height="40px">-->
 
-                            <!--<img src="images/Octocat.png" height="90px">-->
                             <!--</p>-->
 
                             <br><br><br><br>
@@ -159,7 +183,7 @@
                             <label>Custom Introduction</label>
                             <textarea ng-model="yourCommentIntroduction" class="comment-text-box darkula-background"></textarea>
                             <md-tooltip ng-hide="isMobile" class="tooltip" md-direction="right">
-                                This will be copied when you hit 'Copy Comments' but will not be erased when you hit 'Reset Comments'
+                                This will be copied when you hit 'Copy Comments' but will not be erased when you hit 'Reset Comments'  (optional)
                             </md-tooltip>
                         </md-input-container>
                         <md-input-container>
@@ -173,7 +197,7 @@
                             <label>Custom Conclusion</label>
                             <textarea ng-model="yourCommentConclusion" class="comment-text-box darkula-background"></textarea>
                             <md-tooltip ng-hide="isMobile" class="tooltip" md-direction="right">
-                                This will be copied when you hit 'Copy Comments' but will not be erased when you hit 'Reset Comments'
+                                This will be copied when you hit 'Copy Comments' but will not be erased when you hit 'Reset Comments'  (optional)
                             </md-tooltip>
                         </md-input-container>
                     </div>
@@ -325,7 +349,7 @@
                             <label>Your custom introduction</label>
                             <input type="text" ng-model="yourCommentIntroduction">
                             <md-tooltip ng-hide="isMobile" class="tooltip">
-                                The custom introduction to appear at the beginning of every comment
+                                The custom introduction to appear at the beginning of every comment (optional)
                             </md-tooltip>
                         </md-input-container>
 
@@ -333,7 +357,7 @@
                             <label>Your custom conclusion</label>
                             <input type="text" ng-model="yourCommentConclusion">
                             <md-tooltip ng-hide="isMobile" class="tooltip">
-                                The custom conclusion to appear at the end of every comment
+                                The custom conclusion to appear at the end of every comment (optional)
                             </md-tooltip>
                         </md-input-container>
 
@@ -389,7 +413,7 @@
                                 <br>
                                 <dt>Editing:</dt><br>
                                 <dd>Edit comment manually as needed or use the regenerate and shuffle buttons to modify them automatically.<br>
-                                    Please remember that the gendered pronoun fixing is not perfect due to "her" having 2 different male equivalents depending on how it is used. Proofreading is strongly advised.</dd>
+                                    Please remember that the gendered pronoun fixing is not perfect due to "her" having 2 different male equivalents depending on how it is used. Proofreading is required.</dd>
                                 <br>
                                 <dt>Copying:</dt><br>
                                 <dd>Hit copy button at the bottom to copy all comments with introductions and conclusions.<br>
