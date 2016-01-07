@@ -196,7 +196,7 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
             studentName = $scope.studentName;
         }
 
-        if ($scope.oldStudentName != null) {
+        if ($scope.oldStudentName != null && $scope.oldStudentName.length > 0) {
             text = text.replace(new RegExp($scope.oldStudentName, 'g'), studentName);
         }
 
@@ -222,7 +222,7 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
             className = $scope.className;
         }
 
-        if ($scope.oldClassName != null) {
+        if ($scope.oldClassName != null && $scope.oldClassName.length > 0) {
             text = text.replace(new RegExp($scope.oldClassName, 'g'), className);
         }
 
