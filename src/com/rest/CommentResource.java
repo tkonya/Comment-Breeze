@@ -57,6 +57,12 @@ public class CommentResource {
 
         System.out.println("Recording page hit");
 
+        // ignore local development hits
+        String ip = request.getRemoteAddr();
+        if ("0:0:0:0:0:0:0:1".equals(ip)) {
+            return Response.ok().build();
+        }
+
         DatabaseHandler databaseHandler = null;
         PreparedStatement preparedStatement = null;
         try {
