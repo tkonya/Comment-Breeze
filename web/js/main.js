@@ -18,6 +18,7 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
     $scope.showTone = true;
     $scope.reduceCommentsSize = 0;
     $scope.fullCommentsSet = null;
+    $scope.avoidHer = true;
 
     $scope.comments = [];
     $scope.allComments = []; // when 'filtering', put all comments in here, then we'll pull them back out when we switch back
@@ -278,6 +279,12 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
 
         for (var i = 0; i < $scope.makeSomethingUpSize; ++i) {
             var randomComment = $scope.comments[Math.floor(Math.random() * $scope.comments.length)];
+
+            if ($scope.avoidHer && $scope.studentGender != 'female' && (randomComment.comment_text.indexOf(' her ') > 0 || randomComment.comment_text.startsWith('Her') || randomComment.comment_text.endsWith(' her.'))) {
+                --i;
+                continue;
+            }
+
             $scope.addComment(randomComment.comment_text, false);
         }
 
@@ -487,6 +494,12 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
 
         for (var i = 0; i < $scope.makeSomethingUpSize; ++i) {
             var randomComment = $scope.comments[Math.floor(Math.random() * $scope.comments.length)];
+
+            if ($scope.avoidHer && $scope.studentGender != 'female' && (randomComment.comment_text.indexOf(' her ') > 0 || randomComment.comment_text.startsWith('Her') || randomComment.comment_text.endsWith(' her.'))) {
+                --i;
+                continue;
+            }
+
             student.comment += $scope.capitalizeFirstLetter($scope.fixGenderPronouns($scope.replaceClassName($scope.replaceMultiStudentName(randomComment.comment_text, student.name, student.old_name), true), student.gender)) + ' ';
         }
 
