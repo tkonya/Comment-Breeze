@@ -183,7 +183,7 @@
 
                         <div>
                             <md-input-container>
-                                <label>Custom Introduction</label>
+                                <label>Your Introduction</label>
                                 <textarea ng-model="yourCommentIntroduction" class="comment-text-box"></textarea>
                                 <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="right">
                                     This will be copied when you hit 'Copy Comments' but will not be erased when you hit 'Reset Comments'  (optional)
@@ -197,7 +197,7 @@
                                 </md-tooltip>
                             </md-input-container>
                             <md-input-container>
-                                <label>Custom Conclusion</label>
+                                <label>Your Conclusion</label>
                                 <textarea ng-model="yourCommentConclusion" class="comment-text-box"></textarea>
                                 <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="right">
                                     This will be copied when you hit 'Copy Comments' but will not be erased when you hit 'Reset Comments'  (optional)
@@ -376,7 +376,7 @@
                             </div>
 
                             <md-input-container flex-gt-lg="35">
-                                <label>Your custom introduction</label>
+                                <label>Your Introduction</label>
                                 <input type="text" ng-model="yourCommentIntroduction">
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
                                     The custom introduction to appear at the beginning of every comment (optional)
@@ -384,7 +384,7 @@
                             </md-input-container>
 
                             <md-input-container flex-gt-lg="35">
-                                <label>Your custom conclusion</label>
+                                <label>Your Conclusion</label>
                                 <input type="text" ng-model="yourCommentConclusion">
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
                                     The custom conclusion to appear at the end of every comment (optional)
@@ -631,7 +631,6 @@
 
                         <br>
 
-                        <h3 class="settings-header">Comment Selection</h3>
                         <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
                             <div flex-gt-lg="25">
                                 <md-checkbox ng-model="avoidHer" aria-label="Hide or show the tooltips">

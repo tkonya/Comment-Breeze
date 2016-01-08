@@ -5,7 +5,3 @@ This is a web app I made to help my friends and other ESL / TESOL teachers build
 **Setup**
 
 See the file Setup.txt for information about how to run this yourself.
-
-**License**
-
-The MIT license. Basically you can use this however you want.
