@@ -256,3 +256,9 @@ tr:nth-child(odd) {
 .inputdemoErrorsAdvanced .hint.ng-enter.ng-enter-active {
     bottom: 7px;
     opacity: 1; }
+
+.multi-student-reminder {
+    cursor: pointer;
+    text-align: center;
+    padding-top: 2em;
+}

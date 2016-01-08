@@ -31,30 +31,32 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
     $scope.currentCommentsPage = 1;
     $scope.totalCommentPages = null;
 
-    $scope.studentName = null;
+    $scope.studentName = '';
     $scope.oldStudentName = null;
 
     $scope.studentGender = 'male';
 
-    $scope.className = null;
+    $scope.className = '';
     $scope.oldClassName = null;
 
     $scope.yourCommentIntroduction = '';
     $scope.yourComment = '';
     $scope.yourCommentConclusion = '';
 
-    $scope.newMultiStudent = null;
+    $scope.newMultiStudent = '';
     $scope.multiStudent = [];
     $scope.editingMultiStudent = null;
     $scope.defaultGender = 'male';
     $scope.allMultiStudentComments = ''; // this must be updated any time it changes for the copy to work right, it has to already be correct by the time copy is hit
+    $scope.multiStudentsCopied = false;
 
     $scope.searchComments = '';
     $scope.toneFilterSetting = 'Any';
     $scope.toneFilterOptions = ['Any', 'Positive', 'Neutral', 'Negative', 'Unrated'];
 
-    $scope.defaultStudentName = 'Sung-hyun';
-    $scope.defaultClassName = 'English class';
+    // these should probably just stay as variables to make them more visible in comments if the user didn't enter them in initially
+    $scope.defaultStudentName = 'STUDENT_NAME';
+    $scope.defaultClassName = 'CLASS_NAME';
 
     // multi student
     $scope.students = [];
@@ -594,6 +596,46 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
 
     $scope.currentCommentsFormattedLength = function() {
         return $scope.comments.length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    };
+
+    $scope.resetAllSingleStudent = function() {
+        $scope.studentName = '';
+        $scope.oldStudentName = null;
+        $scope.studentGender = 'male';
+        $scope.className = '';
+        $scope.oldClassName = null;
+        $scope.searchComments = '';
+        $scope.yourCommentIntroduction = '';
+        $scope.yourComment = '';
+        $scope.yourCommentConclusion = '';
+
+        if ($scope.toneFilterSetting != 'Any') {
+
+            // put the comments back in
+            if ($scope.allComments.length > 0) {
+                $scope.comments = $scope.allComments;
+            }
+
+        }
+        $scope.toneFilterSetting = 'Any';
+
+        $scope.illToastToThat('All fields reset')
+    };
+
+    $scope.resetAllMultiStudent = function() {
+        $scope.newMultiStudent = '';
+        $scope.defaultGender = 'male';
+        $scope.className = '';
+        $scope.oldClassName = null;
+        $scope.yourCommentIntroduction = '';
+        $scope.yourComment = '';
+        $scope.yourCommentConclusion = '';
+    };
+
+    $scope.removeAllMultiStudents = function() {
+        $scope.multiStudent = [];
+        $scope.allMultiStudentComments = '';
+        $scope.multiStudentsCopied = false;
     };
 
     $scope.getComments();

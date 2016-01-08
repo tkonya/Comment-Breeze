@@ -76,19 +76,10 @@
                                     I made this site to help my girlfriend, friends and other ESL teachers build report card comments. If you're an ESL teacher I hope this makes your life easier.
                                 </p>
 
-                                <h3>Why make this?</h3>
-
-                                <p class="paragraphs">
-                                    There are other tools out there, but I thought I could do something different than what I've seen.
-                                    One thing I've never seen on any other report card site is any kind of search functionality.
-                                    I wanted to make it so you could search a giant bank of comments for words or phrases that you have in mind.
-                                    I've never seen a site that had more than a couple hundred comments, so if you were to use that site repeatedly then there wouldn't be much variation in your comments.
-                                </p>
-
                                 <h3>What's different about Comment Breeze?</h3>
 
                                 <p class="paragraphs">
-                                    A massive database of comments, currently <span ng-bind="commentsLengthFormatted"></span>!<br>
+                                    A massive database of usable comments, currently <span ng-bind="commentsLengthFormatted"></span>!<br>
                                     Blazing fast multi-student comment generation<br>
                                     Powerful live search capability
                                 </p>
@@ -213,23 +204,7 @@
 
                         <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
 
-                            <md-button aria-label="Copy Comments" md-ink-ripple flex class="md-button md-raised md-primary three-buttons" ng-click="commentsCopied()" md-ripple-size="auto" clipboard text="yourCommentIntroduction + ' ' + yourComment + ' ' + yourCommentConclusion">
-                                <i class="material-icons inline-icon">content_copy</i>
-                                <span>Copy Comments</span>
-                                <md-tooltip ng-show="showTooltips" class="tooltip">
-                                    Copies everything above to the clipboard
-                                </md-tooltip>
-                            </md-button>
-
-                            <md-button aria-label="Reset Comments" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="resetYourComment()">
-                                <i class="material-icons inline-icon">refresh</i>
-                                <span>Reset Comments</span>
-                                <md-tooltip ng-show="showTooltips" class="tooltip">
-                                    Erases the comments, but not the introduction or conclusion
-                                </md-tooltip>
-                            </md-button>
-
-                            <md-button aria-label="Reset Comments" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="shuffleComment()">
+                            <md-button aria-label="Reset Comments" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-disabled="yourComment == ''" ng-click="shuffleComment()">
                                 <i class="material-icons inline-icon">shuffle</i>
                                 <span>Shuffle Comments</span>
                                 <md-tooltip ng-show="showTooltips" class="tooltip" md-autohide="true">
@@ -242,6 +217,50 @@
                                 Just Make Something Up
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
                                     Generates {{makeSomethingUpSize}} random comments
+                                </md-tooltip>
+                            </md-button>
+
+                            <md-button aria-label="Copy Comments" md-ink-ripple flex class="md-button md-raised md-primary three-buttons" ng-disabled="yourCommentIntroduction == '' && yourComment == '' && yourCommentConclusion == ''" ng-click="commentsCopied()" md-ripple-size="auto" clipboard text="yourCommentIntroduction + ' ' + yourComment + ' ' + yourCommentConclusion">
+                                <i class="material-icons inline-icon">content_copy</i>
+                                <span>Copy Comments</span>
+                                <md-tooltip ng-show="showTooltips" class="tooltip">
+                                    Copies everything above to the clipboard
+                                </md-tooltip>
+                            </md-button>
+
+                            <md-button ng-show="yourComment.length > 0 || studentName.length > 0" aria-label="Reset Comments" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="resetYourComment()">
+                                <i class="material-icons inline-icon">clear</i>
+                                <span>Clear Name And Comment</span>
+                                <md-tooltip ng-show="showTooltips" class="tooltip">
+                                    Erases the comments, but not the introduction or conclusion
+                                </md-tooltip>
+                            </md-button>
+
+                            <md-button ng-hide="yourComment.length > 0 || studentName.length > 0" aria-label="Reset All" md-ink-ripple flex class="md-button md-raised md-accent" md-ripple-size="auto" ng-click="resetAllSingleStudent()" ng-disabled="className == '' && studentName == '' && yourCommentIntroduction == '' && yourComment == '' && yourCommentConclusion == '' && searchComments == '' && toneFilterSetting == 'Any' && studentGender == 'male'">
+                                <i class="material-icons inline-icon">clear_all</i>
+                                <span>Clear All Fields</span>
+                                <md-tooltip ng-show="showTooltips" class="tooltip">
+                                    Resets all fields, searches and filters
+                                </md-tooltip>
+                            </md-button>
+
+                        </div>
+
+                        <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill ng-show="editingMultiStudent != null">
+
+                            <md-button aria-label="Cancel Editing" md-ink-ripple flex class="md-button md-raised md-accent" ng-click="selectedTab = 2; editingMultiStudent = null;" md-ripple-size="auto">
+                                <i class="material-icons inline-icon">cancel</i>
+                                <span>Cancel Editing</span>
+                                <md-tooltip ng-show="showTooltips" class="tooltip">
+                                    Copies everything above to the clipboard
+                                </md-tooltip>
+                            </md-button>
+
+                            <md-button aria-label="Done Editing" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="selectedTab = 2; selectMultiStudentTab();">
+                                <i class="material-icons inline-icon">done</i>
+                                <span>Done Editing</span>
+                                <md-tooltip ng-show="showTooltips" class="tooltip">
+                                    Erases the comments, but not the introduction or conclusion
                                 </md-tooltip>
                             </md-button>
 
@@ -373,7 +392,7 @@
                                 <i class="material-icons inline-icon">help</i>
                                 <span>Help</span>
                                 <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="left">
-                                    Show instructions and settings
+                                    Show instructions and tips
                                 </md-tooltip>
                             </md-button>
 
@@ -392,9 +411,9 @@
                                 </md-tooltip>
                             </div>
 
-                            <form ng-submit="addMultiStudent()" autocomplete="off" flex-gt-lg="50">
+                            <form ng-submit="addMultiStudent()" autocomplete="off" flex-gt-lg="25">
                                 <md-input-container class="input-container">
-                                    <label>Add Student</label>
+                                    <label>Student Name</label>
                                     <input type="text" ng-model="newMultiStudent">
                                 </md-input-container>
                                 <button class="invisible-button" type="submit">Submit</button>
@@ -403,14 +422,26 @@
                                 </md-tooltip>
                             </form>
 
-                            <md-button aria-label="Copy Comments" md-ink-ripple flex class="md-button md-raised md-primary button-min-size" ng-click="addMultiStudent()" md-ripple-size="auto">
+                            <md-button aria-label="Copy Comments" md-ink-ripple flex ng-disabled="newMultiStudent == ''" class="md-button md-raised md-primary button-min-size" ng-click="addMultiStudent()" md-ripple-size="auto">
                                 <i class="material-icons inline-icon">person_add</i>
-                                <span>Add Student</span>
+                                <span>Add</span>
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
-                                    Adds the student to the list
+                                    Adds <span ng-bind="newMultiStudent" ng-hide="newMultiStudent == ''"></span><span ng-show="newMultiStudent == ''">student</span> to the list
                                 </md-tooltip>
                             </md-button>
 
+                            <md-button aria-label="Reset All" md-ink-ripple flex class="md-button md-raised md-accent button-min-size" md-ripple-size="auto" ng-click="resetAllMultiStudent()" ng-disabled="className == '' && newMultiStudent == '' && yourCommentIntroduction == '' && yourCommentConclusion == '' && defaultGender == 'male'">
+                                <i class="material-icons inline-icon">clear_all</i>
+                                <span>Clear All Fields</span>
+                                <md-tooltip ng-show="showTooltips" class="tooltip">
+                                    Resets all fields
+                                </md-tooltip>
+                            </md-button>
+
+                        </div>
+
+                        <div ng-hide="multiStudent.length > 0" class="multi-student-reminder">
+                            <span ng-click="showMultiStudentHelp()">Be sure to read the help for instructions, tips and shortcuts!</span>
                         </div>
 
                         <div ng-show="multiStudent.length > 0">
@@ -458,11 +489,19 @@
                             </table>
 
                             <div class="copy-all-container">
-                                <md-button aria-label="Copy All Comments" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="commentsCopied()" clipboard text="allMultiStudentComments">
+                                <md-button aria-label="Copy All Comments" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="commentsCopied(); multiStudentsCopied = true;" clipboard text="allMultiStudentComments">
                                     <i class="material-icons inline-icon">content_copy</i>
                                     <span>Copy All Comments</span>
                                     <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
                                         Copy comments for all students including introduction and conclusion if applicable
+                                    </md-tooltip>
+                                </md-button>
+
+                                <md-button aria-label="Remove All Students" md-ink-ripple flex class="md-button md-raised md-accent" md-ripple-size="auto" ng-show="multiStudentsCopied" ng-click="removeAllMultiStudents()">
+                                    <i class="material-icons inline-icon">clear_all</i>
+                                    <span>Remove All Students</span>
+                                    <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
+                                        Remove all of the above students
                                     </md-tooltip>
                                 </md-button>
                             </div>
