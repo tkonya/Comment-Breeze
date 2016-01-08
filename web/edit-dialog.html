@@ -23,21 +23,9 @@
             </md-tooltip>
         </md-input-container>
 
-        <!--<md-input-container>-->
-            <!--<label>Comment Tone</label>-->
-            <!--<md-select ng-model="editingComment.pos_neg">-->
-                <!--<md-option ng-value="1">positive</md-option>-->
-                <!--<md-option ng-value="0">neutral</md-option>-->
-                <!--<md-option ng-value="-1">negative</md-option>-->
-            <!--</md-select>-->
-            <!--<md-tooltip class="tooltip" ng-hide="isMobile">-->
-                <!--Edit comment tone; no password required-->
-            <!--</md-tooltip>-->
-        <!--</md-input-container>-->
-
         Select comment tone:
         <div>
-            <md-radio-group ng-model="editingComment.pos_neg" layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
+            <md-radio-group class="md-primary" ng-model="editingComment.pos_neg" layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
                 <md-radio-button ng-model="studentGender" value="1">Positive</md-radio-button>
                 <md-radio-button ng-model="studentGender" value="0">Neutral</md-radio-button>
                 <md-radio-button ng-model="studentGender" value="-1">Negative</md-radio-button>

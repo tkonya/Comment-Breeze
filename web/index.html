@@ -161,7 +161,7 @@
                             </form>
 
                             <div flex-gt-lg="30">
-                                <md-radio-group ng-model="studentGender" layout="row">
+                                <md-radio-group class="md-primary" ng-model="studentGender" layout="row">
                                     <md-radio-button ng-model="studentGender" value="male" ng-click="fixCommentPronouns()" selected>Male</md-radio-button>
                                     <md-radio-button ng-model="studentGender" value="female" ng-click="fixCommentPronouns()" >Female</md-radio-button>
                                     <md-radio-button ng-model="studentGender" value="neutral" ng-click="fixCommentPronouns()" >Neutral</md-radio-button>
@@ -207,19 +207,19 @@
 
                         <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
 
-                            <md-button aria-label="Reset Comments" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-disabled="yourComment == ''" ng-click="shuffleComment()">
-                                <i class="material-icons inline-icon">shuffle</i>
-                                <span>Shuffle Comments</span>
-                                <md-tooltip ng-show="showTooltips" class="tooltip" md-autohide="true">
-                                    Rearranges the comment sentences in random order
-                                </md-tooltip>
-                            </md-button>
-
                             <md-button aria-label="Just Make Something Up" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="makeSomethingUp()">
                                 <i class="material-icons inline-icon">warning</i>
                                 Just Make Something Up
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
                                     Generates {{makeSomethingUpSize}} random comments
+                                </md-tooltip>
+                            </md-button>
+
+                            <md-button aria-label="Reset Comments" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-disabled="yourComment == ''" ng-click="shuffleComment()">
+                                <i class="material-icons inline-icon">shuffle</i>
+                                <span>Shuffle Comments</span>
+                                <md-tooltip ng-show="showTooltips" class="tooltip" md-autohide="true">
+                                    Rearranges the comment sentences in random order
                                 </md-tooltip>
                             </md-button>
 
@@ -404,7 +404,7 @@
                         <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
 
                             <div flex-gt-lg="25">
-                                <md-radio-group ng-model="defaultGender" layout="row" aria-label="Default Gender">
+                                <md-radio-group ng-model="defaultGender" class="md-primary" layout="row" aria-label="Default Gender">
                                     <md-radio-button ng-model="defaultGender" value="male" selected>Male</md-radio-button>
                                     <md-radio-button ng-model="defaultGender" value="female" >Female</md-radio-button>
                                     <md-radio-button ng-model="defaultGender" value="neutral" >Neutral</md-radio-button>
@@ -458,13 +458,62 @@
                                     </td>
                                     <td flex-gt-lg="20" class="multi-student-button-td">
                                         <div class="multi-student-button-container" layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="column">
-                                            <md-button class="button-hover" ng-click="shuffleMultiStudentComment(student)">
-                                                <i class="material-icons inline-icon">shuffle</i>
-                                                <span>Shuffle Comments</span>
-                                                <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
-                                                    Shuffle the current comments for this student
-                                                </md-tooltip>
-                                            </md-button>
+
+                                            <!--<md-menu>-->
+                                                <!--&lt;!&ndash; Trigger element is a md-button with an icon &ndash;&gt;-->
+                                                <!--<md-button ng-click="$mdOpenMenu($event)" class="md-icon-button" aria-label="Open sample menu">-->
+                                                    <!--<i class="material-icons inline-icon">menu</i>-->
+                                                    <!--<span>Options</span>-->
+                                                <!--</md-button>-->
+                                                <!--<md-menu-content>-->
+                                                    <!--<md-menu-item>-->
+                                                        <!--<md-button class="button-hover" ng-click="regenerateMultiStudentComment(student)">-->
+                                                            <!--<i class="material-icons inline-icon">autorenew</i>-->
+                                                            <!--<span>Regenerate</span>-->
+                                                            <!--<md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">-->
+                                                                <!--Get a new set of random comments for this student-->
+                                                            <!--</md-tooltip>-->
+                                                        <!--</md-button>-->
+                                                    <!--</md-menu-item>-->
+                                                    <!--<md-menu-item>-->
+                                                        <!--<md-button class="button-hover" ng-disabled="student.comment == ''" ng-click="shuffleMultiStudentComment(student)">-->
+                                                            <!--<i class="material-icons inline-icon">shuffle</i>-->
+                                                            <!--<span>Shuffle Comments</span>-->
+                                                            <!--<md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">-->
+                                                                <!--Shuffle the current comments for this student-->
+                                                            <!--</md-tooltip>-->
+                                                        <!--</md-button>-->
+                                                    <!--</md-menu-item>-->
+                                                    <!--<md-menu-item>-->
+                                                        <!--<md-button class="button-hover"  ng-click="editMultiStudentComment(student)">-->
+                                                            <!--<i class="material-icons inline-icon">mode_edit</i>-->
+                                                            <!--<span>Edit as Single Student</span>-->
+                                                            <!--<md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">-->
+                                                                <!--Edit this student's comments-->
+                                                            <!--</md-tooltip>-->
+                                                        <!--</md-button>-->
+                                                    <!--</md-menu-item>-->
+                                                    <!--<md-menu-item>-->
+                                                        <!--<md-button aria-label="Copy Comments" md-ink-ripple flex class="button-hover" ng-disabled="yourCommentIntroduction == '' && student.comment == '' && yourCommentConclusion == ''" ng-click="commentsCopied()" md-ripple-size="auto" clipboard text="yourCommentIntroduction + ' ' + student.comment + ' ' + yourCommentConclusion">-->
+                                                            <!--<i class="material-icons inline-icon">content_copy</i>-->
+                                                            <!--<span>Copy Comment</span>-->
+                                                            <!--<md-tooltip ng-show="showTooltips" class="tooltip">-->
+                                                                <!--Copies just this student's comment to the clipboard-->
+                                                            <!--</md-tooltip>-->
+                                                        <!--</md-button>-->
+                                                    <!--</md-menu-item>-->
+                                                    <!--<md-menu-item>-->
+                                                        <!--<md-button class="button-hover" ng-click="removeMultiStudent(student)">-->
+                                                            <!--<i class="material-icons inline-icon">delete</i>-->
+                                                            <!--<span>Remove Student</span>-->
+                                                            <!--<md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">-->
+                                                                <!--Remove this student from the list-->
+                                                            <!--</md-tooltip>-->
+                                                        <!--</md-button>-->
+                                                    <!--</md-menu-item>-->
+                                                <!--</md-menu-content>-->
+                                            <!--</md-menu>-->
+
                                             <md-button class="button-hover" ng-click="regenerateMultiStudentComment(student)">
                                                 <i class="material-icons inline-icon">autorenew</i>
                                                 <span>Regenerate</span>
@@ -472,6 +521,15 @@
                                                     Get a new set of random comments for this student
                                                 </md-tooltip>
                                             </md-button>
+
+                                            <!--<md-button class="button-hover" ng-disabled="student.comment == ''" ng-click="shuffleMultiStudentComment(student)">-->
+                                                <!--<i class="material-icons inline-icon">shuffle</i>-->
+                                                <!--<span>Shuffle Comments</span>-->
+                                                <!--<md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">-->
+                                                    <!--Shuffle the current comments for this student-->
+                                                <!--</md-tooltip>-->
+                                            <!--</md-button>-->
+
                                             <md-button class="button-hover"  ng-click="editMultiStudentComment(student)">
                                                 <i class="material-icons inline-icon">mode_edit</i>
                                                 <span>Edit as Single Student</span>
@@ -479,6 +537,15 @@
                                                     Edit this student's comments
                                                 </md-tooltip>
                                             </md-button>
+
+                                            <md-button aria-label="Copy Comments" md-ink-ripple flex class="button-hover" ng-disabled="yourCommentIntroduction == '' && student.comment == '' && yourCommentConclusion == ''" ng-click="commentsCopied()" md-ripple-size="auto" clipboard text="yourCommentIntroduction + ' ' + student.comment + ' ' + yourCommentConclusion">
+                                                <i class="material-icons inline-icon">content_copy</i>
+                                                <span>Copy Comment</span>
+                                                <md-tooltip ng-show="showTooltips" class="tooltip">
+                                                    Copies just this student's comment to the clipboard
+                                                </md-tooltip>
+                                            </md-button>
+
                                             <md-button class="button-hover" ng-click="removeMultiStudent(student)">
                                                 <i class="material-icons inline-icon">delete</i>
                                                 <span>Remove Student</span>
@@ -486,6 +553,7 @@
                                                     Remove this student from the list
                                                 </md-tooltip>
                                             </md-button>
+
                                         </div>
                                     </td>
                                 </tr>

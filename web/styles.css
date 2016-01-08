@@ -16,6 +16,10 @@ td.comment-text:hover {
     color: #FFC107;
 }
 
+.button-hover-accent:hover {
+    color: #673AB7;
+}
+
 .comment-edit {
     padding: .4em;
     cursor: pointer;

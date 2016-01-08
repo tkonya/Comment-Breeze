@@ -553,7 +553,7 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
         $scope.selectedTab = 1;
         $location.hash('top-of-page');
         $anchorScroll();
-        $scope.illToastToThat('Editing '+ student.name +'. Return to Multi Student tab when done and your changes will be brought back.')
+        $scope.illToastToThat('Editing '+ student.name +' as single student.')
     };
 
     $scope.selectMultiStudentTab = function() {
