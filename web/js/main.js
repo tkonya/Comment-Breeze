@@ -6,7 +6,7 @@ var commentApp = angular.module('commentApp', ['angular-clipboard', 'ngMaterial'
             .backgroundPalette('grey').dark();
     });
 
-commentApp.controller('CommentController', function($scope, $http, $timeout, $mdToast, $mdDialog, $mdMedia) {
+commentApp.controller('CommentController', function($scope, $http, $timeout, $mdToast, $mdDialog, $mdMedia, $location, $anchorScroll) {
 
     $scope.selectedTab = 0;
 
@@ -73,10 +73,24 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
                 $scope.commentsLengthFormatted = $scope.comments.length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
                 $scope.changeCommentsPerPage();
+
+                $scope.recordPageHit();
+
             }).
             error(function () {
                 console.error('returned error');
             });
+    };
+
+    $scope.recordPageHit = function() {
+        $http({
+            url: "/rest/comments/hit",
+            method: "POST"
+        }).success(function () {
+            console.log('Page hit recorded');
+        }).error(function () {
+            console.log('Error recording page hit');
+        });
     };
 
     $scope.addComment = function(comment, showToast) {
@@ -531,9 +545,13 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
     $scope.editMultiStudentComment = function(student) {
         $scope.editingMultiStudent = student;
         $scope.studentName = student.name;
+        $scope.oldStudentName = student.name;
         $scope.yourComment = student.comment;
         $scope.studentGender = student.gender;
         $scope.selectedTab = 1;
+        $location.hash('top-of-page');
+        $anchorScroll();
+        $scope.illToastToThat('Editing '+ student.name +'. Return to Multi Student tab when done and your changes will be brought back.')
     };
 
     $scope.selectMultiStudentTab = function() {

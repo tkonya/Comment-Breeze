@@ -33,9 +33,11 @@ public class CommentResource {
 
     @GET
     @Produces("application/json")
-    public Response getComments() throws JSONException {
+    public Response getComments(@Context HttpServletRequest request) throws JSONException {
+
         System.out.println("In comment resource");
 
+        // get the comments object if necessary
         if (updated || lastCached.isBefore(LocalDateTime.now().minusDays(1)) || comments == null || comments.length() == 0) {
             System.out.println("Has been over 1 day, will reload cache");
             DatabaseHandler databaseHandler = new DatabaseHandler();
@@ -47,6 +49,40 @@ public class CommentResource {
         }
 
         return Response.ok(comments.toString()).build();
+    }
+
+    @POST
+    @Path("hit")
+    public Response recordPageHit(@Context HttpServletRequest request) throws JSONException {
+
+        System.out.println("Recording page hit");
+
+        DatabaseHandler databaseHandler = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            databaseHandler = new DatabaseHandler();
+            preparedStatement = databaseHandler.getConnection().prepareStatement(
+                    "INSERT INTO page_hits (ip_address, user_agent, time) VALUES (?, ?, CURRENT_TIMESTAMP)"
+            );
+
+            preparedStatement.setString(1, request.getRemoteAddr());
+            preparedStatement.setString(2, request.getHeader("User-Agent"));
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                assert preparedStatement != null;
+                preparedStatement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            assert databaseHandler != null;
+            databaseHandler.closeConnection();
+        }
+
+        return Response.ok().build();
     }
 
     @PUT

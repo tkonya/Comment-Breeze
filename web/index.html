@@ -47,6 +47,18 @@
 </head>
 <body ng-app="commentApp" ng-controller="CommentController" class="darkula-background">
 
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-72173818-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <div style="height:0;width: 0;" id="top-of-page"></div>
+
     <md-tabs md-dynamic-height="true" md-center-tabs="true" md-selected="selectedTab">
         <md-tab>
             <md-tab-label>
@@ -76,12 +88,9 @@
                                 <h3>What's different about Comment Breeze?</h3>
 
                                 <p class="paragraphs">
-                                    There are currently <span ng-bind="commentsLengthFormatted"></span> comments in the database.
-                                    This is the greatest strength and weakness of this site.
-                                    The benefit is that there are tens of thousands more comments here than any other site I've seen.
-                                    Since all of the comments are loaded into your browser upfront, it means that searching them is instantaneous.
-                                    The downside is that since I don't have the time (or interest) in going through and editing and categorizing all of the comments manually they are not organized or formatted as well as other sites.
-                                    I have written code to help me go through and format comments in a semi-automated way, but it's not perfect.
+                                    A massive database of comments, currently <span ng-bind="commentsLengthFormatted"></span>!<br>
+                                    Blazing fast multi-student comment generation<br>
+                                    Powerful live search capability
                                 </p>
 
                                 <h3>OK, how do I use it?</h3>
@@ -95,11 +104,8 @@
 
                                 <p class="paragraphs" ng-show="isMobile">
                                     I've done my best to make this site responsive and accessible on mobile devices as well as computers.
-                                    But if you are visiting this on a mobile site you might want to note a couple things.
-                                    Firstly the page is very javascript heavy, and may suffer from slow performance on mobile devices with limited computing power.
-                                    The tooltips are turned off for mobile users due to not having a mouse to hover over things with and also them taking up a much higher percentage of the screen.
-                                    I currently detect mobile users by looking at whether the screen is less than 1200px wide; if you're seeing this message it means you initially loaded the page under 1200px.
-                                    You can turn on tooltips in the settings tab.
+                                    That said, the page is very javascript heavy and may suffer from slow performance on mobile devices with limited computing power.
+                                    See the settings tab for adjustments you can make to make your mobile viewing better.
                                 </p>
 
                                 <h3>How is it made?</h3>
@@ -113,9 +119,8 @@
 
                                 <br><br>
 
-                                <!--<p>-->
                                 <a href="https://github.com/tkonya/Comment-Breeze" target="_blank">
-                                    <img src="images/OctoMark.png" height="90px">
+                                    <img src="images/OctoMark.png">
                                 </a>
 
                                 <!--<img src="images/Logo-Black-128px-TM.png" height="40px">-->
@@ -135,7 +140,7 @@
                 Single Student
             </md-tab-label>
             <md-tab-body>
-                <div class="darkula-background">
+                <div class="darkula-background" id="top-single-student-container">
                     <div class="all-tabs">
                         <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
 
@@ -153,7 +158,7 @@
                             <form ng-submit="blurStudentName()" flex-gt-lg="30">
                                 <md-input-container class="input-container">
                                     <label>Student Name</label>
-                                    <input type="text" ng-model="studentName" ng-blur="blurStudentName()">
+                                    <input type="text" autocomplete="off" ng-model="studentName" ng-blur="blurStudentName()">
                                 </md-input-container>
                                 <button class="invisible-button" type="submit">Submit</button>
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
@@ -376,6 +381,17 @@
 
                         <div layout-sm="column" layout-md="column" layout-lg="column" layout-gt-lg="row" layout-fill>
 
+                            <div flex-gt-lg="25">
+                                <md-radio-group ng-model="defaultGender" layout="row" aria-label="Default Gender">
+                                    <md-radio-button ng-model="defaultGender" value="male" selected>Male</md-radio-button>
+                                    <md-radio-button ng-model="defaultGender" value="female" >Female</md-radio-button>
+                                    <md-radio-button ng-model="defaultGender" value="neutral" >Neutral</md-radio-button>
+                                </md-radio-group>
+                                <md-tooltip ng-show="showTooltips" class="tooltip">
+                                    The default gender added students
+                                </md-tooltip>
+                            </div>
+
                             <form ng-submit="addMultiStudent()" autocomplete="off" flex-gt-lg="50">
                                 <md-input-container class="input-container">
                                     <label>Add Student</label>
@@ -387,16 +403,13 @@
                                 </md-tooltip>
                             </form>
 
-                            <div flex-gt-lg="50">
-                                <md-radio-group ng-model="defaultGender" layout="row" aria-label="Default Gender">
-                                    <md-radio-button ng-model="defaultGender" value="male" selected>Male</md-radio-button>
-                                    <md-radio-button ng-model="defaultGender" value="female" >Female</md-radio-button>
-                                    <md-radio-button ng-model="defaultGender" value="neutral" >Neutral</md-radio-button>
-                                </md-radio-group>
+                            <md-button aria-label="Copy Comments" md-ink-ripple flex class="md-button md-raised md-primary button-min-size" ng-click="addMultiStudent()" md-ripple-size="auto">
+                                <i class="material-icons inline-icon">person_add</i>
+                                <span>Add Student</span>
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
-                                    The default gender added students
+                                    Adds the student to the list
                                 </md-tooltip>
-                            </div>
+                            </md-button>
 
                         </div>
 
@@ -426,17 +439,17 @@
                                                 </md-tooltip>
                                             </md-button>
                                             <md-button class="button-hover"  ng-click="editMultiStudentComment(student)">
-                                            <i class="material-icons inline-icon">mode_edit</i>
-                                            <span>Edit as Single Student</span>
-                                            <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
-                                            Edit this student's comments
-                                            </md-tooltip>
+                                                <i class="material-icons inline-icon">mode_edit</i>
+                                                <span>Edit as Single Student</span>
+                                                <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
+                                                    Edit this student's comments
+                                                </md-tooltip>
                                             </md-button>
                                             <md-button class="button-hover" ng-click="removeMultiStudent(student)">
                                                 <i class="material-icons inline-icon">delete</i>
-                                                <span>Delete Student</span>
+                                                <span>Remove Student</span>
                                                 <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
-                                                    Edit this student's comments
+                                                    Remove this student from the list
                                                 </md-tooltip>
                                             </md-button>
                                         </div>
