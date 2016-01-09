@@ -6,7 +6,7 @@ var commentApp = angular.module('commentApp', ['angular-clipboard', 'ngMaterial'
             .backgroundPalette('grey').dark();
     });
 
-commentApp.controller('CommentController', function($scope, $http, $timeout, $mdToast, $mdDialog, $mdMedia, $location, $anchorScroll) {
+commentApp.controller('CommentController', function($scope, $http, $timeout, $mdToast, $mdDialog, $mdMedia, $location, $anchorScroll, $document) {
 
     $scope.selectedTab = 0;
 
@@ -200,6 +200,16 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
 
         $scope.yourCommentIntroduction = $scope.replaceClassName($scope.yourCommentIntroduction, true);
         $scope.yourComment = $scope.replaceClassName($scope.yourComment, true);
+
+        // replace it in all of the multi student texts too
+        if ($scope.multiStudent.length > 0) {
+            for (var i = 0; i < $scope.multiStudent.length; ++i) {
+                $scope.multiStudent[i].comment = $scope.replaceClassName($scope.multiStudent[i].comment, true);
+            }
+            $scope.buildAllMultiStudentComments();
+        }
+
+
         $scope.yourCommentConclusion = $scope.replaceClassName($scope.yourCommentConclusion);
 
         $scope.illToastToThat('Class name changed to ' + $scope.className);
@@ -261,11 +271,16 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
         $scope.commentViewBegin = 0;
     };
 
-    $scope.changeCommentsPage = function(newPage) {
+    $scope.changeCommentsPage = function(newPage, skipAnchor) {
         console.log('Changing page to ' + newPage);
         if (newPage >= 1 && newPage <= $scope.totalCommentPages) {
             $scope.currentCommentsPage = newPage;
             $scope.commentViewBegin = ($scope.currentCommentsPage - 1) * $scope.commentViewLimit;
+        }
+
+        if (!skipAnchor) {
+            //$location.hash('next-comments-page-location');
+            //$anchorScroll();
         }
     };
 
@@ -449,18 +464,21 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
     };
 
     $scope.detectMobile = function() {
-        var smallScreen = $mdMedia('(max-width: 1199px)');
+        var smallScreen = $mdMedia('sm') || $mdMedia('xs');
         if (smallScreen) {
+            console.log('Detected small screen, hiding tooltips');
             $scope.isMobile = true;
             $scope.showTooltips = false;
         }
     };
 
     $scope.illToastToThat = function(text) {
+        //$mdToast.show($mdToast.simple().textContent(text));
         $mdToast.show(
             {
                 template: '<md-toast class="toast-style">' + text + '</md-toast>',
-                position: 'top left'
+                position: 'bottom right',
+                parent: $document[0].querySelector('#toastBounds')
             }
         );
     };
@@ -564,8 +582,8 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
         $scope.yourComment = student.comment;
         $scope.studentGender = student.gender;
         $scope.selectedTab = 1;
-        $location.hash('top-of-page');
-        $anchorScroll();
+        //$location.hash('top-of-page');
+        //$anchorScroll();
         $scope.illToastToThat('Editing '+ student.name +' as single student.')
     };
 
@@ -594,7 +612,7 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
         $scope.comments = $scope.fullCommentsSet.slice(0, $scope.reduceCommentsSize);
         $scope.illToastToThat('Comments reduced to ' + $scope.comments.length);
         $scope.changeCommentsPerPage();
-        $scope.changeCommentsPage(1);
+        $scope.changeCommentsPage(1, true);
     };
 
     $scope.restoreComments = function() {
@@ -604,7 +622,7 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
         $scope.fullCommentsSet = null;
         $scope.illToastToThat('Full comment set restored');
         $scope.changeCommentsPerPage();
-        $scope.changeCommentsPage(1);
+        $scope.changeCommentsPage(1, true);
     };
 
     $scope.currentCommentsFormattedLength = function() {

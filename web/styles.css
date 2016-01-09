@@ -77,10 +77,17 @@ tr:nth-child(odd) {
     height: 0px;
     width: 0px;
     visibility: hidden;
+    position: relative;
+    bottom: 30px;
 }
 
 .input-container {
     padding-bottom: 0;
+    margin: 0;
+}
+
+.intro-conclusion-multi {
+    margin-top: 0;
 }
 
 .tooltip {
@@ -114,7 +121,7 @@ tr:nth-child(odd) {
 }
 
 .all-tabs {
-    padding-top: 1em;
+    padding-top: 2em;
     max-width: 1600px;
     margin: auto;
 }
@@ -166,7 +173,7 @@ tr:nth-child(odd) {
 
 .multi-student-button-td {
     vertical-align: middle;
-    margin: auto;
+    margin: 0.5em;
 }
 
 .multi-student-button-container {
@@ -214,13 +221,14 @@ tr:nth-child(odd) {
 }
 
 .settings-text {
+    margin-top: 0;
     padding-left: 1em;
 }
 
 
 .settings-number-input {
-    padding-left: 1em;
-    padding-top: 1em;
+    /*padding-left: 1em;*/
+    /*padding-top: 1em;*/
     max-width: 60%;
 }
 
@@ -265,4 +273,65 @@ tr:nth-child(odd) {
     cursor: pointer;
     text-align: center;
     padding-top: 2em;
+}
+
+.full-width {
+    width: 98%;
+}
+
+.radio-button-container {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.radio-button-group {
+    margin: auto;
+    padding-left: 0.3em;
+    padding-right: 1em;
+}
+
+.help-button {
+    position: relative;
+    bottom: 1em;
+}
+
+.search-and-filter {
+    margin-bottom: 0.2em;
+    /*position: relative;*/
+    /*top: 1em;*/
+}
+
+.whole-comment-container {
+    padding-top: 1.5em;
+}
+
+.small-margin {
+    margin-top: 2em;
+}
+
+.no-bottom-margin {
+    margin-bottom: 0;
+}
+
+.gender-radio {
+    margin-left: 0;
+}
+
+.setting-control-container {
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    vertical-align: middle;
+    margin-bottom: 0.5em;
+}
+
+.setting-control {
+    margin-bottom: 0;
+    width: auto;
+    vertical-align: bottom;
+}
+
+.zero-size {
+    height: 0;
+    width: 0;
 }
