@@ -169,18 +169,28 @@
 
                             <div flex-order="3" flex-gt-sm="30" class="radio-button-container">
                                 <md-radio-group class="md-primary radio-button-group" ng-model="studentGender" layout="row">
-                                    <md-radio-button ng-model="studentGender" class="gender-radio" value="male" ng-click="fixCommentPronouns()" selected>Male</md-radio-button>
-                                    <md-radio-button ng-model="studentGender" class="gender-radio" value="female" ng-click="fixCommentPronouns()" >Female</md-radio-button>
+                                    <md-radio-button ng-model="studentGender" class="gender-radio" value="male" ng-click="fixCommentPronouns()" selected>
+                                        Male
+                                        <md-tooltip ng-show="showTooltips" class="tooltip">
+                                            Will attempt to fix gendered pronouns
+                                        </md-tooltip>
+                                    </md-radio-button>
+                                    <md-radio-button ng-model="studentGender" class="gender-radio" value="female" ng-click="fixCommentPronouns()" >
+                                        Female
+                                        <md-tooltip ng-show="showTooltips" class="tooltip">
+                                            Will attempt to fix gendered pronouns
+                                        </md-tooltip>
+                                    </md-radio-button>
                                     <md-radio-button ng-disabled="!enableNeutralGender" ng-model="studentGender" class="gender-radio" value="neutral" ng-click="fixCommentPronouns()">
                                         Neutral
                                         <md-tooltip ng-show="showTooltips && !enableNeutralGender" class="tooltip">
-                                            Netural gender can be enabled on the settings page
-                                        </md-tooltip></md-radio-button>
+                                            Neutral gender can be enabled on the settings page
+                                        </md-tooltip>
+                                        <md-tooltip ng-show="showTooltips && enableNeutralGender" class="tooltip">
+                                            Will attempt to fix gendered pronouns
+                                        </md-tooltip>
                                     </md-radio-button>
                                 </md-radio-group>
-                                <md-tooltip ng-show="showTooltips" class="tooltip">
-                                    Will attempt to fix gendered pronouns
-                                </md-tooltip>
                             </div>
 
                             <md-button class="button-hover help-button md-primary" ng-click="showSingleStudentHelp()" flex-order-sm="-1" flex-order-gt-sm="4" flex-gt-sm="10">
@@ -419,16 +429,27 @@
 
                             <div flex-gt-sm="25" class="radio-button-container">
                                 <md-radio-group ng-model="defaultGender" class="md-primary radio-button-group" layout="row" aria-label="Default Gender">
-                                    <md-radio-button ng-model="defaultGender" value="male" selected>Male</md-radio-button>
-                                    <md-radio-button ng-model="defaultGender" value="female" >Female</md-radio-button>
+                                    <md-radio-button ng-model="defaultGender" value="male" selected>
+                                        Male
+                                        <md-tooltip ng-show="showTooltips" class="tooltip">
+                                            The default gender added students
+                                        </md-tooltip>
+                                    </md-radio-button>
+                                    <md-radio-button ng-model="defaultGender" value="female">
+                                        Female
+                                        <md-tooltip ng-show="showTooltips" class="tooltip">
+                                            The default gender added students
+                                        </md-tooltip>
+                                    </md-radio-button>
                                     <md-radio-button ng-disabled="!enableNeutralGender" ng-model="defaultGender" value="neutral">Neutral
                                         <md-tooltip ng-show="showTooltips && !enableNeutralGender" class="tooltip">
-                                            Netural gender can be enabled on the settings page
-                                        </md-tooltip></md-radio-button>
+                                            Neutral gender can be enabled on the settings page
+                                        </md-tooltip>
+                                        <md-tooltip ng-show="showTooltips && enableNeutralGender" class="tooltip">
+                                            The default gender added students
+                                        </md-tooltip>
+                                    </md-radio-button>
                                 </md-radio-group>
-                                <md-tooltip ng-show="showTooltips" class="tooltip">
-                                    The default gender added students
-                                </md-tooltip>
                             </div>
 
                             <div hide-gt-sm class="small-margin"></div>
