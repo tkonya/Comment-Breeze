@@ -19,6 +19,7 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
     $scope.reduceCommentsSize = 0;
     $scope.fullCommentsSet = null;
     $scope.avoidHer = true;
+    $scope.enableNeutralGender = false;
 
     $scope.comments = [];
     $scope.allComments = []; // when 'filtering', put all comments in here, then we'll pull them back out when we switch back
