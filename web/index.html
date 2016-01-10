@@ -7,9 +7,9 @@
     <meta name="viewport" content="initial-scale=1" />
 
     <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src="angular/angular.min.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
     <script src="angular-clipboard/angular-clipboard.js"></script>
-    <script src="angular/angular.min.js"></script>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
@@ -96,7 +96,7 @@
                                     Reading the help for each page first is strongly suggested.
                                 </p>
 
-                                <h3 class=yellow-color" ng-show="isMobile">Mobile Warning</h3>
+                                <h3 class="yellow-color" ng-show="isMobile">Mobile Warning</h3>
 
                                 <p class="paragraphs" ng-show="isMobile">
                                     I've done my best to make this site responsive and accessible on mobile devices as well as computers.<br>
@@ -170,7 +170,12 @@
                                 <md-radio-group class="md-primary radio-button-group" ng-model="studentGender" layout="row">
                                     <md-radio-button ng-model="studentGender" class="gender-radio" value="male" ng-click="fixCommentPronouns()" selected>Male</md-radio-button>
                                     <md-radio-button ng-model="studentGender" class="gender-radio" value="female" ng-click="fixCommentPronouns()" >Female</md-radio-button>
-                                    <md-radio-button ng-model="studentGender" class="gender-radio" value="neutral" ng-click="fixCommentPronouns()" >Neutral</md-radio-button>
+                                    <md-radio-button ng-disabled="!enableNeutralGender" ng-model="studentGender" class="gender-radio" value="neutral" ng-click="fixCommentPronouns()">
+                                        Neutral
+                                        <md-tooltip ng-show="showTooltips && !enableNeutralGender" class="tooltip">
+                                            Netural gender can be enabled on the settings page
+                                        </md-tooltip></md-radio-button>
+                                    </md-radio-button>
                                 </md-radio-group>
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
                                     Will attempt to fix gendered pronouns
@@ -412,7 +417,10 @@
                                 <md-radio-group ng-model="defaultGender" class="md-primary radio-button-group" layout="row" aria-label="Default Gender">
                                     <md-radio-button ng-model="defaultGender" value="male" selected>Male</md-radio-button>
                                     <md-radio-button ng-model="defaultGender" value="female" >Female</md-radio-button>
-                                    <md-radio-button ng-model="defaultGender" value="neutral" >Neutral</md-radio-button>
+                                    <md-radio-button ng-disabled="!enableNeutralGender" ng-model="defaultGender" value="neutral">Neutral
+                                        <md-tooltip ng-show="showTooltips && !enableNeutralGender" class="tooltip">
+                                            Netural gender can be enabled on the settings page
+                                        </md-tooltip></md-radio-button>
                                 </md-radio-group>
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
                                     The default gender added students
@@ -604,11 +612,11 @@
                 <div class="darkula-background">
                     <div class="all-tabs settings-tab">
 
-                        <h3 class="settings-header">Visibility</h3>
+                        <h3 class="settings-header yellow-color">Visibility</h3>
                         <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
                             <div flex-gt-xs="25" class="setting-control-container">
                                 <md-checkbox ng-model="showTooltips" aria-label="Hide or show the tooltips" class="setting-control">
-                                    Show Tooltips
+                                    Tooltips
                                 </md-checkbox>
                             </div>
                             <p flex-gt-xs="75" class="settings-text">Turn pop up tooltips on or off. Recommended off for mobile or touchscreen-only users; on for users with a mouse or other pointing device.</p>
@@ -617,7 +625,7 @@
                         <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
                             <div flex-gt-xs="25" class="setting-control-container">
                                 <md-checkbox ng-model="showTone" class="setting-control" aria-label="Hide or show the tone button and indicator">
-                                    Show Tone Buttons
+                                    Tone Buttons
                                 </md-checkbox>
                             </div>
                             <p flex-gt-xs="75" class="settings-text">Show or hide the tone buttons and indicators on the comments list. Gives a little extra space to those who are on small screens or are not going to edit comment tone.</p>
@@ -626,7 +634,7 @@
                         <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
                             <div flex-gt-xs="25" class="setting-control-container">
                                 <md-checkbox ng-model="showEditButtons" class="setting-control" aria-label="Hide or show the edit buttons">
-                                    Show Edit Buttons
+                                    Edit Buttons
                                 </md-checkbox>
                             </div>
                             <p flex-gt-xs="75" class="settings-text">Show or hide the edit button on the comments list. Gives a little extra space to those who are on small screens or are not going to edit the comment text.</p>
@@ -634,7 +642,7 @@
 
                         <br>
 
-                        <h3 class="settings-header">Make Something Up</h3>
+                        <h3 class="settings-header yellow-color">Make Something Up</h3>
                         <div layout-xs="column" layout-sm="row"  layout-gt-sm="row" layout-fill>
                             <div flex-gt-xs="25" class="setting-control-container">
                                 <md-input-container class="settings-number-input setting-control">
@@ -647,21 +655,31 @@
 
                         <br>
 
+                        <h3 class="settings-header yellow-color">Gender Selection and Switching</h3>
                         <div layout-xs="column" layout-sm="row"  layout-gt-sm="row" layout-fill>
                             <div flex-gt-sm="25" class="setting-control-container">
-                                <md-checkbox ng-model="avoidHer" class="setting-control" aria-label="Hide or show the tooltips">
+                                <md-checkbox ng-model="avoidHer" class="setting-control" aria-label="Avoid comments with the 'her' pronoun">
                                     Avoid "her"
                                 </md-checkbox>
                             </div>
-                            <p flex-gt-sm="75" class="settings-text">When auto-generating comments for male or neutral genders the system cannot know for sure which pronoun to replace "her" with, therefore often times it gets it wrong. Checking this will attempt to avoid comments with "her" when auto-generating comments if the gender is not female. This will reduce the number of available comments for non-females, but also reduce the number of corrections necessary.</p>
+                            <p flex-gt-sm="75" class="settings-text">When auto-generating comments for non-female genders the system cannot know for sure which pronoun to replace "her" with, therefore often times it gets it wrong. Checking this will attempt to avoid comments with "her" when auto-generating comments if the gender is not female. This will reduce the number of available comments for non-females, but also reduce the number of corrections necessary.</p>
+                        </div>
+
+                        <div layout-xs="column" layout-sm="row"  layout-gt-sm="row" layout-fill>
+                            <div flex-gt-sm="25" class="setting-control-container">
+                                <md-checkbox ng-model="enableNeutralGender" class="setting-control" aria-label="Enable neutral gender">
+                                    Enable Neutral
+                                </md-checkbox>
+                            </div>
+                            <p flex-gt-sm="75" class="settings-text">The gender neutral pronouns are also plural (they, them, etc...) and therefor switching to them from the singular male or female pronouns will often make the sentence grammatically incorrect because verbs will remain singular. You can turn on the ability to use gendered pronouns but more proofreading and correction will be required.</p>
                         </div>
 
                         <br>
 
-                        <h3 class="settings-header">Resize Comments</h3>
+                        <h3 class="settings-header yellow-color">Resize Comments</h3>
                         <div layout-xs="column" layout-sm="row"  layout-gt-sm="row" layout-fill>
                             <div flex-gt-xs="25" class="setting-control-container" class="setting-control-container">
-                                <md-input-container class="settings-number-input setting-control">
+                                <md-input-container class="settings-number-inpuht setting-control">
                                     <label>Target Size</label>
                                     <input type="number" ng-model="reduceCommentsSize" min="1" max="comments.length">
                                 </md-input-container>
