@@ -17,7 +17,7 @@ public class LockoutHandler {
     private int failExpirationMinutes = 180; // how long it takes for a failed attempt to roll off
 
     private int idLockoutAttempts = 3; // how many attempts a single id is allowed before they are locked out
-    private int idLockoutMinutes = 60; // how many minutes an id is locked out for once they exceed the max number of lockout attempts
+    private int idLockoutMinutes = 360; // how many minutes an id is locked out for once they exceed the max number of lockout attempts
     private Map<String, LocalDateTime> idLockoutEndTimes; // if an ID is present here it means that they are locked out until the time specified
 
     private int globalLockoutAttempts = 20;
