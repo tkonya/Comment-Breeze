@@ -7,9 +7,10 @@
     <meta name="viewport" content="initial-scale=1" />
 
     <link rel="stylesheet" type="text/css" href="styles.css">
+
+    <script src="angular/angular.min.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
     <script src="angular-clipboard/angular-clipboard.js"></script>
-    <script src="angular/angular.min.js"></script>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
@@ -337,12 +338,15 @@
                                 </tr>
                             </table>
 
-                            <div layout-sm="column" layout-md="column" layout-gt-md="row" layout-fill>
-                                <md-select flex ng-model="commentViewLimit" ng-change="changeCommentsPerPage()" width="50%">
+                            <div layout-xs="column" layout-gt-xs="row" layout-gt-md="row" layout-fill>
+                                <md-select flex ng-model="commentViewLimit" ng-change="changeCommentsPerPage()" flex-sm="30" flex-gt-sm="20">
                                     <md-select-label>Per Page:</md-select-label>
                                     <md-option ng-value="10">10</md-option>
                                     <md-option ng-value="20">20</md-option>
                                     <md-option ng-value="50">50</md-option>
+                                    <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="left">
+                                        Change the number of comments per page
+                                    </md-tooltip>
                                 </md-select>
 
                                 <div flex>

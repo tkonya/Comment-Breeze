@@ -40,12 +40,19 @@ public class CommentResource {
         // get the comments object if necessary
         if (updated || lastCached.isBefore(LocalDateTime.now().minusDays(1)) || comments == null || comments.length() == 0) {
             System.out.println("Has been over 1 day, will reload cache");
+
             DatabaseHandler databaseHandler = new DatabaseHandler();
-            comments = databaseHandler.getJSONArrayFor("SELECT comment_id, comment_text, COALESCE(verified_pos_neg, pos_neg) as pos_neg FROM comment_breeze.comments WHERE deleted = FALSE GROUP BY comment_text ORDER BY RAND()");
+            JSONArray fetchedComments = databaseHandler.getJSONArrayFor("SELECT comment_id, comment_text, COALESCE(verified_pos_neg, pos_neg) as pos_neg FROM comment_breeze.comments WHERE deleted = FALSE GROUP BY comment_text ORDER BY RAND()");
             databaseHandler.closeConnection();
-            updated = false;
+            if (fetchedComments != null && fetchedComments.length() > 0) {
+                comments = fetchedComments;
+                updated = false;
+            } else {
+                System.out.println("Failed to reload comments");
+            }
+
         } else {
-            System.out.println("Has not been 1 day yet, will load from cache");
+//            System.out.println("Has not been 1 day yet, will load from cache");
         }
 
         return Response.ok(comments.toString()).build();
