@@ -18,16 +18,13 @@ public class CommentUtility {
 
         DatabaseHandler databaseHandler = new DatabaseHandler();
 
-        addStudentName("Hyunseok", databaseHandler);
+        addStudentName("", databaseHandler);
+//        findExtraStudentNames(databaseHandler);
 
-        // rescrubbing student names
-//        Collection<String> studentNames = databaseHandler.getCollection(new ArrayList<String>(), "SELECT student_name FROM student_names");
-//        for (String name : studentNames) {
-//            addStudentName(name, databaseHandler);
-//        }
+    }
 
-
-        Collection<String> comments = databaseHandler.getCollection(new ArrayList<String>(), "SELECT comment_text FROM comment_breeze.comments WHERE deleted = 0");
+    private static void findNames(DatabaseHandler databaseHandler) {
+        Collection<String> comments = databaseHandler.getCollection(new ArrayList<>(), "SELECT comment_text FROM comment_breeze.comments WHERE deleted = 0");
 
         Set<String> captureSet = new HashSet<>();
 
@@ -44,14 +41,57 @@ public class CommentUtility {
         for (String value : captureSet) {
             value = value.trim();
             System.out.println("\n" + value);
-            System.out.println("Class Name (C), Student Name (S), School Name (K), None (N)");
+            System.out.println("Class Name (C), Student Name (S), None (N)");
             String readLine = readLine();
             if ("C".equals(readLine.toUpperCase())) {
                 addClassName(value, databaseHandler);
             } else if ("S".equals(readLine.toUpperCase())) {
                 addStudentName(value, databaseHandler);
-            } else if ("K".equals(readLine.toUpperCase())) {
-                addSchoolName(value, databaseHandler);
+            }
+        }
+    }
+
+    private static void findExtraStudentNames(DatabaseHandler databaseHandler) {
+        Collection<String> comments = databaseHandler.getCollection(new ArrayList<>(), "SELECT comment_text FROM comment_breeze.comments WHERE deleted = 0");
+
+        HashMap<String, String> found = new HashMap<>();
+
+        Pattern p = Pattern.compile("(STUDENT_NAME [A-Z][A-Za-z-]{1,20})");
+        for (String text : comments) {
+            Matcher m = p.matcher(text);
+            if (m.find()) {
+                if (text.startsWith("STUDENT_NAME")) {
+                    found.put(text, m.group(1));
+                }
+            }
+        }
+
+        System.out.println("Found " + found.size() + "matches");
+
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = databaseHandler.getConnection().prepareStatement("UPDATE comments SET comment_text = ? WHERE comment_text = ?");
+            for (String value : found.keySet()) {
+
+                value = value.trim();
+                System.out.println("\n" + value);
+                String fixedText = value.substring(value.indexOf("STUDENT_NAME") + 13);
+                System.out.println(fixedText);
+
+                preparedStatement.setString(1, fixedText);
+                preparedStatement.setString(2, value);
+                preparedStatement.addBatch();
+
+            }
+
+            preparedStatement.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException ignore) {}
             }
         }
 
@@ -117,7 +157,7 @@ public class CommentUtility {
         try {
             preparedStatement = databaseHandler.getConnection().prepareStatement("UPDATE comments SET comment_text = REPLACE(comment_text, ?, 'STUDENT_NAME') WHERE CAST(comment_text AS BINARY) RLIKE ?");
             preparedStatement.setString(1, studentName);
-            preparedStatement.setString(2, studentName + "[\\'|’|,|!|:| |.]");
+            preparedStatement.setString(2, studentName + "[\\'|’|,|!|:|;| |.]");
             int updated = preparedStatement.executeUpdate();
             System.out.println(updated + " rows in comments updated");
         } catch (SQLException e) {
@@ -204,6 +244,7 @@ public class CommentUtility {
 
     }
 
+    @Deprecated
     public static void addSchoolName(String schoolName, DatabaseHandler databaseHandler) {
         System.out.println("Adding school name: " + schoolName);
 
