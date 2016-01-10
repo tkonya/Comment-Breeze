@@ -74,14 +74,14 @@
                         <div class="front-page-content-container">
                             <md-content class="front-page-content">
                                 <br>
-                                <h3>Welcome to Comment Breeze!</h3>
+                                <h3 class="yellow-color">Welcome to Comment Breeze!</h3>
 
                                 <p class="paragraphs">
                                     I made this site to help my girlfriend, friends and other ESL teachers build report card comments.<br>
                                     If you're an ESL teacher, I hope this makes your life easier!
                                 </p>
 
-                                <h3>What's different about Comment Breeze?</h3>
+                                <h3 class="yellow-color">What's different about Comment Breeze?</h3>
 
                                 <p class="paragraphs">
                                     <span ng-bind="commentsLengthFormatted"></span> usable comments<br>
@@ -89,23 +89,23 @@
                                     Powerful live search capability
                                 </p>
 
-                                <h3>OK, how do I use it?</h3>
+                                <h3 class="yellow-color">OK, how do I use it?</h3>
 
                                 <p class="paragraphs">
                                     Go to either the Single Student or Multi Student tab.<br>
-                                    There is a help button in the upper right hand corner of either page that will show you instructions and tips for using each page.<br>
-                                    I suggest reading the help for both pages, as there is functionality that is not obvious.
+                                    Click the help button in the upper right hand corner for instructions and tips.<br>
+                                    Reading the help for each page first is strongly suggested.
                                 </p>
 
-                                <h3 ng-show="isMobile">Mobile Warning</h3>
+                                <h3 class=yellow-color" ng-show="isMobile">Mobile Warning</h3>
 
                                 <p class="paragraphs" ng-show="isMobile">
                                     I've done my best to make this site responsive and accessible on mobile devices as well as computers.<br>
                                     That said, the page is very javascript heavy and may suffer from slow performance on mobile devices with limited computing power.<br>
-                                    See the settings tab for adjustments you can make to make your mobile viewing better.
+                                    Some settings have been adjusted for you to make your mobile viewing experience better. These can be changed on the settings page.
                                 </p>
 
-                                <h3>How is it made?</h3>
+                                <h3 class="yellow-color">How is it made?</h3>
 
                                 <p class="paragraphs">
                                     Angular JS 1.4 w/ Angular Material 1.0<br>
@@ -145,14 +145,6 @@
 
                         <div layout-xs="column" layout-sm="column" layout-gt-sm="row" layout-fill>
 
-                            <!--<md-button class="button-hover" ng-click="showSingleStudentHelp()" hide-gt-sm flex>-->
-                                <!--<i class="material-icons inline-icon">help</i>-->
-                                <!--<span>Help</span>-->
-                                <!--<md-tooltip ng-show="showTooltips" class="tooltip" md-direction="left">-->
-                                    <!--Show instructions and settings-->
-                                <!--</md-tooltip>-->
-                            <!--</md-button>-->
-
                             <form ng-submit="blurClassName()" flex-gt-sm="30" flex-order="1">
                                 <md-input-container class="input-container full-width" flex="100">
                                     <label>Class Name</label>
@@ -186,7 +178,7 @@
                                 </md-tooltip>
                             </div>
 
-                            <md-button class="button-hover help-button" ng-click="showSingleStudentHelp()" flex-order-sm="-1" flex-order-gt-sm="4" flex-gt-sm="10">
+                            <md-button class="button-hover help-button md-primary" ng-click="showSingleStudentHelp()" flex-order-sm="-1" flex-order-gt-sm="4" flex-gt-sm="10">
                                 <i class="material-icons inline-icon">help</i>
                                 <span>Help</span>
                                 <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="left">
@@ -405,7 +397,7 @@
                                 </md-tooltip>
                             </md-input-container>
 
-                            <md-button class="button-hover help-button" ng-click="showMultiStudentHelp()" flex-gt-sm="10" flex-order-sm="-1" flex-order-gt-sm="4">
+                            <md-button class="button-hover help-button md-primary" ng-click="showMultiStudentHelp()" flex-gt-sm="10" flex-order-sm="-1" flex-order-gt-sm="4">
                                 <i class="material-icons inline-icon">help</i>
                                 <span>Help</span>
                                 <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="left">

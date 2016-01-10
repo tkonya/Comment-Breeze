@@ -470,7 +470,9 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
             $scope.isMobile = true;
             $scope.showTooltips = false;
         }
-    };
+
+        $scope.showEditButtons = $mdMedia('(min-width: 400px)');
+    }
 
     $scope.illToastToThat = function(text) {
         //$mdToast.show($mdToast.simple().textContent(text));

@@ -137,6 +137,7 @@ tr:nth-child(odd) {
     max-width: 50em;
     padding-left: 1em;
     padding-right: 1em;
+    padding-bottom: 1.5em;
 }
 
 .positive {
@@ -334,4 +335,12 @@ tr:nth-child(odd) {
 .zero-size {
     height: 0;
     width: 0;
+}
+
+.tone-radio-button {
+    padding-bottom: 1em;
+}
+
+.spacer-div {
+    margin-bottom: 0.5em;
 }
