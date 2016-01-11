@@ -65,7 +65,7 @@ public class CommentResource {
                 if (databaseHandler == null) {
                     databaseHandler = new DatabaseHandler();
                 }
-                JSONArray fetchedComments = databaseHandler.getJSONArrayFor("SELECT comment_id, comment_text, COALESCE(verified_pos_neg, pos_neg) as pos_neg FROM comment_breeze.comments WHERE deleted = FALSE GROUP BY comment_text ORDER BY RAND()");
+                JSONArray fetchedComments = databaseHandler.getJSONArrayFor("SELECT comment_id, comment_text, flagged, COALESCE(verified_pos_neg, pos_neg) as pos_neg FROM comment_breeze.comments WHERE deleted = FALSE GROUP BY comment_text ORDER BY RAND()");
                 databaseHandler.closeConnection();
                 if (fetchedComments != null && fetchedComments.length() > 0) {
                     comments = fetchedComments;
@@ -161,7 +161,7 @@ public class CommentResource {
 
                 databaseHandler = new DatabaseHandler();
                 preparedStatement = databaseHandler.getConnection().prepareStatement(
-                    "UPDATE comments SET comment_text = IFNULL(?, comment_text), pos_neg = IFNULL(?, pos_neg), verified_pos_neg = IFNULL(?, pos_neg), deleted = IFNULL(?, deleted), last_update_ip = IFNULL(?, last_update_ip), last_update = CURRENT_TIMESTAMP WHERE comment_id = ?"
+                    "UPDATE comments SET comment_text = IFNULL(?, comment_text), pos_neg = IFNULL(?, pos_neg), verified_pos_neg = IFNULL(?, pos_neg), deleted = IFNULL(?, deleted), last_update_ip = IFNULL(?, last_update_ip), last_update = CURRENT_TIMESTAMP, flagged = IFNULL(?, flagged) WHERE comment_id = ?"
                 );
 
                 if (comment.has("comment_text") && canEdit) {
@@ -189,7 +189,12 @@ public class CommentResource {
                 } else {
                     preparedStatement.setNull(5, Types.VARCHAR);
                 }
-                preparedStatement.setInt(6, comment.getInt("comment_id"));
+                if (comment.has("flagged")) {
+                    preparedStatement.setBoolean(6, comment.getBoolean("flagged"));
+                } else {
+                    preparedStatement.setNull(6, Types.BIT);
+                }
+                preparedStatement.setInt(7, comment.getInt("comment_id"));
 
                 System.out.println(preparedStatement);
                 int result = preparedStatement.executeUpdate();
