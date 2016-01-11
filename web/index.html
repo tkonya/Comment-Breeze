@@ -84,7 +84,7 @@
                                 <h3 class="yellow-color">What's different about Comment Breeze?</h3>
 
                                 <p class="paragraphs">
-                                    <span ng-bind="commentsLengthFormatted"></span> usable comments<br>
+                                    <span ng-bind="totalCommentsSize"></span> usable comments<br>
                                     Blazing fast multi-student comment generation<br>
                                     Powerful live search capability
                                 </p>
@@ -145,10 +145,10 @@
 
                         <div layout-xs="column" layout-sm="column" layout-gt-sm="row" layout-fill>
 
-                            <form ng-submit="blurClassName()" flex-gt-sm="30" flex-order="1">
+                            <form ng-submit="changeClassName()" flex-gt-sm="30" flex-order="1">
                                 <md-input-container class="input-container full-width" flex="100">
                                     <label>Class Name</label>
-                                    <input type="text" ng-model="className" ng-blur="blurClassName()">
+                                    <input type="text" ng-model="className" ng-blur="changeClassName()">
                                 </md-input-container>
                                 <!--<button class="invisible-button" type="submit">Submit</button>-->
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
@@ -156,10 +156,10 @@
                                 </md-tooltip>
                             </form>
 
-                            <form ng-submit="blurStudentName()" flex-gt-sm="30" flex-order="2">
+                            <form ng-submit="changeStudentName()" flex-gt-sm="30" flex-order="2">
                                 <md-input-container class="input-container full-width">
                                     <label>Student Name</label>
-                                    <input type="text" autocomplete="off" ng-model="studentName" ng-blur="blurStudentName()">
+                                    <input type="text" autocomplete="off" ng-model="studentName" ng-blur="changeStudentName()">
                                 </md-input-container>
                                 <!--<button class="invisible-button" type="submit">Submit</button>-->
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
@@ -168,26 +168,26 @@
                             </form>
 
                             <div flex-order="3" flex-gt-sm="30" class="radio-button-container">
-                                <md-radio-group class="md-primary radio-button-group" ng-model="studentGender" layout="row">
-                                    <md-radio-button ng-model="studentGender" class="gender-radio" value="male" ng-click="fixCommentPronouns()" selected>
+                                <md-radio-group class="md-primary radio-button-group" ng-model="studentGender" ng-change="fixCommentPronouns()" layout="row">
+                                    <md-radio-button ng-model="studentGender" class="gender-radio" value="male" selected>
                                         Male
-                                        <md-tooltip ng-show="showTooltips" class="tooltip">
-                                            Will attempt to fix gendered pronouns
+                                        <md-tooltip ng-show="showTooltips && studentGender != 'male'" class="tooltip">
+                                            Change and set pronouns to male
                                         </md-tooltip>
                                     </md-radio-button>
-                                    <md-radio-button ng-model="studentGender" class="gender-radio" value="female" ng-click="fixCommentPronouns()" >
+                                    <md-radio-button ng-model="studentGender" class="gender-radio" value="female" >
                                         Female
-                                        <md-tooltip ng-show="showTooltips" class="tooltip">
-                                            Will attempt to fix gendered pronouns
+                                        <md-tooltip ng-show="showTooltips && studentGender != 'female'" class="tooltip">
+                                            Change and set pronouns to female
                                         </md-tooltip>
                                     </md-radio-button>
-                                    <md-radio-button ng-disabled="!enableNeutralGender" ng-model="studentGender" class="gender-radio" value="neutral" ng-click="fixCommentPronouns()">
+                                    <md-radio-button ng-disabled="!enableNeutralGender" ng-model="studentGender" class="gender-radio" value="neutral"">
                                         Neutral
                                         <md-tooltip ng-show="showTooltips && !enableNeutralGender" class="tooltip">
                                             Neutral gender can be enabled on the settings page
                                         </md-tooltip>
-                                        <md-tooltip ng-show="showTooltips && enableNeutralGender" class="tooltip">
-                                            Will attempt to fix gendered pronouns
+                                        <md-tooltip ng-show="showTooltips && enableNeutralGender && studentGender != 'neutral'" class="tooltip">
+                                            Change and set pronouns to neutral
                                         </md-tooltip>
                                     </md-radio-button>
                                 </md-radio-group>
@@ -389,10 +389,10 @@
                     <div class="all-tabs">
                         <div layout-xs="column" layout-sm="column" layout-gt-sm="row" layout-fill>
 
-                            <form ng-submit="blurClassName()" flex-gt-sm="20" flex-order="1">
+                            <form ng-submit="changeClassName()" flex-gt-sm="20" flex-order="1">
                                 <md-input-container class="input-container full-width" flex="100">
                                     <label>Class Name</label>
-                                    <input type="text" ng-model="className" ng-blur="blurClassName()">
+                                    <input type="text" ng-model="className" ng-blur="changeClassName()">
                                 </md-input-container>
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
                                     Will replace instance of CLASS_NAME in comments
@@ -431,14 +431,14 @@
                                 <md-radio-group ng-model="defaultGender" class="md-primary radio-button-group" layout="row" aria-label="Default Gender">
                                     <md-radio-button ng-model="defaultGender" value="male" selected>
                                         Male
-                                        <md-tooltip ng-show="showTooltips" class="tooltip">
-                                            The default gender added students
+                                        <md-tooltip ng-show="showTooltips && defaultGender != 'male'" class="tooltip">
+                                            Set default gender to male
                                         </md-tooltip>
                                     </md-radio-button>
                                     <md-radio-button ng-model="defaultGender" value="female">
                                         Female
-                                        <md-tooltip ng-show="showTooltips" class="tooltip">
-                                            The default gender added students
+                                        <md-tooltip ng-show="showTooltips && defaultGender != 'female'" class="tooltip">
+                                            Set default gender to female
                                         </md-tooltip>
                                     </md-radio-button>
                                     <md-radio-button ng-disabled="!enableNeutralGender" ng-model="defaultGender" value="neutral">Neutral
@@ -446,7 +446,7 @@
                                             Neutral gender can be enabled on the settings page
                                         </md-tooltip>
                                         <md-tooltip ng-show="showTooltips && enableNeutralGender" class="tooltip">
-                                            The default gender added students
+                                            Set default gender to neutral
                                         </md-tooltip>
                                     </md-radio-button>
                                 </md-radio-group>
@@ -637,6 +637,19 @@
                 <div class="darkula-background">
                     <div class="all-tabs settings-tab">
 
+                        <div ng-hide="allCommentsLoaded">
+                            <h3 class="settings-header yellow-color">Load All Comments</h3>
+                            <div layout-xs="column" layout-sm="row"  layout-gt-sm="row" layout-fill>
+                                <div flex-gt-xs="25" class="setting-control-container">
+                                    <md-button aria-label="Load All" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="getComments(0, true);">
+                                        <i class="material-icons inline-icon">cached</i>
+                                        Load All <span ng-bind="totalCommentsSize"></span>
+                                    </md-button>
+                                </div>
+                                <p flex-gt-xs="75" class="settings-text">Because you initially loaded this page with a small screen or window it was suspected that you might be on a mobile device with limited computing power. To improve performance only <span ng-bind="comments.length"></span> were loaded, but you may load all comments if you choose.</p>
+                            </div>
+                        </div>
+
                         <h3 class="settings-header yellow-color">Visibility</h3>
                         <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
                             <div flex-gt-xs="25" class="setting-control-container">
@@ -701,27 +714,29 @@
 
                         <br>
 
-                        <h3 class="settings-header yellow-color">Resize Comments</h3>
-                        <div layout-xs="column" layout-sm="row"  layout-gt-sm="row" layout-fill>
-                            <div flex-gt-xs="25" class="setting-control-container" class="setting-control-container">
-                                <md-input-container class="settings-number-inpuht setting-control">
-                                    <label>Target Size</label>
-                                    <input type="number" ng-model="reduceCommentsSize" min="1" max="comments.length">
-                                </md-input-container>
+                        <div ng-show="allCommentsLoaded">
+                            <h3 class="settings-header yellow-color">Resize Comments</h3>
+                            <div layout-xs="column" layout-sm="row"  layout-gt-sm="row" layout-fill>
+                                <div flex-gt-xs="25" class="setting-control-container" class="setting-control-container">
+                                    <md-input-container class="settings-number-inpuht setting-control">
+                                        <label>Target Size</label>
+                                        <input type="number" ng-model="reduceCommentsSize" min="1" max="comments.length">
+                                    </md-input-container>
 
+                                </div>
+                                <p flex-gt-xs="75" class="settings-text">If searching is slow, generally on a mobile device, you can reduce the size of the comments you are searching through to increase speed. Select the number of comments you want to search (minimum 1; maximum <span ng-bind="totalCommentsSize"></span>) and hit "Reduce to Target Size". You can change or restore this at any time. Current size: <span ng-bind="currentCommentsFormattedLength()"></span></p>
                             </div>
-                            <p flex-gt-xs="75" class="settings-text">If searching is slow, generally on a mobile device, you can reduce the size of the comments you are searching through to increase speed. Select the number of comments you want to search (minimum 1; maximum <span ng-bind="commentsLengthFormatted"></span>) and hit "Reduce to Target Size". You can change or restore this at any time. Current size: <span ng-bind="currentCommentsFormattedLength()"></span></p>
-                        </div>
-                        <div layout-xs="column" layout-sm="row"  layout-gt-sm="row" layout-fill>
-                            <md-button aria-label="Reduce to Set Size" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="resizeComments()" ng-disabled="reduceCommentsSize == comments.length">
-                                <i class="material-icons inline-icon">filter_list</i>
-                                <span ng-show="reduceCommentsSize <= comments.length">Reduce to Target Size</span>
-                                <span ng-show="reduceCommentsSize > comments.length">Increase to Target Size</span>
-                            </md-button>
-                            <md-button aria-label="Just Make Something Up" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="restoreComments()" ng-disabled="fullCommentsSet == null">
-                                <i class="material-icons inline-icon">cached</i>
-                                Restore Full Set
-                            </md-button>
+                            <div layout-xs="column" layout-sm="row"  layout-gt-sm="row" layout-fill>
+                                <md-button aria-label="Reduce to Set Size" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="resizeComments()" ng-disabled="reduceCommentsSize == comments.length">
+                                    <i class="material-icons inline-icon">filter_list</i>
+                                    <span ng-show="reduceCommentsSize <= comments.length">Reduce to Target Size</span>
+                                    <span ng-show="reduceCommentsSize > comments.length">Increase to Target Size</span>
+                                </md-button>
+                                <md-button aria-label="Just Make Something Up" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="restoreComments()" ng-disabled="fullCommentsSet == null">
+                                    <i class="material-icons inline-icon">cached</i>
+                                    Restore Full Set
+                                </md-button>
+                            </div>
                         </div>
 
                     </div>

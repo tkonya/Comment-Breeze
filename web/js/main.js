@@ -26,8 +26,10 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
     $scope.editingComment = null;
     $scope.editingPasswordTry = '';
     $scope.commentsLoaded = false;
+    $scope.commentSizeToGet = 0;
+    $scope.allCommentsLoaded = false;
 
-    $scope.commentsLengthFormatted = '20,000+';
+    $scope.totalCommentsSize = '20,000+';
     $scope.commentViewLimit = 20;
     $scope.commentViewBegin = 0;
     $scope.currentCommentsPage = 1;
@@ -63,18 +65,38 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
     // multi student
     $scope.students = [];
 
-    $scope.getComments = function() {
-        console.log('trying to get comments');
-        $http.get('/rest/comments').
+    $scope.getComments = function(size, showAllLoadedMessage) {
+
+        $scope.commentsLoaded = false;
+        if (size == null) {
+            size = 0;
+        }
+        $http.get('/rest/comments?size=' + size).
             success(function (data) {
                 console.log('returned success');
 
                 console.log(data.length + ' comments received');
 
-                $scope.comments = data;
+                $scope.comments = data.comments;
                 $scope.reduceCommentsSize = Math.round($scope.comments.length / 5);
                 $scope.commentsLoaded = true;
-                $scope.commentsLengthFormatted = $scope.comments.length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                $scope.totalCommentsSize = data.total_size;
+
+                $scope.allCommentsLoaded = data.all_comments_loaded;
+                if (!$scope.allCommentsLoaded) {
+                    //$scope.illToastToThat('Not all comments loaded - see settings page');
+                    var toast = $mdToast.simple()
+                        .textContent('Not all comments loaded')
+                        .action('Settings')
+                        .highlightAction(true);
+                    $mdToast.show(toast).then(function(response) {
+                        if ( response == 'ok' ) {
+                            $scope.selectedTab = 3;
+                        }
+                    });
+                } else if (showAllLoadedMessage) {
+                    $scope.illToastToThat('Full comment set loaded');
+                }
 
                 $scope.changeCommentsPerPage();
 
@@ -176,7 +198,7 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
         return text;
     };
 
-    $scope.blurStudentName = function() {
+    $scope.changeStudentName = function() {
         console.log('student name: ' + $scope.studentName);
         console.log('old student name: ' + $scope.oldStudentName);
 
@@ -191,7 +213,7 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
         $scope.illToastToThat('Student name changed to ' + $scope.studentName);
     };
 
-    $scope.blurClassName = function() {
+    $scope.changeClassName = function() {
         console.log('class name: ' + $scope.className);
         console.log('old class name: ' + $scope.oldClassName);
 
@@ -473,7 +495,14 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
         }
 
         $scope.showEditButtons = $mdMedia('(min-width: 400px)');
-    }
+
+
+        if ($mdMedia('xs')) {
+            $scope.commentSizeToGet = 2000;
+        } else if ($mdMedia('sm')) {
+            $scope.commentSizeToGet = 6000;
+        }
+    };
 
     $scope.illToastToThat = function(text) {
         //$mdToast.show($mdToast.simple().textContent(text));
@@ -672,7 +701,7 @@ commentApp.controller('CommentController', function($scope, $http, $timeout, $md
         $scope.multiStudentsCopied = false;
     };
 
-    $scope.getComments();
     $scope.detectMobile();
+    $scope.getComments($scope.commentSizeToGet);
 
 });

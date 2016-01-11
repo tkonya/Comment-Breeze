@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
 
 /**
@@ -31,9 +32,13 @@ public class CommentResource {
 
     private static LockoutHandler lockoutHandler = new LockoutHandler();
 
+    /**
+     * @param size 0 = all, any positive number = the number of comments you want
+     * @throws JSONException
+     */
     @GET
     @Produces("application/json")
-    public Response getComments(@Context HttpServletRequest request) throws JSONException {
+    public Response getComments(@Context HttpServletRequest request, @QueryParam("size") Integer size) throws JSONException {
 
         System.out.println("In comment resource");
 
@@ -55,7 +60,23 @@ public class CommentResource {
 //            System.out.println("Has not been 1 day yet, will load from cache");
         }
 
-        return Response.ok(comments.toString()).build();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("total_size", NumberFormat.getInstance().format(comments.length()));
+
+        if (size == null || size < 1 || size > comments.length()) {
+            jsonObject.put("comments", comments);
+            jsonObject.put("all_comments_loaded", true);
+        } else {
+            System.out.println("Getting subarray of size " + size);
+            JSONArray commentSubArray = new JSONArray();
+            for (int i = 0; i < size; ++i) {
+                commentSubArray.put(comments.getJSONObject(i));
+            }
+            jsonObject.put("comments", commentSubArray);
+            jsonObject.put("all_comments_loaded", false);
+        }
+
+        return Response.ok(jsonObject.toString()).build();
     }
 
     @POST
@@ -75,7 +96,7 @@ public class CommentResource {
         try {
             databaseHandler = new DatabaseHandler();
             preparedStatement = databaseHandler.getConnection().prepareStatement(
-                    "INSERT INTO page_hits (ip_address, user_agent, time) VALUES (?, ?, CURRENT_TIMESTAMP)"
+                "INSERT INTO page_hits (ip_address, user_agent, time) VALUES (?, ?, CURRENT_TIMESTAMP)"
             );
 
             preparedStatement.setString(1, request.getRemoteAddr());
