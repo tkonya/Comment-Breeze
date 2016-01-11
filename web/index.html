@@ -298,7 +298,7 @@
 
                             <md-input-container flex-gt-sm="75" class="search-and-filter">
                                 <label>Search Comments</label>
-                                <input type="text" ng-model="searchComments">
+                                <input type="text" ng-model="searchComments" ng-change="changeCommentsPage(1);">
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
                                     Instant search on comments. This is the best way to find comments if you have an idea of what you want to say.
                                 </md-tooltip>

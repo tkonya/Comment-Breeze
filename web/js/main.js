@@ -274,10 +274,12 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
     };
 
     $scope.changeCommentsPage = function(newPage) {
-        console.log('Changing page to ' + newPage);
-        if (newPage >= 1 && newPage <= $scope.totalCommentPages) {
-            $scope.currentCommentsPage = newPage;
-            $scope.commentViewBegin = ($scope.currentCommentsPage - 1) * $scope.commentViewLimit;
+        if ($scope.currentCommentsPage != newPage) {
+            console.log('Changing page to ' + newPage);
+            if (newPage >= 1 && newPage <= $scope.totalCommentPages) {
+                $scope.currentCommentsPage = newPage;
+                $scope.commentViewBegin = ($scope.currentCommentsPage - 1) * $scope.commentViewLimit;
+            }
         }
     };
 
@@ -429,7 +431,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         console.log('done changing filter');
     };
 
-    $scope.detectMobile = function() {
+    $scope.setMobileSettings = function() {
         if ($mdMedia('xs')) {
             $scope.commentSizeToGet = 2000;
             $scope.showTooltips = false;
@@ -441,7 +443,6 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
     };
 
     $scope.illToastToThat = function(text) {
-        //$mdToast.show($mdToast.simple().textContent(text));
         $mdToast.show(
             {
                 template: '<md-toast class="toast-style">' + text + '</md-toast>',
@@ -466,7 +467,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         } else if ($scope.newMultiStudent.endsWith(' f') || $scope.newMultiStudent.endsWith(' F')) {
             student.gender = "female";
             student.name = $scope.newMultiStudent.replace(' f', '').replace(' F', '');
-        } else if ($scope.newMultiStudent.endsWith(' n') || $scope.newMultiStudent.endsWith(' N')) {
+        } else if ($scope.enableNeutralGender && ($scope.newMultiStudent.endsWith(' n') || $scope.newMultiStudent.endsWith(' N'))) {
             student.gender = "neutral";
             student.name = $scope.newMultiStudent.replace(' n', '').replace(' N', '');
         } else {
@@ -662,7 +663,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         $scope.multiStudentsCopied = false;
     };
 
-    $scope.detectMobile();
+    $scope.setMobileSettings();
     $scope.getComments();
 
 });
