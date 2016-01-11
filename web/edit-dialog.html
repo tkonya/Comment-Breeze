@@ -10,7 +10,7 @@
         <md-input-container class="full-width">
             <label>Editing Password</label>
             <input type="text" ng-model="editingPasswordTry">
-            <md-tooltip class="tooltip" ng-hide="isMobile">
+            <md-tooltip class="tooltip" ng-hide="showTooltips">
                 Enter the password to edit comment text
             </md-tooltip>
         </md-input-container><br>
@@ -18,7 +18,7 @@
         <md-input-container class="full-width">
             <label>Comment Text</label>
             <input type="text" required md-maxlength="255" ng-disabled="editingPasswordTry.length < 1" ng-model="editingComment.comment_text">
-            <md-tooltip class="tooltip" ng-hide="isMobile">
+            <md-tooltip class="tooltip" ng-hide="showTooltips">
                 A password is required to edit comment text
             </md-tooltip>
         </md-input-container><br>
@@ -26,13 +26,13 @@
         Select comment tone:<br><br>
         <div>
             <md-radio-group class="md-primary" ng-model="editingComment.pos_neg" layout-xs="column" layout-sm="row" layout="row" layout-fill>
-                <md-radio-button ng-model="studentGender" value="1">Positive</md-radio-button>
+                <md-radio-button ng-model="gender" value="1">Positive</md-radio-button>
                 <div class="spacer-div" hide-lg-xs></div>
-                <md-radio-button ng-model="studentGender" value="0">Neutral</md-radio-button>
+                <md-radio-button ng-model="gender" value="0">Neutral</md-radio-button>
                 <div class="spacer-div" hide-lg-xs></div>
-                <md-radio-button ng-model="studentGender" value="-1">Negative</md-radio-button>
+                <md-radio-button ng-model="gender" value="-1">Negative</md-radio-button>
             </md-radio-group>
-            <md-tooltip ng-hide="isMobile" class="tooltip">
+            <md-tooltip ng-hide="showTooltips" class="tooltip">
                 Edit comment tone; no password required
             </md-tooltip>
         </div>

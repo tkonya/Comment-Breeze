@@ -97,13 +97,16 @@
                                     Reading the help for each page first is strongly suggested.
                                 </p>
 
-                                <h3 class="yellow-color" ng-show="isMobile">Mobile Warning</h3>
+                                <div ng-show="commentSizeToGet != 0">
+                                    <h3 class="yellow-color">Mobile Warning</h3>
 
-                                <p class="paragraphs" ng-show="isMobile">
-                                    I've done my best to make this site responsive and accessible on mobile devices as well as computers.<br>
-                                    That said, the page is very javascript heavy and may suffer from slow performance on mobile devices with limited computing power.<br>
-                                    Some settings have been adjusted for you to make your mobile viewing experience better. These can be changed on the settings page.
-                                </p>
+                                    <p class="paragraphs">
+                                        I've done my best to make this site responsive and accessible on mobile devices as well as computers.<br>
+                                        That said, the page is very javascript heavy and may suffer from slow performance on mobile devices with limited computing power.<br>
+                                        Some settings are changed to make mobile viewing experiences better. These can be changed on the settings page.
+                                    </p>
+                                </div>
+
 
                                 <h3 class="yellow-color">How is it made?</h3>
 
@@ -168,25 +171,25 @@
                             </form>
 
                             <div flex-order="3" flex-gt-sm="30" class="radio-button-container">
-                                <md-radio-group class="md-primary radio-button-group" ng-model="studentGender" ng-change="fixCommentPronouns()" layout="row">
-                                    <md-radio-button ng-model="studentGender" class="gender-radio" value="male" selected>
+                                <md-radio-group class="md-primary radio-button-group" ng-model="gender" ng-change="fixCommentPronouns()" layout="row">
+                                    <md-radio-button ng-model="gender" class="gender-radio" value="male" selected>
                                         Male
-                                        <md-tooltip ng-show="showTooltips && studentGender != 'male'" class="tooltip">
+                                        <md-tooltip ng-show="showTooltips && gender != 'male'" class="tooltip">
                                             Change and set pronouns to male
                                         </md-tooltip>
                                     </md-radio-button>
-                                    <md-radio-button ng-model="studentGender" class="gender-radio" value="female" >
+                                    <md-radio-button ng-model="gender" class="gender-radio" value="female" >
                                         Female
-                                        <md-tooltip ng-show="showTooltips && studentGender != 'female'" class="tooltip">
+                                        <md-tooltip ng-show="showTooltips && gender != 'female'" class="tooltip">
                                             Change and set pronouns to female
                                         </md-tooltip>
                                     </md-radio-button>
-                                    <md-radio-button ng-disabled="!enableNeutralGender" ng-model="studentGender" class="gender-radio" value="neutral"">
+                                    <md-radio-button ng-disabled="!enableNeutralGender" ng-model="gender" class="gender-radio" value="neutral"">
                                         Neutral
                                         <md-tooltip ng-show="showTooltips && !enableNeutralGender" class="tooltip">
                                             Neutral gender can be enabled on the settings page
                                         </md-tooltip>
-                                        <md-tooltip ng-show="showTooltips && enableNeutralGender && studentGender != 'neutral'" class="tooltip">
+                                        <md-tooltip ng-show="showTooltips && enableNeutralGender && gender != 'neutral'" class="tooltip">
                                             Change and set pronouns to neutral
                                         </md-tooltip>
                                     </md-radio-button>
@@ -237,7 +240,7 @@
                                 </md-tooltip>
                             </md-button>
 
-                            <md-button aria-label="Reset Comments" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-disabled="yourComment == ''" ng-click="shuffleComment()">
+                            <md-button aria-label="Reset Comments" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-disabled="yourComment == ''" ng-click="shuffleSingleStudentComment()">
                                 <i class="material-icons inline-icon">shuffle</i>
                                 <span>Shuffle Comments</span>
                                 <md-tooltip ng-show="showTooltips" class="tooltip" md-autohide="true">
@@ -245,7 +248,7 @@
                                 </md-tooltip>
                             </md-button>
 
-                            <md-button aria-label="Copy Comments" md-ink-ripple flex class="md-button md-raised md-primary three-buttons" ng-disabled="yourCommentIntroduction == '' && yourComment == '' && yourCommentConclusion == ''" ng-click="commentsCopied()" md-ripple-size="auto" clipboard text="yourCommentIntroduction + ' ' + yourComment + ' ' + yourCommentConclusion">
+                            <md-button aria-label="Copy Comments" md-ink-ripple flex class="md-button md-raised md-primary three-buttons" ng-disabled="yourCommentIntroduction == '' && yourComment == '' && yourCommentConclusion == ''" ng-click="illToastToThat('Comments copied to clipboard')" md-ripple-size="auto" clipboard text="yourCommentIntroduction + ' ' + yourComment + ' ' + yourCommentConclusion">
                                 <i class="material-icons inline-icon">content_copy</i>
                                 <span>Copy Comments</span>
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
@@ -253,7 +256,7 @@
                                 </md-tooltip>
                             </md-button>
 
-                            <md-button ng-show="yourComment.length > 0 || studentName.length > 0" aria-label="Reset Comments" md-ink-ripple flex class="md-button md-raised md-accent" md-ripple-size="auto" ng-click="resetYourComment()">
+                            <md-button ng-show="yourComment.length > 0 || studentName.length > 0" aria-label="Reset Comments" md-ink-ripple flex class="md-button md-raised md-accent" md-ripple-size="auto" ng-click="studentName = ''; yourComment = '';">
                                 <i class="material-icons inline-icon">clear</i>
                                 <span>Clear Name And Comment</span>
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
@@ -261,7 +264,7 @@
                                 </md-tooltip>
                             </md-button>
 
-                            <md-button ng-hide="yourComment.length > 0 || studentName.length > 0" aria-label="Reset All" md-ink-ripple flex class="md-button md-raised md-accent" md-ripple-size="auto" ng-click="resetAllSingleStudent()" ng-disabled="className == '' && studentName == '' && yourCommentIntroduction == '' && yourComment == '' && yourCommentConclusion == '' && searchComments == '' && toneFilterSetting == 'Any' && studentGender == 'male'">
+                            <md-button ng-hide="yourComment.length > 0 || studentName.length > 0" aria-label="Reset All" md-ink-ripple flex class="md-button md-raised md-accent" md-ripple-size="auto" ng-click="resetAllSingleStudent()" ng-disabled="className == '' && studentName == '' && yourCommentIntroduction == '' && yourComment == '' && yourCommentConclusion == '' && searchComments == '' && toneFilterSetting == 'Any' && gender == 'male'">
                                 <i class="material-icons inline-icon">clear_all</i>
                                 <span>Clear All Fields</span>
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
@@ -310,14 +313,14 @@
 
                         </div>
 
-                        <md-progress-circular md-mode="indeterminate" ng-hide="commentsLoaded" class="waiting-spinner"></md-progress-circular>
+                        <md-progress-circular md-mode="indeterminate" ng-hide="comments.length > 0" class="waiting-spinner"></md-progress-circular>
 
                         <div id="next-comments-page-location" class="zero-size"></div>
 
-                        <div ng-show="commentsLoaded">
+                        <div ng-show="comments.length > 0">
                             <table class="comment-bank-table">
                                 <tr ng-repeat="comment in comments | filter:searchComments | limitTo : commentViewLimit : commentViewBegin" class="rounded-corners">
-                                    <td ng-click="showEditCommentDialog(comment)" ng-show="showTone">
+                                    <td ng-click="showEditToneDialog(comment)" ng-show="showTone">
                                         <span ng-show="comment.pos_neg == -1" class="negative">
                                             <i class="material-icons">thumb_down</i>
                                             <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="right">
@@ -344,7 +347,7 @@
                                         </span>
                                     </td>
                                     <td ng-bind="comment.comment_text" ng-click="addComment(comment.comment_text, true)" class="comment-text"></td>
-                                    <td class="comment-edit" class="comment-edit" ng-click="showEditDialog(comment, false)" ng-show="showEditButtons">
+                                    <td class="comment-edit" class="comment-edit" ng-click="showEditCommentDialog(comment, false)" ng-show="showEditButtons">
                                         <i title="Edit this comment" class="material-icons">mode_edit</i>
                                         <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="left">
                                             Edit this comment
@@ -428,20 +431,20 @@
                         <div layout-xs="column" layout-sm="column" layout-gt-sm="row" layout-fill>
 
                             <div flex-gt-sm="25" class="radio-button-container">
-                                <md-radio-group ng-model="defaultGender" class="md-primary radio-button-group" layout="row" aria-label="Default Gender">
-                                    <md-radio-button ng-model="defaultGender" value="male" selected>
+                                <md-radio-group ng-model="gender" class="md-primary radio-button-group" layout="row" aria-label="Default Gender">
+                                    <md-radio-button ng-model="gender" value="male" selected>
                                         Male
-                                        <md-tooltip ng-show="showTooltips && defaultGender != 'male'" class="tooltip">
+                                        <md-tooltip ng-show="showTooltips && gender != 'male'" class="tooltip">
                                             Set default gender to male
                                         </md-tooltip>
                                     </md-radio-button>
-                                    <md-radio-button ng-model="defaultGender" value="female">
+                                    <md-radio-button ng-model="gender" value="female">
                                         Female
-                                        <md-tooltip ng-show="showTooltips && defaultGender != 'female'" class="tooltip">
+                                        <md-tooltip ng-show="showTooltips && gender != 'female'" class="tooltip">
                                             Set default gender to female
                                         </md-tooltip>
                                     </md-radio-button>
-                                    <md-radio-button ng-disabled="!enableNeutralGender" ng-model="defaultGender" value="neutral">Neutral
+                                    <md-radio-button ng-disabled="!enableNeutralGender" ng-model="gender" value="neutral">Neutral
                                         <md-tooltip ng-show="showTooltips && !enableNeutralGender" class="tooltip">
                                             Neutral gender can be enabled on the settings page
                                         </md-tooltip>
@@ -475,7 +478,7 @@
                                 </md-button>
                             </div>
 
-                            <md-button aria-label="Reset All" md-ink-ripple flex-gt-sm="25" class="help-button md-button md-raised md-accent button-min-size" md-ripple-size="auto" ng-click="resetAllMultiStudent()" ng-disabled="className == '' && newMultiStudent == '' && yourCommentIntroduction == '' && yourCommentConclusion == '' && defaultGender == 'male'">
+                            <md-button aria-label="Reset All" md-ink-ripple flex-gt-sm="25" class="help-button md-button md-raised md-accent button-min-size" md-ripple-size="auto" ng-click="resetAllMultiStudent()" ng-disabled="className == '' && newMultiStudent == '' && yourCommentIntroduction == '' && yourCommentConclusion == '' && gender == 'male'">
                                 <i class="material-icons inline-icon">clear_all</i>
                                 <span>Clear All Fields</span>
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
@@ -520,7 +523,7 @@
                                             </div>
 
                                             <div layout-sm="column" layout-fill class="full-width">
-                                                <md-button aria-label="Copy Comments" md-ink-ripple flex class="button-hover full-width" ng-disabled="yourCommentIntroduction == '' && student.comment == '' && yourCommentConclusion == ''" ng-click="commentsCopied()" md-ripple-size="auto" clipboard text="yourCommentIntroduction + ' ' + student.comment + ' ' + yourCommentConclusion">
+                                                <md-button aria-label="Copy Comments" md-ink-ripple flex class="button-hover full-width" ng-disabled="yourCommentIntroduction == '' && student.comment == '' && yourCommentConclusion == ''" ng-click="illToastToThat('Comments copied to clipboard')" md-ripple-size="auto" clipboard text="yourCommentIntroduction + ' ' + student.comment + ' ' + yourCommentConclusion">
                                                     <i class="material-icons inline-icon">content_copy</i>
                                                     <span>Copy Comment</span>
                                                     <md-tooltip ng-show="showTooltips" class="tooltip">
@@ -538,11 +541,11 @@
                                             </div>
 
                                             <!--<md-button class="button-hover" ng-disabled="student.comment == ''" ng-click="shuffleMultiStudentComment(student)">-->
-                                            <!--<i class="material-icons inline-icon">shuffle</i>-->
-                                            <!--<span>Shuffle Comments</span>-->
-                                            <!--<md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">-->
-                                            <!--Shuffle the current comments for this student-->
-                                            <!--</md-tooltip>-->
+                                                <!--<i class="material-icons inline-icon">shuffle</i>-->
+                                                <!--<span>Shuffle Comments</span>-->
+                                                <!--<md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">-->
+                                                    <!--Shuffle the current comments for this student-->
+                                                <!--</md-tooltip>-->
                                             <!--</md-button>-->
 
                                             <!--<md-menu>-->
@@ -580,7 +583,7 @@
                                             <!--</md-button>-->
                                             <!--</md-menu-item>-->
                                             <!--<md-menu-item>-->
-                                            <!--<md-button aria-label="Copy Comments" md-ink-ripple flex class="button-hover" ng-disabled="yourCommentIntroduction == '' && student.comment == '' && yourCommentConclusion == ''" ng-click="commentsCopied()" md-ripple-size="auto" clipboard text="yourCommentIntroduction + ' ' + student.comment + ' ' + yourCommentConclusion">-->
+                                            <!--<md-button aria-label="Copy Comments" md-ink-ripple flex class="button-hover" ng-disabled="yourCommentIntroduction == '' && student.comment == '' && yourCommentConclusion == ''" ng-click="illToastToThat('Comments copied to clipboard')" md-ripple-size="auto" clipboard text="yourCommentIntroduction + ' ' + student.comment + ' ' + yourCommentConclusion">-->
                                             <!--<i class="material-icons inline-icon">content_copy</i>-->
                                             <!--<span>Copy Comment</span>-->
                                             <!--<md-tooltip ng-show="showTooltips" class="tooltip">-->
@@ -606,7 +609,7 @@
                             </table>
 
                             <div class="copy-all-container">
-                                <md-button aria-label="Copy All Comments" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="commentsCopied(); multiStudentsCopied = true;" clipboard text="allMultiStudentComments">
+                                <md-button aria-label="Copy All Comments" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="illToastToThat('All comments copied to clipboard'); multiStudentsCopied = true;" clipboard text="allMultiStudentComments">
                                     <i class="material-icons inline-icon">content_copy</i>
                                     <span>Copy All Comments</span>
                                     <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
@@ -637,11 +640,11 @@
                 <div class="darkula-background">
                     <div class="all-tabs settings-tab">
 
-                        <div ng-hide="allCommentsLoaded">
+                        <div ng-hide="commentSizeToGet == 0">
                             <h3 class="settings-header yellow-color">Load All Comments</h3>
                             <div layout-xs="column" layout-sm="row"  layout-gt-sm="row" layout-fill>
                                 <div flex-gt-xs="25" class="setting-control-container">
-                                    <md-button aria-label="Load All" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="getComments(0, true);">
+                                    <md-button aria-label="Load All" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="commentSizeToGet = 0; getComments(true);">
                                         <i class="material-icons inline-icon">cached</i>
                                         Load All <span ng-bind="totalCommentsSize"></span>
                                     </md-button>
@@ -714,7 +717,7 @@
 
                         <br>
 
-                        <div ng-show="allCommentsLoaded">
+                        <div ng-show="commentSizeToGet == 0">
                             <h3 class="settings-header yellow-color">Resize Comments</h3>
                             <div layout-xs="column" layout-sm="row"  layout-gt-sm="row" layout-fill>
                                 <div flex-gt-xs="25" class="setting-control-container" class="setting-control-container">

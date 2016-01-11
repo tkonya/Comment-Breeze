@@ -42,22 +42,55 @@ public class CommentResource {
 
         System.out.println("In comment resource");
 
-        // get the comments object if necessary
-        if (updated || lastCached.isBefore(LocalDateTime.now().minusDays(1)) || comments == null || comments.length() == 0) {
-            System.out.println("Has been over 1 day, will reload cache");
+        DatabaseHandler databaseHandler = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            // maybe record page hit - ignore local development hits
+            String ip = request.getRemoteAddr();
+            if (!"0:0:0:0:0:0:0:1".equals(ip)) {
+                databaseHandler = new DatabaseHandler();
+                preparedStatement = databaseHandler.getConnection().prepareStatement(
+                        "INSERT INTO page_hits (ip_address, user_agent, time) VALUES (?, ?, CURRENT_TIMESTAMP)"
+                );
 
-            DatabaseHandler databaseHandler = new DatabaseHandler();
-            JSONArray fetchedComments = databaseHandler.getJSONArrayFor("SELECT comment_id, comment_text, COALESCE(verified_pos_neg, pos_neg) as pos_neg FROM comment_breeze.comments WHERE deleted = FALSE GROUP BY comment_text ORDER BY RAND()");
-            databaseHandler.closeConnection();
-            if (fetchedComments != null && fetchedComments.length() > 0) {
-                comments = fetchedComments;
-                updated = false;
-            } else {
-                System.out.println("Failed to reload comments");
+                preparedStatement.setString(1, request.getRemoteAddr());
+                preparedStatement.setString(2, request.getHeader("User-Agent"));
+                preparedStatement.executeUpdate();
             }
 
-        } else {
+            // get the comments object if necessary
+            if (updated || lastCached.isBefore(LocalDateTime.now().minusDays(1)) || comments == null || comments.length() == 0) {
+                System.out.println("Has been over 1 day, will reload cache");
+
+                if (databaseHandler == null) {
+                    databaseHandler = new DatabaseHandler();
+                }
+                JSONArray fetchedComments = databaseHandler.getJSONArrayFor("SELECT comment_id, comment_text, COALESCE(verified_pos_neg, pos_neg) as pos_neg FROM comment_breeze.comments WHERE deleted = FALSE GROUP BY comment_text ORDER BY RAND()");
+                databaseHandler.closeConnection();
+                if (fetchedComments != null && fetchedComments.length() > 0) {
+                    comments = fetchedComments;
+                    updated = false;
+                } else {
+                    System.out.println("Failed to reload comments");
+                }
+
+            } else {
 //            System.out.println("Has not been 1 day yet, will load from cache");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            if (databaseHandler != null) {
+                databaseHandler.closeConnection();
+            }
         }
 
         JSONObject jsonObject = new JSONObject();
@@ -77,46 +110,6 @@ public class CommentResource {
         }
 
         return Response.ok(jsonObject.toString()).build();
-    }
-
-    @POST
-    @Path("hit")
-    public Response recordPageHit(@Context HttpServletRequest request) throws JSONException {
-
-        System.out.println("Recording page hit");
-
-        // ignore local development hits
-        String ip = request.getRemoteAddr();
-        if ("0:0:0:0:0:0:0:1".equals(ip)) {
-            return Response.ok().build();
-        }
-
-        DatabaseHandler databaseHandler = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            databaseHandler = new DatabaseHandler();
-            preparedStatement = databaseHandler.getConnection().prepareStatement(
-                "INSERT INTO page_hits (ip_address, user_agent, time) VALUES (?, ?, CURRENT_TIMESTAMP)"
-            );
-
-            preparedStatement.setString(1, request.getRemoteAddr());
-            preparedStatement.setString(2, request.getHeader("User-Agent"));
-            preparedStatement.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                assert preparedStatement != null;
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            assert databaseHandler != null;
-            databaseHandler.closeConnection();
-        }
-
-        return Response.ok().build();
     }
 
     @PUT
