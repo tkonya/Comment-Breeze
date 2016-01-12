@@ -10,7 +10,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
 
     // comments
     $scope.comments = [];
-    //$scope.allComments = []; // when 'filtering', put all comments in here, then we'll pull them back out when we switch back
+    $scope.allComments = []; // when 'filtering', put all comments in here, then we'll pull them back out when we switch back
     $scope.editingComment = null;
     $scope.editingPasswordTry = '';
     $scope.commentSizeToGet = 0; // 0 should indicate that we intend to get them all or have gotten them all
@@ -54,7 +54,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
     $scope.avoidHer = true;
     $scope.enableNeutralGender = false;
     $scope.reduceCommentsSize = 10000;
-    $scope.fullCommentsSet = null;
+    //$scope.fullCommentsSet = null;
 
     // navigation
     $scope.selectedTab = 0;
