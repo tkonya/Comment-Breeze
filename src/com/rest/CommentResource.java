@@ -180,9 +180,9 @@ public class CommentResource {
                     preparedStatement.setNull(3, Types.INTEGER);
                 }
                 if (comment.has("deleted") && canEdit) {
-                    preparedStatement.setBoolean(4, comment.getBoolean("deleted"));
+                    preparedStatement.setBoolean(4, "true".equals(comment.getString("deleted")) || "1".equals(comment.getString("deleted")));
                 } else {
-                    preparedStatement.setBoolean(4, false);
+                    preparedStatement.setNull(4, Types.BIT);
                 }
                 if (ipAddress != null && !ipAddress.isEmpty()) {
                     preparedStatement.setString(5, ipAddress);
@@ -190,7 +190,7 @@ public class CommentResource {
                     preparedStatement.setNull(5, Types.VARCHAR);
                 }
                 if (comment.has("flagged")) {
-                    preparedStatement.setBoolean(6, comment.getBoolean("flagged"));
+                    preparedStatement.setBoolean(6, "true".equals(comment.getString("flagged")) || "1".equals(comment.getString("flagged")));
                 } else {
                     preparedStatement.setNull(6, Types.BIT);
                 }
@@ -226,30 +226,55 @@ public class CommentResource {
     }
 
     private void writePasswordFail(String ipAddress) {
-        DatabaseHandler databaseHandler = null;
-        PreparedStatement preparedStatement = null;
-        try {
 
-            databaseHandler = new DatabaseHandler();
-            preparedStatement = databaseHandler.getConnection().prepareStatement(
-                "INSERT INTO password_fails (ip, `time`) VALUES (?, CURRENT_TIMESTAMP)"
-            );
-
-            preparedStatement.setString(1, ipAddress);
-            preparedStatement.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
+        if (!"0:0:0:0:0:0:0:1".equals(ipAddress)) {
+            DatabaseHandler databaseHandler = null;
+            PreparedStatement preparedStatement = null;
             try {
-                assert preparedStatement != null;
-                preparedStatement.close();
+
+                databaseHandler = new DatabaseHandler();
+                preparedStatement = databaseHandler.getConnection().prepareStatement(
+                    "INSERT INTO password_fails (ip, `time`) VALUES (?, CURRENT_TIMESTAMP)"
+                );
+
+                preparedStatement.setString(1, ipAddress);
+                preparedStatement.executeUpdate();
+
             } catch (SQLException e) {
                 e.printStackTrace();
+            } finally {
+                try {
+                    assert preparedStatement != null;
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                if (databaseHandler != null) {
+                    databaseHandler.closeConnection();
+                }
             }
-            assert databaseHandler != null;
-            databaseHandler.closeConnection();
         }
+    }
+
+    @GET
+    @Path("/stats")
+    @Produces("application/json")
+    public Response getStats(@Context HttpServletRequest request) throws JSONException {
+
+        System.out.println("In comment resource");
+
+        DatabaseHandler databaseHandler = new DatabaseHandler();
+        JSONObject jsonObject = new JSONObject();
+
+        jsonObject.put("password_fails", databaseHandler.getJSONArrayFor("SELECT COUNT(*) FROM password_fails WHERE time > CURRENT_DATE - INTERVAL 1 WEEK"));
+
+        jsonObject.put("unique_hits", databaseHandler.getJSONArrayFor("SELECT DATE(`time`), COUNT(DISTINCT ip_address, user_agent) FROM page_hits GROUP BY DATE(`time`) ORDER BY `time` DESC LIMIT 7"));
+
+        jsonObject.put("tone_rated", "");
+
+        jsonObject.put("edited", "");
+
+        return Response.ok(jsonObject.toString()).build();
     }
 
 }

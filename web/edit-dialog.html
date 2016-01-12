@@ -17,7 +17,7 @@
 
         <md-input-container class="full-width">
             <label>Comment Text</label>
-            <input type="text" required md-maxlength="255" ng-disabled="editingPasswordTry < 1" ng-model="editingComment.comment_text">
+            <textarea required md-maxlength="255" ng-disabled="editingPasswordTry < 1" ng-model="editingComment.comment_text"></textarea>
             <md-tooltip class="tooltip" ng-show="showTooltips">
                 <span ng-show="editingPasswordTry == ''">A password is required to edit comment text</span>
                 <span ng-show="editingPasswordTry != ''">Edit comment text</span>
@@ -38,10 +38,10 @@
                 <span ng-show="editingPasswordTry != ''">Edit verified comment tone</span>
             </md-tooltip>
         </div>
-        <br><br>
+        <br><br><br>
 
         <div>
-            <md-checkbox ng-model="editingComment.flagged" class="setting-control" aria-label="Flag this comment">
+            <md-checkbox ng-model="editingComment.flagged" ng-false-value="'0'" ng-true-value="'1'" class="setting-control" aria-label="Flag this comment">
                 Flag comment for admin attention
             </md-checkbox>
             <md-tooltip ng-show="showTooltips" class="tooltip">
@@ -50,14 +50,14 @@
         </div><br><br>
 
         <div>
-            <md-checkbox ng-model="editingComment.deleted" class="setting-control" ng-disabled="editingPasswordTry == ''" aria-label="Delete this comment">
+            <md-checkbox ng-model="editingComment.deleted" ng-false-value="0" ng-true-value="1" class="setting-control" ng-disabled="editingPasswordTry == ''" aria-label="Delete this comment">
                 Delete comment
             </md-checkbox>
             <md-tooltip ng-hide="showTooltips" class="tooltip">
                 <span ng-show="editingPasswordTry == ''">A password is required to delete comments</span>
                 <span ng-show="editingPasswordTry != ''">Delete this comment</span>
             </md-tooltip>
-        </div>
+        </div><br>
 
         <div class="center-aligned">
             <md-button md-ink-ripple flex class="md-button md-raised md-primary" ng-click="saveDialog()">Save</md-button>

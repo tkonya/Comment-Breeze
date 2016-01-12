@@ -31,7 +31,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
     // single student search and filter
     $scope.searchComments = '';
     $scope.toneFilterSetting = 'Any';
-    $scope.toneFilterOptions = ['Any', 'Positive', 'Neutral', 'Negative', 'Unrated'];
+    $scope.toneFilterOptions = ['Any', 'Positive', 'Neutral', 'Negative', 'Unrated', 'Flagged'];
 
     // multi student
     $scope.newMultiStudent = '';
@@ -72,17 +72,19 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
                 $scope.totalCommentsSize = data.total_size;
 
                 if (!data.all_comments_loaded) {
-                    //$scope.illToastToThat('Not all comments loaded - see settings page');
-                    var toast = $mdToast.simple()
-                        .textContent('Not all comments loaded')
-                        .action('Settings')
-                        .highlightAction(true)
-                        .parent($document[0].querySelector('#toastBounds'));
-                    $mdToast.show(toast).then(function(response) {
-                        if ( response == 'ok' ) {
-                            $scope.selectedTab = 3;
-                        }
-                    });
+                    $scope.illToastToThat('Not all comments loaded - see settings');
+                    //var toast = $mdToast.simple()
+                    //    .textContent('Not all comments loaded')
+                    //    .action('Settings')
+                    //    .highlightAction(true)
+                    //    .parent($document[0].querySelector('#toastBounds'))
+                    //    .position('top left');
+                    //$mdToast.show(toast).then(function(response) {
+                    //    if ( response == 'ok' ) {
+                    //        $scope.selectedTab = 3;
+                    //    }
+                    //});
+                    //$scope.settingsActionToast();
                 } else if (showAllLoadedMessage) {
                     $scope.illToastToThat('Full comment set loaded');
                 }
@@ -422,6 +424,8 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
                     }
                 } else if ($scope.toneFilterSetting == 'Unrated') {
                     $scope.comments.push($scope.allComments[i]);
+                } else if ($scope.toneFilterSetting == 'Flagged' && ($scope.allComments[i].flagged == 1 || $scope.allComments[i].flagged == '1' || $scope.allComments[i].flagged == 'true')) {
+                    $scope.comments.push($scope.allComments[i]);
                 }
             }
         }
@@ -446,6 +450,16 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         $mdToast.show(
             {
                 template: '<md-toast class="toast-style">' + text + '</md-toast>',
+                position: 'bottom right',
+                parent: $document[0].querySelector('#toastBounds')
+            }
+        );
+    };
+
+    $scope.settingsActionToast = function() {
+        $mdToast.show(
+            {
+                template: '<md-toast class="toast-style">Not all comments loaded<md-button class="md-primary" ng-click="selectedTab = 3">Settings</md-button></md-toast>',
                 position: 'bottom right',
                 parent: $document[0].querySelector('#toastBounds')
             }

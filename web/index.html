@@ -313,9 +313,13 @@
 
                         </div>
 
-                        <md-progress-circular md-mode="indeterminate" ng-hide="comments.length > 0" class="waiting-spinner"></md-progress-circular>
+                        <md-progress-circular md-mode="indeterminate" ng-show="comments.length == 0 && toneFilterSetting == 'Any'" class="waiting-spinner"></md-progress-circular>
 
                         <div id="next-comments-page-location" class="zero-size"></div>
+
+                        <div class="center-aligned" ng-show="comments.length == 0 && toneFilterSetting != 'Any'">
+                            <div>No results</div>
+                        </div>
 
                         <div ng-show="comments.length > 0">
                             <table class="comment-bank-table">
