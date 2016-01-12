@@ -40,8 +40,6 @@ public class CommentResource {
     @Produces("application/json")
     public Response getComments(@Context HttpServletRequest request, @QueryParam("size") Integer size) throws JSONException {
 
-        System.out.println("In comment resource");
-
         DatabaseHandler databaseHandler = null;
         PreparedStatement preparedStatement = null;
         try {
@@ -94,7 +92,9 @@ public class CommentResource {
         }
 
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("total_size", NumberFormat.getInstance().format(comments.length()));
+//        jsonObject.put("total_size", NumberFormat.getInstance().format(comments.length()));
+        jsonObject.put("total_size", comments.length());
+        jsonObject.put("total_size_unformatted", comments.length());
 
         if (size == null || size < 1 || size > comments.length()) {
             jsonObject.put("comments", comments);

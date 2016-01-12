@@ -6,15 +6,15 @@ var commentApp = angular.module('commentApp', ['angular-clipboard', 'ngMaterial'
             .backgroundPalette('grey').dark();
     });
 
-commentApp.controller('CommentController', function($scope, $http, $mdToast, $mdDialog, $mdMedia, $document) {
+commentApp.controller('CommentController', function($scope, $http, $mdToast, $mdDialog, $mdMedia, $document, $location) {
 
     // comments
     $scope.comments = [];
-    $scope.allComments = []; // when 'filtering', put all comments in here, then we'll pull them back out when we switch back
+    //$scope.allComments = []; // when 'filtering', put all comments in here, then we'll pull them back out when we switch back
     $scope.editingComment = null;
     $scope.editingPasswordTry = '';
     $scope.commentSizeToGet = 0; // 0 should indicate that we intend to get them all or have gotten them all
-    $scope.totalCommentsSize = '20,000+';
+    $scope.totalCommentsSize = '20000';
 
     // pagination
     $scope.commentViewLimit = 20;
@@ -53,7 +53,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
     $scope.makeSomethingUpSize = 10;
     $scope.avoidHer = true;
     $scope.enableNeutralGender = false;
-    $scope.reduceCommentsSize = 0;
+    $scope.reduceCommentsSize = 10000;
     $scope.fullCommentsSet = null;
 
     // navigation
@@ -61,39 +61,42 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
 
     $scope.getComments = function(showAllLoadedMessage) {
 
-        $http.get('/rest/comments?size=' + $scope.commentSizeToGet).
+        var commentsToGet = $scope.commentSizeToGet;
+
+        // see if we got a limit in the url params
+        var params = $location.search();
+        if (params.limit != null) {
+            commentsToGet = params.limit;
+            if (commentsToGet == 0) {
+                $scope.illToastToThat('Reloaded all comments');
+            }
+        }
+
+        $location.search('limit', null);
+
+        $http.get('/rest/comments?size=' + commentsToGet).
             success(function (data) {
                 console.log('returned success');
                 console.log(data.comments.length + ' comments received');
 
                 $scope.comments = data.comments;
-                $scope.reduceCommentsSize = Math.round($scope.comments.length / 5);
-                //$scope.commentsLoaded = true;
                 $scope.totalCommentsSize = data.total_size;
 
-                if (!data.all_comments_loaded) {
-                    $scope.illToastToThat('Not all comments loaded - see settings');
-                    //var toast = $mdToast.simple()
-                    //    .textContent('Not all comments loaded')
-                    //    .action('Settings')
-                    //    .highlightAction(true)
-                    //    .parent($document[0].querySelector('#toastBounds'))
-                    //    .position('top left');
-                    //$mdToast.show(toast).then(function(response) {
-                    //    if ( response == 'ok' ) {
-                    //        $scope.selectedTab = 3;
-                    //    }
-                    //});
-                    //$scope.settingsActionToast();
-                } else if (showAllLoadedMessage) {
-                    $scope.illToastToThat('Full comment set loaded');
+                if ($scope.selectedTab == 3 && $scope.comments.length < $scope.totalCommentsSize) {
+                    $scope.illToastToThat('Reloaded with ' + $scope.formatNumber($scope.comments.length) + ' comments');
+                } else {
+                    if (!data.all_comments_loaded) {
+                        $scope.illToastToThat($scope.formatNumber($scope.comments.length) + ' comments loaded - see settings tab to change');
+                    } else if (showAllLoadedMessage) {
+                        $scope.illToastToThat('Full comment set loaded');
+                    }
                 }
 
                 $scope.changeCommentsPerPage();
 
             }).
             error(function () {
-                console.error('returned error');
+                $scope.illToastToThat('Error loading comments');
             });
     };
 
@@ -447,19 +450,10 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
     };
 
     $scope.illToastToThat = function(text) {
+        console.log('Toast: ' + text);
         $mdToast.show(
             {
                 template: '<md-toast class="toast-style">' + text + '</md-toast>',
-                position: 'bottom right',
-                parent: $document[0].querySelector('#toastBounds')
-            }
-        );
-    };
-
-    $scope.settingsActionToast = function() {
-        $mdToast.show(
-            {
-                template: '<md-toast class="toast-style">Not all comments loaded<md-button class="md-primary" ng-click="selectedTab = 3">Settings</md-button></md-toast>',
                 position: 'bottom right',
                 parent: $document[0].querySelector('#toastBounds')
             }
@@ -613,28 +607,37 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         }
     };
 
-    $scope.resizeComments = function() {
-        if ($scope.fullCommentsSet == null) {
-            $scope.fullCommentsSet = $scope.comments;
+    $scope.reloadWithLimit = function(limit) {
+        if (limit != null) {
+            $location.search('limit', limit);
+        } else {
+            $location.search('limit', $scope.reduceCommentsSize);
         }
-        $scope.comments = $scope.fullCommentsSet.slice(0, $scope.reduceCommentsSize);
-        $scope.illToastToThat('Comments reduced to ' + $scope.comments.length);
-        $scope.changeCommentsPerPage();
-        $scope.changeCommentsPage(1, true);
+        location.reload();
     };
 
-    $scope.restoreComments = function() {
-        if ($scope.fullCommentsSet != null) {
-            $scope.comments = $scope.fullCommentsSet;
-        }
-        $scope.fullCommentsSet = null;
-        $scope.illToastToThat('Full comment set restored');
-        $scope.changeCommentsPerPage();
-        $scope.changeCommentsPage(1, true);
-    };
+    //$scope.resizeComments = function() {
+    //    if ($scope.fullCommentsSet == null) {
+    //        $scope.fullCommentsSet = $scope.comments;
+    //    }
+    //    $scope.comments = $scope.fullCommentsSet.slice(0, $scope.reduceCommentsSize);
+    //    $scope.illToastToThat('Comments reduced to ' + $scope.comments.length);
+    //    $scope.changeCommentsPerPage();
+    //    $scope.changeCommentsPage(1, true);
+    //};
+    //
+    //$scope.restoreComments = function() {
+    //    if ($scope.fullCommentsSet != null) {
+    //        $scope.comments = $scope.fullCommentsSet;
+    //    }
+    //    $scope.fullCommentsSet = null;
+    //    $scope.illToastToThat('Full comment set restored');
+    //    $scope.changeCommentsPerPage();
+    //    $scope.changeCommentsPage(1, true);
+    //};
 
-    $scope.currentCommentsFormattedLength = function() {
-        return $scope.comments.length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    $scope.formatNumber = function(number) {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     };
 
     $scope.resetAllSingleStudent = function() {
@@ -677,6 +680,36 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         $scope.multiStudentsCopied = false;
     };
 
+    $scope.selectTab = function() {
+        if ($scope.comments.length > 0) {
+            if ($scope.selectedTab == 0) {
+                $location.search('tab', null);
+            } else if ($scope.selectedTab == 1) {
+                $location.search('tab', 'single-student');
+            } else if ($scope.selectedTab == 2) {
+                $location.search('tab', 'multi-student');
+            } else if ($scope.selectedTab == 3) {
+                $location.search('tab', 'settings');
+            } else if ($scope.selectedTab == 4) {
+                $location.search('tab', 'donate');
+            }
+        }
+    };
+
+    $scope.setTab = function() {
+        var params = $location.search();
+        if (params.tab == 'single-student') {
+            $scope.selectedTab = 1;
+        } else if (params.tab == 'multi-student') {
+            $scope.selectedTab = 2;
+        } else if (params.tab == 'settings') {
+            $scope.selectedTab = 3;
+        } else if (params.tab == 'donate') {
+            $scope.selectedTab = 4;
+        }
+    };
+
+    $scope.setTab();
     $scope.setMobileSettings();
     $scope.getComments();
 
