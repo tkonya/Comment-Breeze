@@ -12,6 +12,11 @@ td.comment-text:hover {
     /*color: #673AB7;*/
 }
 
+.common-tag:hover {
+    cursor: pointer;
+    color: #FFC107;
+}
+
 .button-hover:hover {
     color: #FFC107;
 }
@@ -336,4 +341,14 @@ tr:nth-child(odd) {
 
 .edit-tone {
     cursor: pointer;
+}
+
+.empty-tag {
+    cursor: pointer;
+    color: black;
+}
+
+.chip-style {
+    color: black;
+    background-color: #FFC107;
 }

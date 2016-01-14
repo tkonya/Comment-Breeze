@@ -358,6 +358,20 @@
                                             </md-tooltip>
                                         </span>
                                     </td>
+                                    <td ng-click="showTagEditDialog(comment)" ng-show="showTags">
+                                        <span ng-show="comment.hasOwnProperty('tags')" class="edit-tone">
+                                            <i class="material-icons">label</i>
+                                            <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="right">
+                                                This comment has tags, click to add or remove
+                                            </md-tooltip>
+                                        </span>
+                                        <span ng-hide="comment.hasOwnProperty('tags')" class="empty-tag">
+                                            <i class="material-icons">label_outline</i>
+                                            <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="right">
+                                                This comment does not have tags, click to add
+                                            </md-tooltip>
+                                        </span>
+                                    </td>
                                     <td ng-bind="comment.comment_text" ng-click="addComment(comment.comment_text, true)" class="comment-text"></td>
                                     <td class="comment-edit" class="comment-edit" ng-click="showEditCommentDialog(comment, false)" ng-show="showEditButtons">
                                         <i title="Edit this comment" class="material-icons">mode_edit</i>
@@ -702,6 +716,15 @@
                                 </md-checkbox>
                             </div>
                             <p flex-gt-xs="75" class="settings-text">Show or hide the edit button on the comments list. Gives a little extra space to those who are on small screens or are not going to edit the comment text.</p>
+                        </div>
+
+                        <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
+                            <div flex-gt-xs="25" class="setting-control-container">
+                                <md-checkbox ng-model="showTags" class="setting-control" aria-label="Hide or show the tags">
+                                    Tags
+                                </md-checkbox>
+                            </div>
+                            <p flex-gt-xs="75" class="settings-text">Show or hide the tags button and indicator on the comments list. Gives a little extra space to those who are on small screens or are not going to look at or edit tags.</p>
                         </div>
 
                         <br>

@@ -6,15 +6,16 @@ var commentApp = angular.module('commentApp', ['angular-clipboard', 'ngMaterial'
             .backgroundPalette('grey').dark();
     });
 
-commentApp.controller('CommentController', function($scope, $http, $mdToast, $mdDialog, $mdMedia, $document, $location) {
+commentApp.controller('CommentController', function($scope, $http, $mdToast, $mdDialog, $mdMedia, $document, $location, $timeout) {
 
     // comments
     $scope.comments = [];
     $scope.allComments = []; // when 'filtering', put all comments in here, then we'll pull them back out when we switch back
-    $scope.editingComment = null;
+    $scope.editingComment = {};
     $scope.editingPasswordTry = '';
     $scope.commentSizeToGet = 0; // 0 should indicate that we intend to get them all or have gotten them all
     $scope.totalCommentsSize = '20000';
+    $scope.commonTags = [];
 
     // pagination
     $scope.commentViewLimit = 20;
@@ -50,12 +51,13 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
     $scope.showTooltips = true;
     $scope.showHints = false;
     $scope.showTone = true;
+    $scope.showTags = true;
     $scope.showEditButtons = true;
     $scope.makeSomethingUpSize = 10;
     $scope.avoidHer = true;
     $scope.enableNeutralGender = false;
     $scope.reduceCommentsSize = 10000;
-    //$scope.fullCommentsSet = null;
+    $scope.showCommonTags = false;
 
     // navigation
     $scope.selectedTab = 0;
@@ -82,12 +84,15 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
 
                 $scope.comments = data.comments;
                 $scope.totalCommentsSize = data.total_size;
+                $scope.commonTags = data.common_tags;
 
                 if ($scope.selectedTab == 3 && $scope.comments.length < $scope.totalCommentsSize) {
                     $scope.illToastToThat('Reloaded with ' + $scope.formatNumber($scope.comments.length) + ' comments');
                 } else {
                     if (!data.all_comments_loaded) {
-                        $scope.illToastToThat($scope.formatNumber($scope.comments.length) + ' comments loaded - see settings tab to change');
+                        $timeout(function() {
+                            $scope.illToastToThat($scope.formatNumber($scope.comments.length) + ' comments loaded - see settings tab to change');
+                        }, 150);
                     } else if (showAllLoadedMessage) {
                         $scope.illToastToThat('Full comment set loaded');
                     }
@@ -295,18 +300,24 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
 
     $scope.showEditCommentDialog = function(comment) {
 
-        $scope.editingComment = comment;
-        $scope.originalComment = comment;
+        $scope.editingComment = angular.copy(comment);
+
+        console.log('editing comment: ' + $scope.editingComment);
+        if (!$scope.editingComment.hasOwnProperty('tags')) {
+            $scope.editingComment.tags = [];
+        } else {
+            console.log('copying old tags');
+            $scope.editingComment.old_tags = angular.copy($scope.editingComment.tags); // copy the old ones so we know which ones are deleted later
+        }
 
         $mdDialog.show({
             clickOutsideToClose: true,
             scope: $scope,        // use parent scope in template
             preserveScope: true,  // do not forget this if use parent scope
-            templateUrl: '/edit-dialog.html',
+            templateUrl: '/edit-comment-dialog.html',
             controller: function DialogController($scope, $mdDialog) {
                 $scope.closeDialog = function () {
                     $mdDialog.hide();
-                    $scope.editingComment= $scope.originalComment;
                 };
                 $scope.saveDialog = function() {
 
@@ -318,6 +329,13 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
                         params: {comment: $scope.editingComment, editing_password_try: $scope.editingPasswordTry},
                         headers: {'Content-Type': 'application/json'}
                     }).success(function (data) {
+
+                        // if we didn't actually add tags then take out the tag array
+                        if ($scope.editingComment.hasOwnProperty('tags') && $scope.editingComment.tags.length == 0) {
+                            delete $scope.editingComment.tags;
+                        }
+
+                        $scope.findAndUpdateComment($scope.editingComment);
 
                         if (data.hasOwnProperty('passfail')) {
                             $scope.editingPasswordTry = '';
@@ -331,6 +349,22 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
                 };
             }
         });
+    };
+
+    // looks for a comment in the comments list with the same id and replaces it with the one passed in
+    $scope.findAndUpdateComment = function(newComment) {
+        for (var i = 0; i < $scope.comments.length; ++i) {
+            if ($scope.comments[i].comment_id == newComment.comment_id) {
+
+                if (newComment.hasOwnProperty('deleted') && (newComment.deleted == 1 || newComment.deleted == '1')) {
+                    $scope.comments.splice(i, 1);
+                } else {
+                    $scope.comments.splice(i, 1, newComment);
+                }
+
+                break;
+            }
+        }
     };
 
     $scope.showEditToneDialog = function(comment) {
@@ -356,6 +390,61 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
                         params: {comment: $scope.editingComment, editing_password_try: $scope.editingPasswordTry},
                         headers: {'Content-Type': 'application/json'}
                     }).success(function (data) {
+
+                        if (data.hasOwnProperty('passfail')) {
+                            $scope.editingPasswordTry = '';
+                        }
+
+                        $scope.illToastToThat(data.message);
+
+                    }).error(function () {
+                        $scope.illToastToThat('Error updating comment');
+                    });
+                };
+            }
+        });
+    };
+
+    $scope.showTagEditDialog = function(comment) {
+
+        $scope.editingComment = angular.copy(comment);
+
+        console.log('editing comment: ' + $scope.editingComment);
+        if (!$scope.editingComment.hasOwnProperty('tags')) {
+            $scope.editingComment.tags = [];
+        } else {
+            console.log('copying old tags');
+            $scope.editingComment.old_tags = angular.copy($scope.editingComment.tags); // copy the old ones so we know which ones are deleted later
+        }
+
+        $mdDialog.show({
+            clickOutsideToClose: true,
+            scope: $scope,        // use parent scope in template
+            preserveScope: true,  // do not forget this if use parent scope
+            templateUrl: '/edit-tag-dialog.html',
+            controller: function DialogController($scope, $mdDialog) {
+                $scope.closeDialog = function () {
+                    $mdDialog.hide();
+                };
+                $scope.saveDialog = function(tone) {
+
+                    $scope.editingComment.pos_neg = tone;
+
+                    console.log('in saveDialog');
+                    $mdDialog.hide();
+                    $http({
+                        url: "/rest/comments",
+                        method: "PUT",
+                        params: {comment: $scope.editingComment, editing_password_try: $scope.editingPasswordTry},
+                        headers: {'Content-Type': 'application/json'}
+                    }).success(function (data) {
+
+                        // if we didn't actually add tags then take out the tag array
+                        if ($scope.editingComment.hasOwnProperty('tags') && $scope.editingComment.tags.length == 0) {
+                            delete $scope.editingComment.tags;
+                        }
+
+                        $scope.findAndUpdateComment($scope.editingComment);
 
                         if (data.hasOwnProperty('passfail')) {
                             $scope.editingPasswordTry = '';
@@ -712,6 +801,14 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         }
     };
 
+    $scope.setPassword = function() {
+        var params = $location.search();
+        if (params.hasOwnProperty('password')) {
+            $scope.editingPasswordTry = params.password;
+        }
+    };
+
+    $scope.setPassword();
     $scope.setTab();
     $scope.setMobileSettings();
     $scope.getComments();

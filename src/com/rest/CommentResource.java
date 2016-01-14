@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Created by Trevor on 10/16/2015.
@@ -26,9 +27,12 @@ import java.time.LocalDateTime;
 public class CommentResource {
 
     private static JSONArray comments;
+    private static JSONArray commonTags;
     private static LocalDateTime lastCached = LocalDateTime.now();
     private static boolean updated = false;
     private static String editingPasswordAnswer;
+
+    private static final boolean NO_DB_MODE = false;
 
     private static LockoutHandler lockoutHandler = new LockoutHandler();
 
@@ -64,13 +68,34 @@ public class CommentResource {
                     databaseHandler = new DatabaseHandler();
                 }
                 JSONArray fetchedComments = databaseHandler.getJSONArrayFor("SELECT comment_id, comment_text, flagged, COALESCE(verified_pos_neg, pos_neg) as pos_neg FROM comment_breeze.comments WHERE deleted = FALSE GROUP BY comment_text ORDER BY RAND()");
-                databaseHandler.closeConnection();
+
                 if (fetchedComments != null && fetchedComments.length() > 0) {
+
+                    // get the tags here
+                    JSONArray allTags = databaseHandler.getJSONArrayFor("SELECT comment_id, tag FROM comment_tags WHERE deleted = FALSE");
+                    for (int i = 0; i < allTags.length(); ++i) {
+                        for (int j = 0; j < fetchedComments.length(); ++j) {
+                            if (fetchedComments.getJSONObject(j).getString("comment_id").equals(allTags.getJSONObject(i).getString("comment_id"))) {
+
+                                if (!fetchedComments.getJSONObject(j).has("tags")) {
+                                    fetchedComments.getJSONObject(j).put("tags", new JSONArray());
+                                }
+
+                                fetchedComments.getJSONObject(j).getJSONArray("tags").put(allTags.getJSONObject(i).getString("tag"));
+                                break;
+                            }
+                        }
+                    }
+
+                    // count 20 most common tags
+                    commonTags = databaseHandler.getJSONArrayFor("SELECT tag FROM comment_breeze.comment_tags WHERE deleted = FALSE GROUP BY tag ORDER BY COUNT(*) DESC LIMIT 100");
+
                     comments = fetchedComments;
                     updated = false;
                 } else {
                     System.out.println("Failed to reload comments");
                 }
+                databaseHandler.closeConnection();
 
             } else {
 //            System.out.println("Has not been 1 day yet, will load from cache");
@@ -92,7 +117,7 @@ public class CommentResource {
         }
 
         JSONObject jsonObject = new JSONObject();
-//        jsonObject.put("total_size", NumberFormat.getInstance().format(comments.length()));
+        jsonObject.put("common_tags", commonTags);
         jsonObject.put("total_size", comments.length());
         jsonObject.put("total_size_unformatted", comments.length());
 
@@ -197,9 +222,69 @@ public class CommentResource {
                 preparedStatement.setInt(7, comment.getInt("comment_id"));
 
                 System.out.println(preparedStatement);
-                int result = preparedStatement.executeUpdate();
+                int normalResult = preparedStatement.executeUpdate();
 
-                if (result < 1) {
+                // only update tags if we told it to specifically
+                if (comment.has("tags_added") && comment.has("tags") && comment.getJSONArray("tags").length() > 0) {
+                    preparedStatement = databaseHandler.getConnection().prepareStatement(
+                            "INSERT INTO comment_tags (comment_id, tag, ip_address, last_updated) VALUES (?, ?, ?, CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE deleted = FALSE, ip_address = ?, last_updated = CURRENT_TIMESTAMP");
+
+                    for (int i = 0; i < comment.getJSONArray("tags").length(); ++i) {
+                        preparedStatement.setInt(1, comment.getInt("comment_id"));
+                        preparedStatement.setString(2, comment.getJSONArray("tags").getString(i));
+                        preparedStatement.setString(3, ipAddress);
+                        preparedStatement.setString(4, ipAddress);
+                        preparedStatement.addBatch();
+                    }
+
+                    int [] addTagResults = preparedStatement.executeBatch();
+                    preparedStatement.clearBatch();
+
+                    for (int result : addTagResults) {
+                        if (result > 0) {
+                            updated = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (comment.has("tags_removed") && comment.has("old_tags") && comment.getJSONArray("old_tags").length() > 0) {
+                    preparedStatement = databaseHandler.getConnection().prepareStatement(
+                            "UPDATE comment_tags SET deleted = TRUE, last_updated = CURRENT_TIMESTAMP, ip_address = ? WHERE comment_id = ? AND tag = ?"
+                    );
+
+                    // old_tags tells us what tags used to be there that aren't anymore, so we just use those to see which ones to delete
+                    outer:
+                    for (int i = 0; i < comment.getJSONArray("old_tags").length(); ++i) {
+
+                        // skip any old tag that is still in tags
+                        String currentTag = comment.getJSONArray("old_tags").getString(i);
+                        if (comment.has("tags") && comment.getJSONArray("tags").length() > 0) {
+                            for (int j = 0; j < comment.getJSONArray("tags").length(); ++j) {
+                                if (comment.getJSONArray("tags").getString(j).equals(currentTag)) {
+                                    continue outer;
+                                }
+                            }
+                        }
+
+                        preparedStatement.setString(1, ipAddress);
+                        preparedStatement.setInt(2, comment.getInt("comment_id"));
+                        preparedStatement.setString(3, currentTag);
+                        preparedStatement.addBatch();
+                    }
+
+                    int [] removeTagResults = preparedStatement.executeBatch();
+                    preparedStatement.clearBatch();
+
+                    for (int result : removeTagResults) {
+                        if (result > 0) {
+                            updated = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (normalResult < 1) {
                     jsonObject.put("message", "Error while updating comment");
                 } else {
                     updated = true;

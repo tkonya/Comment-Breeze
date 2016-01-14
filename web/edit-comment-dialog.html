@@ -1,6 +1,11 @@
 <md-dialog flex="80">
     <md-dialog-content style="padding: 2em;">
-        <h2>Edit Comment</h2>
+        <h2 class="yellow-color"><span>Edit Comment
+            <md-tooltip class="tooltip" ng-show="showTooltips">
+                Comment ID <span ng-bind="editingComment.comment_id"></span>
+            </md-tooltip>
+        </span>
+        </h2>
 
         <p>
             A password is currently required to edit comment text or delete comments, but anybody can edit comment tone or flag a comment.<br><br>
@@ -37,8 +42,12 @@
                 <span ng-show="editingPasswordTry == ''">Edit comment tone</span>
                 <span ng-show="editingPasswordTry != ''">Edit verified comment tone</span>
             </md-tooltip>
-        </div>
-        <br><br><br>
+        </div> <br><br>
+
+        Add or remove tags:
+        <md-chips ng-model="editingComment.tags" md-on-remove="editingComment.tags_removed = true" md-on-add="editingComment.tags_added = true"></md-chips>
+
+        <br><br>
 
         <div>
             <md-checkbox ng-model="editingComment.flagged" ng-false-value="'0'" ng-true-value="'1'" class="setting-control" aria-label="Flag this comment">

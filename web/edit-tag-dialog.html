@@ -1,0 +1,25 @@
+<md-dialog flex="80">
+    <md-dialog-content style="padding: 2em;">
+        <h2 class="yellow-color">Add or Remove Tags</h2>
+
+        <p>Add or remove tags:</p>
+
+        <p>"<span ng-bind="editingComment.comment_text"></span>"</p>
+
+        <md-chips class="chip-style" ng-model="editingComment.tags" md-on-remove="editingComment.tags_removed = true" md-on-add="editingComment.tags_added = true"></md-chips>
+        <br>
+
+        <span ng-hide="showCommonTags" class="common-tag" ng-click="showCommonTags = true">Show common tags</span>
+        <span ng-show="showCommonTags">
+            <span ng-repeat="tag in commonTags"><span class="common-tag" ng-bind="tag.tag" ng-click="editingComment.tags.push(tag.tag);"></span>{{$last ? '' : ', '}}</span>
+            <br><br>
+            <span ng-show="showCommonTags" class="common-tag" ng-click="showCommonTags = false">Hide common tags</span>
+        </span>
+
+        <div class="center-aligned">
+            <md-button md-ink-ripple flex class="md-button md-raised md-primary" ng-click="saveDialog()">Save</md-button>
+            <md-button ng-click="closeDialog()">Cancel</md-button>
+        </div>
+
+    </md-dialog-content>
+</md-dialog>
