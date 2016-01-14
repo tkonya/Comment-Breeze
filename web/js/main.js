@@ -48,6 +48,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
 
     // settings
     $scope.showTooltips = true;
+    $scope.showHints = false;
     $scope.showTone = true;
     $scope.showEditButtons = true;
     $scope.makeSomethingUpSize = 10;
@@ -442,9 +443,11 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         if ($mdMedia('xs')) {
             $scope.commentSizeToGet = 2000;
             $scope.showTooltips = false;
+            //$scope.showHints = true;
             $scope.showEditButtons = false;
         } else if ($mdMedia('sm')) {
             $scope.showTooltips = false;
+            //$scope.showHints = true;
             $scope.commentSizeToGet = 6000;
         }
     };

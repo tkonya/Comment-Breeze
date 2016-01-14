@@ -4,7 +4,6 @@
 
         <p>
             A password is currently required to edit comment text or delete comments, but anybody can edit comment tone or flag a comment.<br><br>
-            Available variables are CLASS_NAME and STUDENT_NAME.
         </p>
 
         <md-input-container class="full-width">
@@ -18,6 +17,7 @@
         <md-input-container class="full-width">
             <label>Comment Text</label>
             <textarea required md-maxlength="255" ng-disabled="editingPasswordTry < 1" ng-model="editingComment.comment_text"></textarea>
+            <div class="hint" ng-show="editingPasswordTry != ''">Available variables are CLASS_NAME and STUDENT_NAME</div>
             <md-tooltip class="tooltip" ng-show="showTooltips">
                 <span ng-show="editingPasswordTry == ''">A password is required to edit comment text</span>
                 <span ng-show="editingPasswordTry != ''">Edit comment text</span>

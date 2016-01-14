@@ -124,7 +124,7 @@
                                 </a>
 
                                 <br><br><br>
-                                <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/4.0/80x15.png" /></a>
+                                <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/4.0/80x15.png" /></a>
 
                                 <!--<img src="images/Logo-Black-128px-TM.png" height="40px">-->
 
@@ -152,10 +152,11 @@
                                 <md-input-container class="input-container full-width" flex="100">
                                     <label>Class Name</label>
                                     <input type="text" ng-model="className" ng-blur="changeClassName()">
+                                    <div class="hint" ng-show="showHints">Will replace instances of CLASS_NAME in comments</div>
                                 </md-input-container>
                                 <!--<button class="invisible-button" type="submit">Submit</button>-->
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
-                                    Will replace instance of CLASS_NAME in comments
+                                    Will replace instances of CLASS_NAME in comments
                                 </md-tooltip>
                             </form>
 
@@ -163,10 +164,11 @@
                                 <md-input-container class="input-container full-width">
                                     <label>Student Name</label>
                                     <input type="text" autocomplete="off" ng-model="studentName" ng-blur="changeStudentName()">
+                                    <div class="hint" ng-show="showHints">Will replace instances of STUDENT_NAME in comments</div>
                                 </md-input-container>
                                 <!--<button class="invisible-button" type="submit">Submit</button>-->
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
-                                    Will replace instance of STUDENT_NAME in comments
+                                    Will replace instances of STUDENT_NAME in comments
                                 </md-tooltip>
                             </form>
 
@@ -213,17 +215,22 @@
                                 <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="right">
                                     This will be copied when you hit 'Copy Comments' but will not be erased when you hit 'Reset Comments'  (optional)
                                 </md-tooltip>
+                                <div class="hint" ng-show="showHints">This will be copied when you hit 'Copy Comments' but will not be erased when you hit 'Reset Comments'  (optional)</div>
                             </md-input-container>
+                            <br ng-show="showHints">
                             <md-input-container class="input-container">
                                 <label>Your Comments</label>
                                 <textarea ng-model="yourComment" class="comment-text-box"></textarea>
+                                <div class="hint" ng-show="showHints">Add comments by clicking below and edit them as needed</div>
                                 <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="right">
                                     Add comments by clicking below and edit them as needed
                                 </md-tooltip>
                             </md-input-container>
+                            <br ng-show="showHints">
                             <md-input-container class="input-container">
                                 <label>Your Conclusion</label>
                                 <textarea ng-model="yourCommentConclusion" class="comment-text-box"></textarea>
+                                <div class="hint" ng-show="showHints">This will be copied when you hit 'Copy Comments' but will not be erased when you hit 'Reset Comments'  (optional)</div>
                                 <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="right">
                                     This will be copied when you hit 'Copy Comments' but will not be erased when you hit 'Reset Comments'  (optional)
                                 </md-tooltip>
@@ -299,6 +306,7 @@
                             <md-input-container flex-gt-sm="75" class="search-and-filter">
                                 <label>Search Comments</label>
                                 <input type="text" ng-model="searchComments" ng-change="changeCommentsPage(1);">
+                                <div class="hint" ng-show="showHints">Instant search on comments. This is the best way to find comments if you have an idea of what you want to say.</div>
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
                                     Instant search on comments. This is the best way to find comments if you have an idea of what you want to say.
                                 </md-tooltip>
@@ -325,25 +333,25 @@
                             <table class="comment-bank-table">
                                 <tr ng-repeat="comment in comments | filter:searchComments | limitTo : commentViewLimit : commentViewBegin" class="rounded-corners">
                                     <td ng-click="showEditToneDialog(comment)" ng-show="showTone">
-                                        <span ng-show="comment.pos_neg == -1" class="negative">
+                                        <span ng-show="comment.pos_neg == -1" class="negative edit-tone">
                                             <i class="material-icons">thumb_down</i>
                                             <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="right">
                                                 This comment has been rated as negative, click to edit
                                             </md-tooltip>
                                         </span>
-                                        <span ng-show="comment.pos_neg == 0" class="neutral">
+                                        <span ng-show="comment.pos_neg == 0" class="neutral edit-tone">
                                             <i class="material-icons">thumbs_up_down</i>
                                             <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="right">
                                                 This comment has been rated as neutral, click to edit
                                             </md-tooltip>
                                         </span>
-                                        <span ng-show="comment.pos_neg == 1" class="positive">
+                                        <span ng-show="comment.pos_neg == 1" class="positive edit-tone">
                                             <i class="material-icons">thumb_up</i>
                                             <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="right">
                                                 This comment has been rated as positive, click to edit
                                             </md-tooltip>
                                         </span>
-                                        <span ng-show="!comment.pos_neg && comment.pos_neg != 0" class="unrated">
+                                        <span ng-show="!comment.pos_neg && comment.pos_neg != 0" class="unrated edit-tone">
                                             <i class="material-icons">rate_review</i>
                                             <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="right">
                                                 This comment has not yet been rated, click to edit
@@ -400,14 +408,16 @@
                                     <label>Class Name</label>
                                     <input type="text" ng-model="className" ng-blur="changeClassName()">
                                 </md-input-container>
+                                <div class="hint" ng-show="showHints">Will replace instances of CLASS_NAME in comments</div>
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
-                                    Will replace instance of CLASS_NAME in comments
+                                    Will replace instances of CLASS_NAME in comments
                                 </md-tooltip>
                             </form>
 
                             <md-input-container flex-gt-sm="35" flex-order="2" class="intro-conclusion-multi no-bottom-margin">
                                 <label>Your Introduction</label>
                                 <textarea ng-model="yourCommentIntroduction"></textarea>
+                                <div class="hint" ng-show="showHints">The custom introduction to appear at the beginning of every comment (optional)</div>
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
                                     The custom introduction to appear at the beginning of every comment (optional)
                                 </md-tooltip>
@@ -416,6 +426,7 @@
                             <md-input-container flex-gt-sm="35" flex-order="3" class="intro-conclusion-multi">
                                 <label>Your Conclusion</label>
                                 <textarea ng-model="yourCommentConclusion"></textarea>
+                                <div class="hint" ng-show="showHints">The custom conclusion to appear at the end of every comment (optional)</div>
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
                                     The custom conclusion to appear at the end of every comment (optional)
                                 </md-tooltip>
@@ -466,7 +477,7 @@
                                         <label>Student Name</label>
                                         <input type="text" ng-model="newMultiStudent">
                                     </md-input-container>
-                                    <!--<button class="invisible-button" type="submit">Submit</button>-->
+                                    <div class="hint" ng-show="showHints">Add all the students that you would like to make comments for today</div>
                                     <md-tooltip ng-show="showTooltips" class="tooltip">
                                         Add all the students that you would like to make comments for today
                                     </md-tooltip>
@@ -666,13 +677,22 @@
                             <p flex-gt-xs="75" class="settings-text">Turn pop up tooltips on or off. Recommended off for mobile or touchscreen-only users; on for users with a mouse or other pointing device.</p>
                         </div>
 
+                        <!--<div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>-->
+                            <!--<div flex-gt-xs="25" class="setting-control-container">-->
+                                <!--<md-checkbox ng-model="showHints" aria-label="Hide or show the tooltips" class="setting-control">-->
+                                    <!--Hints-->
+                                <!--</md-checkbox>-->
+                            <!--</div>-->
+                            <!--<p flex-gt-xs="75" class="settings-text">Turn input hints on or off. This usually displays the same information as tooltips. Recommended on for mobile or touchscreen-only users; off if tooltips is on.</p>-->
+                        <!--</div>-->
+
                         <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
                             <div flex-gt-xs="25" class="setting-control-container">
                                 <md-checkbox ng-model="showTone" class="setting-control" aria-label="Hide or show the tone button and indicator">
                                     Tone Buttons
                                 </md-checkbox>
                             </div>
-                            <p flex-gt-xs="75" class="settings-text">Show or hide the tone buttons and indicators on the comments list. Gives a little extra space to those who are on small screens or are not going to edit comment tone.</p>
+                            <p flex-gt-xs="75" class="settings-text">Show or hide the tone buttons and indicators on the comments list. Gives a little extra space to those who are on small screens or do not need to see or edit tone.</p>
                         </div>
 
                         <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
