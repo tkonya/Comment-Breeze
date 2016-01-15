@@ -1,8 +1,12 @@
 <md-dialog flex="80">
     <md-dialog-content style="padding: 2em;">
-        <h2 class="yellow-color">Add or Remove Tags</h2>
-
-        <p>Add or remove tags:</p>
+        <h2 class="yellow-color">
+            <span>Add or Remove Tags
+                <md-tooltip class="tooltip" ng-show="showTooltips">
+                    Comment ID <span ng-bind="editingComment.comment_id"></span>
+                </md-tooltip>
+            </span>
+        </h2>
 
         <p>"<span ng-bind="editingComment.comment_text"></span>"</p>
 
@@ -11,7 +15,8 @@
 
         <span ng-hide="showCommonTags" class="common-tag" ng-click="showCommonTags = true">Show common tags</span>
         <span ng-show="showCommonTags">
-            <span ng-repeat="tag in commonTags"><span class="common-tag" ng-bind="tag.tag" ng-click="editingComment.tags.push(tag.tag);"></span>{{$last ? '' : ', '}}</span>
+            <span ng-repeat="tag in commonTags">
+                <span ng-hide="editingComment.tags.indexOf(tag.tag) > -1"><span class="common-tag" ng-bind="tag.tag" ng-click="editingComment.tags.push(tag.tag);"></span>{{$last ? '' : ', '}}</span></span>
             <br><br>
             <span ng-show="showCommonTags" class="common-tag" ng-click="showCommonTags = false">Hide common tags</span>
         </span>

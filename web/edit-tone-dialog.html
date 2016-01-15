@@ -1,8 +1,12 @@
 <md-dialog flex="80">
     <md-dialog-content style="padding: 2em;">
-        <h2 class="yellow-color">Edit Comment Tone</h2>
-
-        <p>Select whether this comment is positive, neutral or negative in tone:</p>
+        <h2 class="yellow-color">
+            <span>Edit Comment Tone
+                <md-tooltip class="tooltip" ng-show="showTooltips">
+                    Comment ID <span ng-bind="editingComment.comment_id"></span>
+                </md-tooltip>
+            </span>
+        </h2>
 
         <p>"<span ng-bind="editingComment.comment_text"></span>"</p>
 
