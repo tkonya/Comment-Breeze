@@ -4,8 +4,6 @@ var commentApp = angular.module('commentApp', ['angular-clipboard', 'ngMaterial'
             .primaryPalette('amber')
             .accentPalette('deep-purple')
             .backgroundPalette('grey').dark();
-
-        $mdThemingProvider.theme('default').foregroundPalette[3] = '#A9B7C6';
     });
 
 commentApp.controller('CommentController', function($scope, $http, $mdToast, $mdDialog, $mdMedia, $document, $location, $timeout) {

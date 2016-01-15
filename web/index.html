@@ -84,7 +84,7 @@
                                 <h3 class="yellow-color">What's different about Comment Breeze?</h3>
 
                                 <p class="paragraphs">
-                                    <span ng-bind="formatNumber(totalCommentsSize);"></span> usable comments<br>
+                                    <span ng-bind="formatNumber(totalCommentsSize);"></span> unique comments<span ng-show="commentSizeToGet != 0">*</span><br>
                                     Blazing fast multi-student comment generation<br>
                                     Powerful live search capability
                                 </p>
@@ -104,7 +104,9 @@
                                         I've done my best to make this site responsive and accessible on mobile devices as well as computers.<br>
                                         That said, the page is very javascript heavy and may suffer from slow performance on mobile devices with limited computing power.<br>
                                         Some settings are changed to make mobile viewing experiences better. These can be changed on the settings page.
-                                        The Smart Search tab is the most CPU intensive of all. I would not even try to use this on mobile; you're phone might ignite.
+                                        The Smart Search tab is the most CPU intensive of all. I would not even try to use this on mobile; you're phone might ignite.<br><br>
+
+                                        <span class="yellow-color">*</span> All comments are not initially loaded for mobile users, <span class="common-tag" ng-click="selectedTab = 4">see settings page to change.</span>
                                     </p>
                                 </div>
 
@@ -865,13 +867,13 @@
                                     </md-tooltip>
                                 </md-button>
 
-                                <md-button aria-label="Remove All Searches" md-ink-ripple ng-disabled="smartSearch.length == 0" flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="regenerateAllSmartSearch();">
-                                    <i class="material-icons inline-icon">autorenew</i>
-                                    <span>Regenerate All</span>
-                                    <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
-                                        Regenerates all searches
-                                    </md-tooltip>
-                                </md-button>
+                                <!--<md-button aria-label="Remove All Searches" md-ink-ripple ng-disabled="smartSearch.length == 0" flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="regenerateAllSmartSearch();">-->
+                                    <!--<i class="material-icons inline-icon">autorenew</i>-->
+                                    <!--<span>Regenerate All</span>-->
+                                    <!--<md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">-->
+                                        <!--Regenerates all searches-->
+                                    <!--</md-tooltip>-->
+                                <!--</md-button>-->
                             </div>
                         </div>
 
@@ -960,6 +962,14 @@
                         </div>
 
                         <div class="copy-all-container" ng-show="smartSearch.length > 0">
+
+                            <md-button aria-label="Remove All Searches" md-ink-ripple ng-disabled="smartSearch.length == 0" flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="regenerateAllSmartSearch();">
+                                <i class="material-icons inline-icon">autorenew</i>
+                                <span>Regenerate All</span>
+                                <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
+                                    Regenerates all searches
+                                </md-tooltip>
+                            </md-button>
 
                             <md-button aria-label="Remove All Searches" md-ink-ripple flex class="md-button md-raised md-accent" md-ripple-size="auto" ng-click="smartSearch = []; useSmartSearch = false;">
                                 <i class="material-icons inline-icon">clear_all</i>
