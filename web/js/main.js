@@ -4,6 +4,8 @@ var commentApp = angular.module('commentApp', ['angular-clipboard', 'ngMaterial'
             .primaryPalette('amber')
             .accentPalette('deep-purple')
             .backgroundPalette('grey').dark();
+
+        $mdThemingProvider.theme('default').foregroundPalette[3] = '#A9B7C6';
     });
 
 commentApp.controller('CommentController', function($scope, $http, $mdToast, $mdDialog, $mdMedia, $document, $location, $timeout) {
@@ -49,7 +51,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
 
     // smart search
     $scope.smartSearch = [];
-    $scope.newSmartSearch = {search_text: '', found_comment: '', tone: 'Any', tags: true, text: true};
+    $scope.newSmartSearch = {search_text: '', found_comment: '', tone: 'Any', tags: false, text: false};
     $scope.limitedToneFilterOptions = ['Any', 'Positive', 'Neutral', 'Negative'];
 
     // settings
@@ -91,7 +93,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
                 $scope.totalCommentsSize = data.total_size;
                 $scope.commonTags = data.common_tags;
 
-                if ($scope.selectedTab == 3 && $scope.comments.length < $scope.totalCommentsSize) {
+                if ($scope.selectedTab == 4 && $scope.comments.length < $scope.totalCommentsSize) {
                     $scope.illToastToThat('Reloaded with ' + $scope.formatNumber($scope.comments.length) + ' comments');
                 } else {
                     if (!data.all_comments_loaded) {
@@ -755,6 +757,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
 
         console.log('search text: ' + search.search_text);
 
+        // we start looking at a random starting point so that we don't end up getting the same comments for every search
         var randomStartingPoint = Math.floor((Math.random() * $scope.comments.length));
         console.log('Starting at random index ' + randomStartingPoint);
 
@@ -835,6 +838,16 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
             $scope.smartSearch.splice(i, 1, $scope.getSmartSearchResult($scope.smartSearch[i]));
         }
         $scope.buildAllSmartSearchComments();
+    };
+
+    $scope.setSearchTextCheckboxes = function(search) {
+        if (search.search_text != '') {
+            search.tags = true;
+            search.text = true;
+        } else {
+            search.tags = false;
+            search.text = false;
+        }
     };
 
     $scope.resetAllSingleStudent = function() {

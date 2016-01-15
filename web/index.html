@@ -536,8 +536,24 @@
 
                         </div>
 
-                        <div ng-hide="multiStudent.length > 0" class="multi-student-reminder">
-                            <span ng-click="showMultiStudentHelp()">Be sure to read the help for instructions, tips and shortcuts!</span>
+                        <!--<div ng-hide="multiStudent.length > 0" class="multi-student-reminder">-->
+                            <!--<span ng-click="showMultiStudentHelp()">Be sure to read the help for instructions, tips and shortcuts!</span>-->
+                        <!--</div>-->
+
+                        <div class="center-aligned quick-instructions-container" ng-hide="multiStudent.length > 0">
+                            <fieldset class="quick-instructions" style="margin: auto;">
+                                <br>
+                                1. Fill in Class Name<br><br>
+                                2. Fill in Your Introduction and Your Conclusion (optional)<br><br>
+                                3. Enter the name of your first student. Use the buttons to the left to set gender, or simply put a space and an "m" or "f" after their name and hit enter (or press "Add") to set their gender automatically.<br><br>
+                                Example: If you want to add a female student named "Amanda", type "Amanda f" and her gender will automatically be set.<br><br>
+                                4. A random comment will be generated for each student you add. You can edit these with the buttons next to each of them.<br><br>
+                                5. Repeat for all students.<br><br>
+                                You can make the automatic comment generation follow a pattern by configuring one on the Smart Search tab.<br><br>
+
+                                <span ng-click="showMultiStudentHelp()" class="common-tag">See the help for more details.</span>
+                                <br><br>
+                            </fieldset>
                         </div>
 
                         <div ng-show="multiStudent.length > 0">
@@ -735,15 +751,15 @@
                                 <i class="material-icons inline-icon">warning</i>
                                 Just Make Something Up
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
-                                    Generates {{makeSomethingUpSize}} random comments
+                                    Generates {{makeSomethingUpSize}} random comments, based on current settings
                                 </md-tooltip>
                             </md-button>
 
                             <md-button aria-label="Reset Comments" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-disabled="yourComment == ''" ng-click="shuffleSmartSearch()">
                                 <i class="material-icons inline-icon">shuffle</i>
-                                <span>Shuffle Comments</span>
+                                <span>Shuffle Searches</span>
                                 <md-tooltip ng-show="showTooltips" class="tooltip" md-autohide="true">
-                                    Rearranges the comment sentences in random order
+                                    Rearranges the searches and the comment sentences in random order
                                 </md-tooltip>
                             </md-button>
 
@@ -800,7 +816,7 @@
                             <form ng-submit="smartSearch.push(getSmartSearchResult(newSmartSearch)); newSmartSearch.search_text = ''; buildAllSmartSearchComments();" flex>
                                 <md-input-container class="input-container full-width">
                                     <label>Search Text</label>
-                                    <input type="text" autocomplete="off" ng-model="newSmartSearch.search_text">
+                                    <input type="text" ng-change="setSearchTextCheckboxes(newSmartSearch);" autocomplete="off" ng-model="newSmartSearch.search_text">
                                 </md-input-container>
                                 <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
                                     Search for this value
@@ -812,19 +828,25 @@
                             </form>
 
                             <div layout="column" flex>
-                                <md-checkbox ng-model="newSmartSearch.text" aria-label="Hide or show the tooltips">
-                                    Search Comment Text
+                                <div>
+                                    <md-checkbox ng-disabled="newSmartSearch.search_text == ''" ng-model="newSmartSearch.text" aria-label="Hide or show the tooltips">
+                                        Search Comment Text
+                                    </md-checkbox>
                                     <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
-                                        Search the comment text for the search text
+                                        <span ng-hide="newSmartSearch.search_text == ''">Search the comment text for the search text</span>
+                                        <span ng-show="newSmartSearch.search_text == ''">There's nothing to search for unless you enter Search Text</span>
                                     </md-tooltip>
-                                </md-checkbox>
+                                </div>
 
-                                <md-checkbox ng-model="newSmartSearch.tags" aria-label="Hide or show the tooltips">
-                                    Search Tags
+                                <div>
+                                    <md-checkbox ng-disabled="newSmartSearch.search_text == ''" ng-model="newSmartSearch.tags" aria-label="Hide or show the tooltips">
+                                        Search Tags
+                                    </md-checkbox>
                                     <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
-                                        Search the tags for the search text
+                                        <span ng-hide="newSmartSearch.search_text == ''">Search the tags for the search text</span>
+                                        <span ng-show="newSmartSearch.search_text == ''">There's nothing to search for unless you enter Search Text</span>
                                     </md-tooltip>
-                                </md-checkbox>
+                                </div>
                             </div>
 
                             <md-input-container flex class="search-and-filter">
@@ -868,18 +890,30 @@
                                     <form ng-submit="smartSearch.splice($index, 1, getSmartSearchResult(search));  buildAllSmartSearchComments();">
                                         <md-input-container class="input-container full-width">
                                             <label>Search Text</label>
-                                            <input type="text" autocomplete="off" ng-model="search.search_text">
+                                            <input type="text" autocomplete="off" ng-change="setSearchTextCheckboxes(search);" ng-model="search.search_text">
                                         </md-input-container>
                                     </form>
 
                                     <div layout-xs="column" layout-gt-xs="row" layout-fill>
-                                        <md-checkbox flex ng-model="search.text" ng-change="smartSearch.splice($index, 1, getSmartSearchResult(search));  buildAllSmartSearchComments();" aria-label="Search comment text for search text">
-                                            Text
-                                        </md-checkbox>
+                                        <div flex>
+                                            <md-checkbox ng-model="search.text" ng-disabled="search.search_text == ''" ng-change="smartSearch.splice($index, 1, getSmartSearchResult(search));  buildAllSmartSearchComments();" aria-label="Search comment text for search text">
+                                                Text
+                                            </md-checkbox>
+                                            <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
+                                                <span ng-hide="newSmartSearch.search_text == ''">Search the comment text for the search text</span>
+                                                <span ng-show="newSmartSearch.search_text == ''">There's nothing to search for unless you enter Search Text</span>
+                                            </md-tooltip>
+                                        </div>
 
-                                        <md-checkbox flex ng-model="search.tags" ng-change="smartSearch.splice($index, 1, getSmartSearchResult(search));  buildAllSmartSearchComments();" aria-label="Search tags for search text">
-                                            Tags
-                                        </md-checkbox>
+                                        <div flex>
+                                            <md-checkbox ng-model="search.tags" ng-disabled="search.search_text == ''" ng-change="smartSearch.splice($index, 1, getSmartSearchResult(search));  buildAllSmartSearchComments();" aria-label="Search tags for search text">
+                                                Tags
+                                            </md-checkbox>
+                                            <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
+                                                <span ng-hide="newSmartSearch.search_text == ''">Search the comment tags for the search text</span>
+                                                <span ng-show="newSmartSearch.search_text == ''">There's nothing to search for unless you enter Search Text</span>
+                                            </md-tooltip>
+                                        </div>
 
                                         <md-input-container flex class="search-and-filter">
                                             <label>Filter on Tone</label>
@@ -890,7 +924,7 @@
                                     </div>
 
                                 </td>
-                                <td flex layout="column">
+                                <td flex layout-xs="column" layout-sm="row" layout-gt-sm="column">
                                     <md-button aria-label="Remove All Students" md-ink-ripple flex class="button-hover full-width" md-ripple-size="auto" ng-click="smartSearch.splice($index, 1, getSmartSearchResult(search));  buildAllSmartSearchComments();">
                                         <i class="material-icons inline-icon">autorenew</i>
                                         <span>Regenerate</span>
@@ -908,6 +942,22 @@
                                 </td>
                             </tr>
                         </table>
+
+                        <div class="center-aligned quick-instructions-container" ng-hide="smartSearch.length > 0">
+                            <fieldset class="quick-instructions" style="margin: auto;">
+                                <br>
+                                1. Fill in Class Name and Student Name<br><br>
+                                2. Fill in Your Introduction and Your Conclusion (optional)<br><br>
+                                3. Add searches one by one, each search represents 1 sentence, in the order you add them.<br><br>
+                                Example: If you want your first sentence to be about "behavior" then type that in and hit "Add Smart Search"<br><br>
+                                4. If you don't care what type of comment goes in a certain position just leave the Search Text empty and the filter set to "Any"<br><br>
+                                5. Repeat for all of the sentences that you want in the comment<br><br>
+                                If you wish to use this pattern with the Multi Student tab then just build the search pattern and then switch to that tab.<br><br>
+
+                                <span ng-click="showSmartSearchHelp()" class="common-tag">See the help for more details.</span>
+                                <br><br>
+                            </fieldset>
+                        </div>
 
                         <div class="copy-all-container" ng-show="smartSearch.length > 0">
 
