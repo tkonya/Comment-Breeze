@@ -586,8 +586,8 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         }
         student.old_name = student.name;
 
-        if ($scope.useSmartSearch) {
-            student.comment = ''
+        if ($scope.useSmartSearch && $scope.smartSearch.length > 0) {
+            student.comment = '';
             for (var i = 0; i < $scope.smartSearch.length; ++i) {
                 student.comment += $scope.capitalizeFirstLetter($scope.getSmartSearchResult($scope.smartSearch[i]).found_comment + ' ');
             }
@@ -753,16 +753,21 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
 
         search.found_comment = '';
 
+        console.log('search text: ' + search.search_text);
+
         var randomStartingPoint = Math.floor((Math.random() * $scope.comments.length));
+        console.log('Starting at random index ' + randomStartingPoint);
 
-        for (var i = 0; i < $scope.comments.length; ++i) {
+        for (var i = randomStartingPoint; i < $scope.comments.length + randomStartingPoint; ++i) {
 
-            var index = i + randomStartingPoint;
-            if (index > $scope.comments.length) {
-                index = index - $scope.comments.length;
+            var index = i;
+            if (index >= $scope.comments.length) {
+                index -= $scope.comments.length;
             }
 
-            console.log('Starting at random index ' + index);
+            if ($scope.avoidHer && $scope.gender != 'female' && ($scope.comments[index].comment_text.indexOf(' her ') > 0 || $scope.comments[index].comment_text.startsWith('Her') || $scope.comments[index].comment_text.endsWith(' her.'))) {
+                continue;
+            }
 
             // yes I know I can make this statement more compact, but then it would be less readable
             if (search.tone != 'Any') {
@@ -795,6 +800,10 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
             break;
         }
 
+        if ($scope.selectedTab == 3 && $scope.smartSearch.length > 0) {
+            $scope.useSmartSearch = true;
+        }
+
         return angular.copy(search);
     };
 
@@ -809,10 +818,6 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         $scope.yourComment = '';
         for (var i = 0; i < $scope.smartSearch.length; ++i) {
             $scope.yourComment += $scope.capitalizeFirstLetter($scope.replaceClassName($scope.replaceMultiStudentName($scope.smartSearch[i].found_comment, $scope.studentName, $scope.oldStudentName), true), $scope.gender) + ' ';
-        }
-
-        if ($scope.smartSearch.length == 0) {
-            $scope.useSmartSearch = false;
         }
     };
 

@@ -492,12 +492,16 @@
                                 </md-radio-group>
                             </div>
 
-                            <md-checkbox ng-disabled="smartSearch.length < 1" ng-model="useSmartSearch" aria-label="Hide or show the tooltips">
-                                Use Smart Search
+                            <div>
+                                <md-checkbox ng-disabled="smartSearch.length < 1" ng-model="useSmartSearch" aria-label="Hide or show the tooltips">
+                                    Use Smart Search
+                                </md-checkbox>
                                 <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
-                                    Auto generates the comment for any new multi student with the smart search settings
+                                    <span ng-show="smartSearch.length > 0">Auto generates the comment for all new multi students with the pattern you defined on the smart search tab</span>
+                                    <span ng-show="smartSearch.length < 1">To use smart search here, first define a pattern on the smart search tab</span>
                                 </md-tooltip>
-                            </md-checkbox>
+                            </div>
+
 
                             <div hide-gt-sm class="small-margin"></div>
 
@@ -831,7 +835,7 @@
                             </md-input-container>
 
                             <div flex layout="column">
-                                <md-button aria-label="Add new smart search" md-ink-ripple class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="smartSearch.push(getSmartSearchResult(newSmartSearch)); newSmartSearch.search_text = ''; buildAllSmartSearchComments();">
+                                <md-button aria-label="Add new smart search" md-ink-ripple class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="smartSearch.push(getSmartSearchResult(newSmartSearch)); newSmartSearch.search_text = ''; buildAllSmartSearchComments(); useSmartSearch = true;">
                                     <i class="material-icons inline-icon">lightbulb_outline</i>
                                     <span>Add Smart Search</span>
                                     <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
@@ -896,7 +900,7 @@
                                     </md-button>
                                     <md-button aria-label="Remove Search" md-ink-ripple flex class="button-hover full-width" md-ripple-size="auto" ng-click="smartSearch.splice($index, 1);  buildAllSmartSearchComments();">
                                         <i class="material-icons inline-icon">delete</i>
-                                        <span>Remove</span>
+                                        <span>Remove Search</span>
                                         <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
                                             Clear this search
                                         </md-tooltip>
