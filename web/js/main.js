@@ -528,19 +528,6 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         console.log('done changing filter');
     };
 
-    $scope.setMobileSettings = function() {
-        if ($mdMedia('xs')) {
-            $scope.commentSizeToGet = 2000;
-            $scope.showTooltips = false;
-            //$scope.showHints = true;
-            $scope.showEditButtons = false;
-        } else if ($mdMedia('sm')) {
-            $scope.showTooltips = false;
-            //$scope.showHints = true;
-            $scope.commentSizeToGet = 6000;
-        }
-    };
-
     $scope.illToastToThat = function(text) {
         console.log('Toast: ' + text);
         $mdToast.show(
@@ -785,6 +772,20 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
             } else if ($scope.selectedTab == 4) {
                 $location.search('tab', 'donate');
             }
+        }
+    };
+
+    $scope.setMobileSettings = function() {
+        if ($mdMedia('xs')) {
+            $scope.commentSizeToGet = 2000;
+            $scope.showTooltips = false;
+            //$scope.showTags = false;
+            //$scope.showHints = true;
+            $scope.showEditButtons = false;
+        } else if ($mdMedia('sm')) {
+            $scope.showTooltips = false;
+            //$scope.showHints = true;
+            $scope.commentSizeToGet = 6000;
         }
     };
 

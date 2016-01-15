@@ -88,7 +88,7 @@ public class CommentResource {
                     }
 
                     // count 20 most common tags
-                    commonTags = databaseHandler.getJSONArrayFor("SELECT tag FROM comment_breeze.comment_tags WHERE deleted = FALSE GROUP BY tag ORDER BY COUNT(*) DESC LIMIT 100");
+                    commonTags = databaseHandler.getJSONArrayFor("SELECT tag FROM comment_breeze.comment_tags WHERE deleted = FALSE GROUP BY tag ORDER BY COUNT(*) DESC LIMIT 30");
 
                     comments = fetchedComments;
                     updated = false;
