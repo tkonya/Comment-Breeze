@@ -231,7 +231,7 @@ public class CommentResource {
 
                     for (int i = 0; i < comment.getJSONArray("tags").length(); ++i) {
                         preparedStatement.setInt(1, comment.getInt("comment_id"));
-                        preparedStatement.setString(2, comment.getJSONArray("tags").getString(i));
+                        preparedStatement.setString(2, comment.getJSONArray("tags").getString(i).toLowerCase());
                         preparedStatement.setString(3, ipAddress);
                         preparedStatement.setString(4, ipAddress);
                         preparedStatement.addBatch();
@@ -258,10 +258,10 @@ public class CommentResource {
                     for (int i = 0; i < comment.getJSONArray("old_tags").length(); ++i) {
 
                         // skip any old tag that is still in tags
-                        String currentTag = comment.getJSONArray("old_tags").getString(i);
+                        String currentTag = comment.getJSONArray("old_tags").getString(i).toLowerCase();
                         if (comment.has("tags") && comment.getJSONArray("tags").length() > 0) {
                             for (int j = 0; j < comment.getJSONArray("tags").length(); ++j) {
-                                if (comment.getJSONArray("tags").getString(j).equals(currentTag)) {
+                                if (comment.getJSONArray("tags").getString(j).toLowerCase().equals(currentTag)) {
                                     continue outer;
                                 }
                             }

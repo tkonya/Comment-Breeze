@@ -1,0 +1,65 @@
+<md-dialog flex="90">
+    <md-dialog-content style="padding: 2em;">
+        <div class="center-aligned yellow-color">
+            <h2>Smart Search Comment Building</h2>
+        </div>
+
+        <h4 class="yellow-color">Setup:</h4>
+        <p>
+            Enter the name of your class and the name of the student you are going to first build a comment for on the "Class Name" and "Student Name" lines respectively. Enter these as you would like them to appear in the comments, so generally just their first/given name. Select what gender the student is.<br><br>
+            If you want all comments to start with the same introduction and/or conclusion then enter those on the "Your custom introduction" and "Your custom conclusion" lines.
+            You may use the variables CLASS_NAME and STUDENT_NAME in your introduction and conclusion, they will be replaced with the appropriate values when copied.
+        </p>
+
+        <h4 class="yellow-color">Building a search set:</h4>
+        <p>
+            You can build the search set sentence by sentence. So for your first sentence enter text you would like to search for, if any, on the "Search Text" line.
+            Check whether you would like to look for this text in the comment text or in the tags. Selecting both will return a comment if it finds the text in either one.
+            Select if you would like this comment to have a certain tone (positive, neutral or negative).
+            Hit "Add Smart Search" and repeat for all other sentences you would like to add.
+            If a search did not return any results or you are unsatisfied with the result, you can modify it below and regenerate.
+        </p>
+
+        <h4 class="yellow-color">Just Make Something Up:</h4>
+        <p>
+            The "Just Make Something Up" button will generate multiple searches using the values you have currently set in the search box..
+            So if you would like a random set of all negative comments, just select "Negative" in the "Filter on Tone" box and hit "Just Make Something Up"
+            You may select the number of searches you would like this button to pick on the settings tab.
+        </p>
+
+        <h4 class="yellow-color">Editing Your Comment:</h4>
+        <p>
+            Edit comment manually as needed or use the shuffle button to scramble the order of the searches that produced it.
+        </p>
+
+        <h4 class="yellow-color">Copying:</h4>
+        <p>
+            When you are satisfied with the comment you can hit the "Copy Comments" button to copy the entire comment.<br>
+            The introduction and conclusion will be added to the beginning and end if you entered them.
+            If you put the variables STUDENT_NAME or CLASS_NAME in the intro or conclusion they will be replaced in the copied text.
+        </p>
+
+        <h4 class="yellow-color">Subsequent Students:</h4>
+        <p>
+            Hitting the "Reset Comments" button will prepare you to do the next student by erasing the current student name and comments.
+            This will not erase your searches so you can reuse the values in them for the next student.
+            The class name, gender, introduction and conclusion will not be changed.
+        </p>
+
+        <h4 class="yellow-color">Mobile Warning:</h4>
+        <p>
+            This is definitely the most CPU intensive tab in the tool. I would not even try to do this on a smartphone or tablet.
+        </p>
+
+        <h4 class="yellow-color">Please Also Note:</h4>
+        <p>
+            There are currently very few comments with tone set or with tags set, so it's not advised to rely on searching/filtering on either of those too much. This tool will become more useful as the comment bank becomes better organized. You can organize it right now by going to the Single Student tab and tagging or rating some comments. Searching on text still works fine though.
+        </p>
+        <br>
+
+        <div class="center-aligned yellow-color">
+            <md-button ng-click="closeDialog()">OK, I got it</md-button>
+        </div>
+
+    </md-dialog-content>
+</md-dialog>

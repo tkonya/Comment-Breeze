@@ -92,7 +92,7 @@
                                 <h3 class="yellow-color">OK, how do I use it?</h3>
 
                                 <p class="paragraphs">
-                                    Go to either the Single Student or Multi Student tab.<br>
+                                    Go to the Single Student, Multi Student or Smart Search tab.<br>
                                     Click the help button in the upper right hand corner for instructions and tips.<br>
                                     Reading the help for each page first is strongly suggested.
                                 </p>
@@ -104,6 +104,7 @@
                                         I've done my best to make this site responsive and accessible on mobile devices as well as computers.<br>
                                         That said, the page is very javascript heavy and may suffer from slow performance on mobile devices with limited computing power.<br>
                                         Some settings are changed to make mobile viewing experiences better. These can be changed on the settings page.
+                                        The Smart Search tab is the most CPU intensive of all. I would not even try to use this on mobile; you're phone might ignite.
                                     </p>
                                 </div>
 
@@ -393,6 +394,14 @@
                                     </md-tooltip>
                                 </md-select>
 
+                                <!--<md-button aria-label="Shuffle Comment Bank" md-ink-ripple flex class="md-button md-raised md-accent" md-ripple-size="auto" ng-click="shuffleCommentBank();">-->
+                                    <!--<i class="material-icons inline-icon">shuffle</i>-->
+                                    <!--<span>Shuffle Comment Bank</span>-->
+                                    <!--<md-tooltip ng-show="showTooltips" class="tooltip">-->
+                                        <!--Shuffles the comment bank-->
+                                    <!--</md-tooltip>-->
+                                <!--</md-button>-->
+
                                 <div flex>
                                     <div align="right">
                                         <button class="md-button" md-ink-ripple ng-show="totalCommentPages > 1 && currentCommentsPage > 1" ng-click="changeCommentsPage(currentCommentsPage - 1)" style="display: inline-block; padding: .5em;">&#9664;</button>
@@ -483,6 +492,13 @@
                                 </md-radio-group>
                             </div>
 
+                            <md-checkbox ng-disabled="smartSearch.length < 1" ng-model="useSmartSearch" aria-label="Hide or show the tooltips">
+                                Use Smart Search
+                                <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
+                                    Auto generates the comment for any new multi student with the smart search settings
+                                </md-tooltip>
+                            </md-checkbox>
+
                             <div hide-gt-sm class="small-margin"></div>
 
                             <div flex-gt-sm="50" layout="row" >
@@ -523,121 +539,71 @@
                         <div ng-show="multiStudent.length > 0">
                             <table class="comment-bank-table">
                                 <tr ng-repeat="student in multiStudent" class="rounded-corners multi-student-comment-row" layout-xs="column" layout-sm="column" layout-gt-sm="row" layout-fill>
-                                    <td flex-gt-sm="80">
+                                    <td flex-gt-sm="60">
                                         <md-input-container class="full-width">
                                             <label>Comment for <span ng-bind="student.name"></span> (<span ng-show="student.gender == 'male'">Male</span><span ng-show="student.gender == 'female'">Female</span><span ng-show="student.gender == 'neutral'">Neutral</span>)</label>
                                             <textarea ng-model="student.comment" class="comment-text-box full-width"></textarea>
                                         </md-input-container>
                                     </td>
                                     <td flex-gt-sm="20" class="multi-student-button-td">
-                                        <div class="multi-student-button-container" layout-xs="column" layout-sm="row" layout-gt-sm="column" layout-fill>
+                                        <div class="multi-student-button-container" layout-xs="column" layout-sm="column" layout-gt-sm="column" layout-fill>
+                                            <md-button class="button-hover full-width" flex ng-click="regenerateMultiStudentComment(student)">
+                                                <i class="material-icons inline-icon">autorenew</i>
+                                                <span>Regenerate</span>
+                                                <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
+                                                    Get a new set of random comments for this student
+                                                </md-tooltip>
+                                            </md-button>
 
-                                            <div layout-sm="column" layout-fill class="full-width">
-                                                <md-button class="button-hover full-width" flex ng-click="regenerateMultiStudentComment(student)">
-                                                    <i class="material-icons inline-icon">autorenew</i>
-                                                    <span>Regenerate</span>
-                                                    <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
-                                                        Get a new set of random comments for this student
-                                                    </md-tooltip>
-                                                </md-button>
+                                            <md-button class="button-hover" ng-disabled="student.comment == ''" ng-click="shuffleMultiStudentComment(student)">
+                                                <i class="material-icons inline-icon">shuffle</i>
+                                                <span>Shuffle Comments</span>
+                                                <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
+                                                    Shuffle the current comments for this student
+                                                </md-tooltip>
+                                            </md-button>
 
-                                                <md-button class="button-hover full-width" flex ng-click="editMultiStudentComment(student)">
-                                                    <i class="material-icons inline-icon">mode_edit</i>
-                                                    <span>Edit as Single Student</span>
-                                                    <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
-                                                        Edit this student's comments
-                                                    </md-tooltip>
-                                                </md-button>
-                                            </div>
+                                            <md-button aria-label="Copy Comments" md-ink-ripple flex class="button-hover full-width" ng-disabled="yourCommentIntroduction == '' && student.comment == '' && yourCommentConclusion == ''" ng-click="illToastToThat('Comments copied to clipboard')" md-ripple-size="auto" clipboard text="yourCommentIntroduction + ' ' + student.comment + ' ' + yourCommentConclusion">
+                                                <i class="material-icons inline-icon">content_copy</i>
+                                                <span>Copy Comment</span>
+                                                <md-tooltip ng-show="showTooltips" class="tooltip">
+                                                    Copies just this student's comment to the clipboard
+                                                </md-tooltip>
+                                            </md-button>
+                                        </div>
+                                    </td>
+                                    <td flex-gt-sm="20" class="multi-student-button-td">
+                                        <div class="multi-student-button-container" layout-xs="column" layout-sm="column" layout-gt-sm="column" layout-fill>
+                                            <md-button class="button-hover full-width" flex ng-click="editMultiStudentComment(student, 1)">
+                                                <i class="material-icons inline-icon">mode_edit</i>
+                                                <span>Edit as Single Student</span>
+                                                <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
+                                                    Edit this student's comments
+                                                </md-tooltip>
+                                            </md-button>
 
-                                            <div layout-sm="column" layout-fill class="full-width">
-                                                <md-button aria-label="Copy Comments" md-ink-ripple flex class="button-hover full-width" ng-disabled="yourCommentIntroduction == '' && student.comment == '' && yourCommentConclusion == ''" ng-click="illToastToThat('Comments copied to clipboard')" md-ripple-size="auto" clipboard text="yourCommentIntroduction + ' ' + student.comment + ' ' + yourCommentConclusion">
-                                                    <i class="material-icons inline-icon">content_copy</i>
-                                                    <span>Copy Comment</span>
-                                                    <md-tooltip ng-show="showTooltips" class="tooltip">
-                                                        Copies just this student's comment to the clipboard
-                                                    </md-tooltip>
-                                                </md-button>
+                                            <md-button class="button-hover full-width" flex ng-click="editMultiStudentComment(student, 3)">
+                                                <i class="material-icons inline-icon">mode_edit</i>
+                                                <span>Edit as Smart Search</span>
+                                                <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
+                                                    Edit this student's comments
+                                                </md-tooltip>
+                                            </md-button>
 
-                                                <md-button class="button-hover full-width" flex ng-click="removeMultiStudent(student)">
-                                                    <i class="material-icons inline-icon">delete</i>
-                                                    <span>Remove Student</span>
-                                                    <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
-                                                        Remove this student from the list
-                                                    </md-tooltip>
-                                                </md-button>
-                                            </div>
-
-                                            <!--<md-button class="button-hover" ng-disabled="student.comment == ''" ng-click="shuffleMultiStudentComment(student)">-->
-                                                <!--<i class="material-icons inline-icon">shuffle</i>-->
-                                                <!--<span>Shuffle Comments</span>-->
-                                                <!--<md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">-->
-                                                    <!--Shuffle the current comments for this student-->
-                                                <!--</md-tooltip>-->
-                                            <!--</md-button>-->
-
-                                            <!--<md-menu>-->
-                                            <!--&lt;!&ndash; Trigger element is a md-button with an icon &ndash;&gt;-->
-                                            <!--<md-button ng-click="$mdOpenMenu($event)" class="md-icon-button" aria-label="Open sample menu">-->
-                                            <!--<i class="material-icons inline-icon">menu</i>-->
-                                            <!--<span>Options</span>-->
-                                            <!--</md-button>-->
-                                            <!--<md-menu-content>-->
-                                            <!--<md-menu-item>-->
-                                            <!--<md-button class="button-hover" ng-click="regenerateMultiStudentComment(student)">-->
-                                            <!--<i class="material-icons inline-icon">autorenew</i>-->
-                                            <!--<span>Regenerate</span>-->
-                                            <!--<md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">-->
-                                            <!--Get a new set of random comments for this student-->
-                                            <!--</md-tooltip>-->
-                                            <!--</md-button>-->
-                                            <!--</md-menu-item>-->
-                                            <!--<md-menu-item>-->
-                                            <!--<md-button class="button-hover" ng-disabled="student.comment == ''" ng-click="shuffleMultiStudentComment(student)">-->
-                                            <!--<i class="material-icons inline-icon">shuffle</i>-->
-                                            <!--<span>Shuffle Comments</span>-->
-                                            <!--<md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">-->
-                                            <!--Shuffle the current comments for this student-->
-                                            <!--</md-tooltip>-->
-                                            <!--</md-button>-->
-                                            <!--</md-menu-item>-->
-                                            <!--<md-menu-item>-->
-                                            <!--<md-button class="button-hover"  ng-click="editMultiStudentComment(student)">-->
-                                            <!--<i class="material-icons inline-icon">mode_edit</i>-->
-                                            <!--<span>Edit as Single Student</span>-->
-                                            <!--<md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">-->
-                                            <!--Edit this student's comments-->
-                                            <!--</md-tooltip>-->
-                                            <!--</md-button>-->
-                                            <!--</md-menu-item>-->
-                                            <!--<md-menu-item>-->
-                                            <!--<md-button aria-label="Copy Comments" md-ink-ripple flex class="button-hover" ng-disabled="yourCommentIntroduction == '' && student.comment == '' && yourCommentConclusion == ''" ng-click="illToastToThat('Comments copied to clipboard')" md-ripple-size="auto" clipboard text="yourCommentIntroduction + ' ' + student.comment + ' ' + yourCommentConclusion">-->
-                                            <!--<i class="material-icons inline-icon">content_copy</i>-->
-                                            <!--<span>Copy Comment</span>-->
-                                            <!--<md-tooltip ng-show="showTooltips" class="tooltip">-->
-                                            <!--Copies just this student's comment to the clipboard-->
-                                            <!--</md-tooltip>-->
-                                            <!--</md-button>-->
-                                            <!--</md-menu-item>-->
-                                            <!--<md-menu-item>-->
-                                            <!--<md-button class="button-hover" ng-click="removeMultiStudent(student)">-->
-                                            <!--<i class="material-icons inline-icon">delete</i>-->
-                                            <!--<span>Remove Student</span>-->
-                                            <!--<md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">-->
-                                            <!--Remove this student from the list-->
-                                            <!--</md-tooltip>-->
-                                            <!--</md-button>-->
-                                            <!--</md-menu-item>-->
-                                            <!--</md-menu-content>-->
-                                            <!--</md-menu>-->
-
+                                            <md-button class="button-hover full-width" flex ng-click="removeMultiStudent(student)">
+                                                <i class="material-icons inline-icon">delete</i>
+                                                <span>Remove Student</span>
+                                                <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
+                                                    Remove this student from the list
+                                                </md-tooltip>
+                                            </md-button>
                                         </div>
                                     </td>
                                 </tr>
                             </table>
 
                             <div class="copy-all-container">
-                                <md-button aria-label="Copy All Comments" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="illToastToThat('All comments copied to clipboard'); multiStudentsCopied = true;" clipboard text="allMultiStudentComments">
+                                <md-button aria-label="Copy All Comments" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="illToastToThat('All comments copied to clipboard');" clipboard text="allMultiStudentComments">
                                     <i class="material-icons inline-icon">content_copy</i>
                                     <span>Copy All Comments</span>
                                     <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
@@ -645,7 +611,7 @@
                                     </md-tooltip>
                                 </md-button>
 
-                                <md-button aria-label="Remove All Students" md-ink-ripple flex class="md-button md-raised md-accent" md-ripple-size="auto" ng-show="multiStudentsCopied" ng-click="removeAllMultiStudents()">
+                                <md-button aria-label="Remove All Students" md-ink-ripple flex class="md-button md-raised md-accent" md-ripple-size="auto" ng-click="removeAllMultiStudents()">
                                     <i class="material-icons inline-icon">clear_all</i>
                                     <span>Remove All Students</span>
                                     <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
@@ -654,6 +620,302 @@
                                 </md-button>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </md-tab-body>
+        </md-tab>
+
+        <md-tab md-on-select="selectTab();">
+            <md-tab-label>
+                <i class="material-icons inline-icon">lightbulb_outline</i>
+                Smart Search
+            </md-tab-label>
+            <md-tab-body>
+                <div class="darkula-background">
+                    <div class="all-tabs">
+
+                        <div layout-xs="column" layout-sm="column" layout-gt-sm="row" layout-fill>
+
+                            <form ng-submit="changeClassName()" flex-gt-sm="30" flex-order="1">
+                                <md-input-container class="input-container full-width" flex="100">
+                                    <label>Class Name</label>
+                                    <input type="text" ng-model="className" ng-blur="changeClassName()">
+                                    <div class="hint" ng-show="showHints">Will replace instances of CLASS_NAME in comments</div>
+                                </md-input-container>
+                                <!--<button class="invisible-button" type="submit">Submit</button>-->
+                                <md-tooltip ng-show="showTooltips" class="tooltip">
+                                    Will replace instances of CLASS_NAME in comments
+                                </md-tooltip>
+                            </form>
+
+                            <form ng-submit="changeStudentName()" flex-gt-sm="30" flex-order="2">
+                                <md-input-container class="input-container full-width">
+                                    <label>Student Name</label>
+                                    <input type="text" autocomplete="off" ng-model="studentName" ng-blur="changeStudentName()">
+                                    <div class="hint" ng-show="showHints">Will replace instances of STUDENT_NAME in comments</div>
+                                </md-input-container>
+                                <!--<button class="invisible-button" type="submit">Submit</button>-->
+                                <md-tooltip ng-show="showTooltips" class="tooltip">
+                                    Will replace instances of STUDENT_NAME in comments
+                                </md-tooltip>
+                            </form>
+
+                            <div flex-order="3" flex-gt-sm="30" class="radio-button-container">
+                                <md-radio-group class="md-primary radio-button-group" ng-model="gender" ng-change="fixCommentPronouns()" layout="row">
+                                    <md-radio-button ng-model="gender" class="gender-radio" value="male" selected>
+                                        Male
+                                        <md-tooltip ng-show="showTooltips && gender != 'male'" class="tooltip">
+                                            Change and set pronouns to male
+                                        </md-tooltip>
+                                    </md-radio-button>
+                                    <md-radio-button ng-model="gender" class="gender-radio" value="female" >
+                                        Female
+                                        <md-tooltip ng-show="showTooltips && gender != 'female'" class="tooltip">
+                                            Change and set pronouns to female
+                                        </md-tooltip>
+                                    </md-radio-button>
+                                    <md-radio-button ng-disabled="!enableNeutralGender" ng-model="gender" class="gender-radio" value="neutral"">
+                                    Neutral
+                                    <md-tooltip ng-show="showTooltips && !enableNeutralGender" class="tooltip">
+                                        Neutral gender can be enabled on the settings page
+                                    </md-tooltip>
+                                    <md-tooltip ng-show="showTooltips && enableNeutralGender && gender != 'neutral'" class="tooltip">
+                                        Change and set pronouns to neutral
+                                    </md-tooltip>
+                                    </md-radio-button>
+                                </md-radio-group>
+                            </div>
+
+                            <md-button class="button-hover help-button md-primary" ng-click="showSmartSearchHelp()" flex-order-sm="-1" flex-order-gt-sm="4" flex-gt-sm="10">
+                                <i class="material-icons inline-icon">help</i>
+                                <span>Help</span>
+                                <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="left">
+                                    Show instructions and settings
+                                </md-tooltip>
+                            </md-button>
+
+                        </div>
+
+                        <div layout="column" layout-fill class="whole-comment-container">
+                            <md-input-container class="input-container">
+                                <label>Your Introduction</label>
+                                <textarea ng-model="yourCommentIntroduction" class="comment-text-box"></textarea>
+                                <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="right">
+                                    This will be copied when you hit 'Copy Comments' but will not be erased when you hit 'Reset Comments'  (optional)
+                                </md-tooltip>
+                                <div class="hint" ng-show="showHints">This will be copied when you hit 'Copy Comments' but will not be erased when you hit 'Reset Comments'  (optional)</div>
+                            </md-input-container>
+                            <br ng-show="showHints">
+                            <md-input-container class="input-container">
+                                <label>Your Comments</label>
+                                <textarea ng-model="yourComment" class="comment-text-box"></textarea>
+                                <div class="hint" ng-show="showHints">Add comments by clicking below and edit them as needed</div>
+                                <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="right">
+                                    Add comments by clicking below and edit them as needed
+                                </md-tooltip>
+                            </md-input-container>
+                            <br ng-show="showHints">
+                            <md-input-container class="input-container">
+                                <label>Your Conclusion</label>
+                                <textarea ng-model="yourCommentConclusion" class="comment-text-box"></textarea>
+                                <div class="hint" ng-show="showHints">This will be copied when you hit 'Copy Comments' but will not be erased when you hit 'Reset Comments'  (optional)</div>
+                                <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="right">
+                                    This will be copied when you hit 'Copy Comments' but will not be erased when you hit 'Reset Comments'  (optional)
+                                </md-tooltip>
+                            </md-input-container>
+                        </div>
+
+                        <div layout-xs="column" layout-sm="column" layout-md="row" layout-gt-md="row" layout-fill>
+
+                            <md-button aria-label="Just Make Something Up" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="justMakeSomethingUpSmartSearch()">
+                                <i class="material-icons inline-icon">warning</i>
+                                Just Make Something Up
+                                <md-tooltip ng-show="showTooltips" class="tooltip">
+                                    Generates {{makeSomethingUpSize}} random comments
+                                </md-tooltip>
+                            </md-button>
+
+                            <md-button aria-label="Reset Comments" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-disabled="yourComment == ''" ng-click="shuffleSmartSearch()">
+                                <i class="material-icons inline-icon">shuffle</i>
+                                <span>Shuffle Comments</span>
+                                <md-tooltip ng-show="showTooltips" class="tooltip" md-autohide="true">
+                                    Rearranges the comment sentences in random order
+                                </md-tooltip>
+                            </md-button>
+
+                            <md-button aria-label="Copy Comments" md-ink-ripple flex class="md-button md-raised md-primary three-buttons" ng-disabled="yourCommentIntroduction == '' && yourComment == '' && yourCommentConclusion == ''" ng-click="illToastToThat('Comments copied to clipboard')" md-ripple-size="auto" clipboard text="yourCommentIntroduction + ' ' + yourComment + ' ' + yourCommentConclusion">
+                                <i class="material-icons inline-icon">content_copy</i>
+                                <span>Copy Comments</span>
+                                <md-tooltip ng-show="showTooltips" class="tooltip">
+                                    Copies everything above to the clipboard
+                                </md-tooltip>
+                            </md-button>
+
+                            <md-button ng-show="yourComment.length > 0 || studentName.length > 0" aria-label="Reset Comments" md-ink-ripple flex class="md-button md-raised md-accent" md-ripple-size="auto" ng-click="studentName = ''; yourComment = '';">
+                                <i class="material-icons inline-icon">clear</i>
+                                <span>Clear Name And Comment</span>
+                                <md-tooltip ng-show="showTooltips" class="tooltip">
+                                    Erases the comments, but not the introduction or conclusion
+                                </md-tooltip>
+                            </md-button>
+
+                            <md-button ng-hide="yourComment.length > 0 || studentName.length > 0" aria-label="Reset All" md-ink-ripple flex class="md-button md-raised md-accent" md-ripple-size="auto" ng-click="resetAllSingleStudent(); resetAllSmartSearch()" ng-disabled="className == '' && studentName == '' && yourCommentIntroduction == '' && yourComment == '' && yourCommentConclusion == '' && searchComments == '' && toneFilterSetting == 'Any' && gender == 'male'">
+                                <i class="material-icons inline-icon">clear_all</i>
+                                <span>Clear All Fields</span>
+                                <md-tooltip ng-show="showTooltips" class="tooltip">
+                                    Resets all fields, searches and filters
+                                </md-tooltip>
+                            </md-button>
+
+                        </div>
+
+                        <div layout-sm="column" layout-gt-sm="row" layout-fill ng-show="editingMultiStudent != null">
+
+                            <md-button aria-label="Cancel Editing" md-ink-ripple flex class="md-button md-raised md-accent" ng-click="selectedTab = 2; editingMultiStudent = null;" md-ripple-size="auto">
+                                <i class="material-icons inline-icon">cancel</i>
+                                <span>Cancel Editing</span>
+                                <md-tooltip ng-show="showTooltips" class="tooltip">
+                                    Copies everything above to the clipboard
+                                </md-tooltip>
+                            </md-button>
+
+                            <md-button aria-label="Done Editing" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="selectedTab = 2; selectMultiStudentTab();">
+                                <i class="material-icons inline-icon">done</i>
+                                <span>Done Editing</span>
+                                <md-tooltip ng-show="showTooltips" class="tooltip">
+                                    Erases the comments, but not the introduction or conclusion
+                                </md-tooltip>
+                            </md-button>
+
+                        </div>
+
+                        <br><br>
+
+                        <div layout-xs="column" layout-sm="column" layout-md="row" layout-gt-md="row" layout-fill>
+
+                            <form ng-submit="smartSearch.push(getSmartSearchResult(newSmartSearch)); newSmartSearch.search_text = ''; buildAllSmartSearchComments();" flex>
+                                <md-input-container class="input-container full-width">
+                                    <label>Search Text</label>
+                                    <input type="text" autocomplete="off" ng-model="newSmartSearch.search_text">
+                                </md-input-container>
+                                <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
+                                    Search for this value
+                                    <span ng-show="newSmartSearch.text && newSmartSearch.tags">in both comment text and tags</span>
+                                    <span ng-show="newSmartSearch.text && !newSmartSearch.tags">in comment text</span>
+                                    <span ng-show="!newSmartSearch.text && newSmartSearch.tags">in comment tags</span>
+                                    <span ng-show="!newSmartSearch.text && !newSmartSearch.tags">nowhere; you don't have text or tags checked!</span>(optional)
+                                </md-tooltip>
+                            </form>
+
+                            <div layout="column" flex>
+                                <md-checkbox ng-model="newSmartSearch.text" aria-label="Hide or show the tooltips">
+                                    Search Comment Text
+                                    <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
+                                        Search the comment text for the search text
+                                    </md-tooltip>
+                                </md-checkbox>
+
+                                <md-checkbox ng-model="newSmartSearch.tags" aria-label="Hide or show the tooltips">
+                                    Search Tags
+                                    <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
+                                        Search the tags for the search text
+                                    </md-tooltip>
+                                </md-checkbox>
+                            </div>
+
+                            <md-input-container flex class="search-and-filter">
+                                <label>Filter on Tone</label>
+                                <md-select ng-model="newSmartSearch.tone">
+                                    <md-option ng-value="option" ng-repeat="option in limitedToneFilterOptions">{{option}}</md-option>
+                                </md-select>
+                            </md-input-container>
+
+                            <div flex layout="column">
+                                <md-button aria-label="Add new smart search" md-ink-ripple class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="smartSearch.push(getSmartSearchResult(newSmartSearch)); newSmartSearch.search_text = ''; buildAllSmartSearchComments();">
+                                    <i class="material-icons inline-icon">lightbulb_outline</i>
+                                    <span>Add Smart Search</span>
+                                    <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
+                                        Adds a new smart search, which will try to find 1 matching sentence
+                                    </md-tooltip>
+                                </md-button>
+
+                                <md-button aria-label="Remove All Searches" md-ink-ripple ng-disabled="smartSearch.length == 0" flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="regenerateAllSmartSearch();">
+                                    <i class="material-icons inline-icon">autorenew</i>
+                                    <span>Regenerate All</span>
+                                    <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
+                                        Regenerates all searches
+                                    </md-tooltip>
+                                </md-button>
+                            </div>
+                        </div>
+
+                        <br>
+
+                        <table class="comment-bank-table">
+                            <tr ng-repeat="search in smartSearch" class="rounded-corners multi-student-comment-row" layout-fill layout-xs="column" layout-sm="column" layout-gt-sm="row">
+                                <td flex-xs flex-sm flex-gt-sm="50">
+                                    <md-input-container class="full-width">
+                                        <label>Search result for sentence {{$index + 1}}</label>
+                                        <textarea ng-model="search.found_comment" placeholder="No matching comment found" class="comment-text-box full-width"></textarea>
+                                    </md-input-container>
+                                </td>
+                                <td flex layout="column">
+
+                                    <form ng-submit="smartSearch.splice($index, 1, getSmartSearchResult(search));  buildAllSmartSearchComments();">
+                                        <md-input-container class="input-container full-width">
+                                            <label>Search Text</label>
+                                            <input type="text" autocomplete="off" ng-model="search.search_text">
+                                        </md-input-container>
+                                    </form>
+
+                                    <div layout-xs="column" layout-gt-xs="row" layout-fill>
+                                        <md-checkbox flex ng-model="search.text" ng-change="smartSearch.splice($index, 1, getSmartSearchResult(search));  buildAllSmartSearchComments();" aria-label="Search comment text for search text">
+                                            Text
+                                        </md-checkbox>
+
+                                        <md-checkbox flex ng-model="search.tags" ng-change="smartSearch.splice($index, 1, getSmartSearchResult(search));  buildAllSmartSearchComments();" aria-label="Search tags for search text">
+                                            Tags
+                                        </md-checkbox>
+
+                                        <md-input-container flex class="search-and-filter">
+                                            <label>Filter on Tone</label>
+                                            <md-select ng-model="search.tone" md-on-close="smartSearch.splice($index, 1, getSmartSearchResult(search));  buildAllSmartSearchComments();">
+                                                <md-option ng-value="option" ng-repeat="option in limitedToneFilterOptions">{{option}}</md-option>
+                                            </md-select>
+                                        </md-input-container>
+                                    </div>
+
+                                </td>
+                                <td flex layout="column">
+                                    <md-button aria-label="Remove All Students" md-ink-ripple flex class="button-hover full-width" md-ripple-size="auto" ng-click="smartSearch.splice($index, 1, getSmartSearchResult(search));  buildAllSmartSearchComments();">
+                                        <i class="material-icons inline-icon">autorenew</i>
+                                        <span>Regenerate</span>
+                                        <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
+                                            Regenerate this search result
+                                        </md-tooltip>
+                                    </md-button>
+                                    <md-button aria-label="Remove Search" md-ink-ripple flex class="button-hover full-width" md-ripple-size="auto" ng-click="smartSearch.splice($index, 1);  buildAllSmartSearchComments();">
+                                        <i class="material-icons inline-icon">delete</i>
+                                        <span>Remove</span>
+                                        <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
+                                            Clear this search
+                                        </md-tooltip>
+                                    </md-button>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div class="copy-all-container" ng-show="smartSearch.length > 0">
+
+                            <md-button aria-label="Remove All Searches" md-ink-ripple flex class="md-button md-raised md-accent" md-ripple-size="auto" ng-click="smartSearch = []; useSmartSearch = false;">
+                                <i class="material-icons inline-icon">clear_all</i>
+                                <span>Remove All Searches</span>
+                                <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
+                                    Remove all of the above searches
+                                </md-tooltip>
+                            </md-button>
+                        </div>
+
                     </div>
                 </div>
             </md-tab-body>
@@ -787,6 +1049,19 @@
                                     Reload All <span ng-bind="formatNumber(totalCommentsSize);"></span>
                                 </md-button>
                             </div>
+                        </div>
+
+                        <br>
+
+                        <h3 class="settings-header yellow-color">Shuffle Comment Bank</h3>
+                        <div layout-xs="column" layout-sm="row"  layout-gt-sm="row" layout-fill>
+                            <div flex-gt-sm="25" class="setting-control-container">
+                                <md-button aria-label="Reload All" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="shuffleCommentBank();">
+                                    <i class="material-icons inline-icon">shuffle</i>
+                                    Shuffle All
+                                </md-button>
+                            </div>
+                            <p flex-gt-sm="75" class="settings-text">If you don't like the order of the comments for some reason you can shuffle them all here. I'm not really sure why you would need to do this. Maybe you want to see different comments on the first page of Single Student? But why wouldn't you just change the page if you wanted to see different comments, that seems easier.</p>
                         </div>
 
                     </div>
