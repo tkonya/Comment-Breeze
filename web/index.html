@@ -545,12 +545,13 @@
                         <div class="center-aligned quick-instructions-container" ng-hide="multiStudent.length > 0">
                             <fieldset class="quick-instructions" style="margin: auto;">
                                 <br>
+                                Multi Student allows you to quickly add students to a list and then edit them as needed. After being added they can be edited individually with the Single Student or Smart Search tools.<br><br>
                                 1. Fill in Class Name<br><br>
                                 2. Fill in Your Introduction and Your Conclusion (optional)<br><br>
                                 3. Enter the name of your first student. Use the buttons to the left to set gender, or simply put a space and an "m" or "f" after their name and hit enter (or press "Add") to set their gender automatically.<br><br>
                                 Example: If you want to add a female student named "Amanda", type "Amanda f" and her gender will automatically be set.<br><br>
                                 4. A random comment will be generated for each student you add. You can edit these with the buttons next to each of them.<br><br>
-                                5. Repeat for all students.<br><br>
+                                5. Repeat steps 3 - 4 for all students.<br><br>
                                 You can make the automatic comment generation follow a pattern by configuring one on the Smart Search tab.<br><br>
 
                                 <span ng-click="showMultiStudentHelp()" class="common-tag">See the help for more details.</span>
@@ -560,7 +561,7 @@
 
                         <div ng-show="multiStudent.length > 0">
                             <table class="comment-bank-table">
-                                <tr ng-repeat="student in multiStudent" class="rounded-corners multi-student-comment-row" layout-xs="column" layout-sm="column" layout-gt-sm="row" layout-fill>
+                                <tr ng-repeat="student in multiStudent" class="rounded-corners multi-student-comment-row animate" layout-xs="column" layout-sm="column" layout-gt-sm="row" layout-fill>
                                     <td flex-gt-sm="60">
                                         <md-input-container class="full-width">
                                             <label>Comment for <span ng-bind="student.name"></span> (<span ng-show="student.gender == 'male'">Male</span><span ng-show="student.gender == 'female'">Female</span><span ng-show="student.gender == 'neutral'">Neutral</span>)</label>
@@ -781,7 +782,7 @@
                                 </md-tooltip>
                             </md-button>
 
-                            <md-button ng-hide="yourComment.length > 0 || studentName.length > 0" aria-label="Reset All" md-ink-ripple flex class="md-button md-raised md-accent" md-ripple-size="auto" ng-click="resetAllSingleStudent(); resetAllSmartSearch()" ng-disabled="className == '' && studentName == '' && yourCommentIntroduction == '' && yourComment == '' && yourCommentConclusion == '' && searchComments == '' && toneFilterSetting == 'Any' && gender == 'male'">
+                            <md-button ng-hide="yourComment.length > 0 || studentName.length > 0" aria-label="Reset All" md-ink-ripple flex class="md-button md-raised md-accent" md-ripple-size="auto" ng-click="resetAllSingleStudent(); resetAllSmartSearch()" ng-disabled="className == '' && studentName == '' && yourCommentIntroduction == '' && yourComment == '' && yourCommentConclusion == '' && toneFilterSetting == 'Any' && gender == 'male'">
                                 <i class="material-icons inline-icon">clear_all</i>
                                 <span>Clear All Fields</span>
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
@@ -948,12 +949,13 @@
                         <div class="center-aligned quick-instructions-container" ng-hide="smartSearch.length > 0">
                             <fieldset class="quick-instructions" style="margin: auto;">
                                 <br>
+                                Smart Search allows you to build a sentence-by-sentence pattern that your comments will conform to. This can be used here or on the Multi Student tab. Each smart search you add will look for one sentence matching the search criteria you set.<br><br>
                                 1. Fill in Class Name and Student Name<br><br>
                                 2. Fill in Your Introduction and Your Conclusion (optional)<br><br>
                                 3. Add searches one by one, each search represents 1 sentence, in the order you add them.<br><br>
                                 Example: If you want your first sentence to be about "behavior" then type that in and hit "Add Smart Search"<br><br>
                                 4. If you don't care what type of comment goes in a certain position just leave the Search Text empty and the filter set to "Any"<br><br>
-                                5. Repeat for all of the sentences that you want in the comment<br><br>
+                                5. Repeat steps 3 - 4 for all of the sentences that you want in the comment<br><br>
                                 If you wish to use this pattern with the Multi Student tab then just build the search pattern and then switch to that tab.<br><br>
 
                                 <span ng-click="showSmartSearchHelp()" class="common-tag">See the help for more details.</span>
@@ -1063,7 +1065,7 @@
                                     <input type="number" ng-model="makeSomethingUpSize" min="1" max="100">
                                 </md-input-container>
                             </div>
-                            <p flex-gt-xs="75" class="settings-text">Adjust the number of comments generated by the "Just Make Something Up" button on the Single Student tab or by default on the Multi Student tab. Can be any number from 1 - 100.</p>
+                            <p flex-gt-xs="75" class="settings-text">Adjust the number of comments generated by the "Just Make Something Up" button on the Single Student and Smart Search tabs, or by default when adding students on the Multi Student tab. Can be any number from 1 - 100.</p>
                         </div>
 
                         <br>

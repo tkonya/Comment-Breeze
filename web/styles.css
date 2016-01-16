@@ -215,6 +215,7 @@ tr:nth-child(odd) {
 
 .multi-student-comment-row {
     padding-top: 1em;
+    line-height: normal;
 }
 
 .settings-tab {
@@ -362,4 +363,9 @@ tr:nth-child(odd) {
 
 .quick-instructions-container {
     margin-top: 2em;
+}
+
+md-input-container label {
+    /*color: #A9B7C6;*/
+    color: #929DA8;
 }

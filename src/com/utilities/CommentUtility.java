@@ -18,8 +18,8 @@ public class CommentUtility {
 
         DatabaseHandler databaseHandler = new DatabaseHandler();
 
-//        addStudentName("", databaseHandler);
-        addClassName("GR2S", databaseHandler);
+        addStudentName("Sera", databaseHandler);
+//        addClassName("Universe", databaseHandler);
 //        findExtraStudentNames(databaseHandler);
 
     }
