@@ -91,10 +91,24 @@
 
                                 <h3 class="yellow-color">OK, how do I use it?</h3>
 
+                                <!--<p class="paragraphs">-->
+                                    <!--Go to the Single Student, Multi Student or Smart Search tab.<br>-->
+                                    <!--Click the help button in the upper right hand corner for instructions and tips.<br>-->
+                                    <!--Reading the help for each page first is strongly suggested.-->
+                                <!--</p>-->
+
                                 <p class="paragraphs">
-                                    Go to the Single Student, Multi Student or Smart Search tab.<br>
-                                    Click the help button in the upper right hand corner for instructions and tips.<br>
-                                    Reading the help for each page first is strongly suggested.
+                                    There are help buttons on each page at the top or upper right. These have detailed instructions about how each tab works.<br>
+
+                                    <!--New users should use the walkthrough to get familiar with it:<br>-->
+                                    <!--<br>-->
+                                    <!--<md-button class="md-button md-raised md-primary" ng-click="walkthrough = {}; showWalkthrough();">-->
+                                        <!--<i class="material-icons inline-icon">star</i>-->
+                                        <!--<span>Start Walkthough</span>-->
+                                        <!--<md-tooltip ng-show="showTooltips" class="tooltip" md-direction="left">-->
+                                            <!--Guides users through Comment Breeze, step by step-->
+                                        <!--</md-tooltip>-->
+                                    <!--</md-button>-->
                                 </p>
 
                                 <div ng-show="commentSizeToGet != 0">
@@ -106,7 +120,7 @@
                                         Some settings are changed to make mobile viewing experiences better. These can be changed on the settings page.
                                         The Smart Search tab is the most CPU intensive of all. I would not even try to use this on mobile; you're phone might ignite.<br><br>
 
-                                        <span class="yellow-color">*</span> All comments are not initially loaded for mobile users, <span class="common-tag" ng-click="selectedTab = 4">see settings page to change.</span>
+                                        <span class="yellow-color">*</span> All comments are not initially loaded for mobile users, <span class="common-tag" ng-click="selectedTab = tabIndexes.settings">see settings page to change.</span>
                                     </p>
                                 </div>
 
@@ -286,19 +300,19 @@
 
                         <div layout-sm="column" layout-gt-sm="row" layout-fill ng-show="editingMultiStudent != null">
 
-                            <md-button aria-label="Cancel Editing" md-ink-ripple flex class="md-button md-raised md-accent" ng-click="selectedTab = 2; editingMultiStudent = null;" md-ripple-size="auto">
+                            <md-button aria-label="Cancel Editing" md-ink-ripple flex class="md-button md-raised md-accent" ng-click="selectedTab = tabIndexes.multi_student; editingMultiStudent = null;" md-ripple-size="auto">
                                 <i class="material-icons inline-icon">cancel</i>
                                 <span>Cancel Editing</span>
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
-                                    Copies everything above to the clipboard
+                                    Goes back to the Multi Student tab without saving anything
                                 </md-tooltip>
                             </md-button>
 
-                            <md-button aria-label="Done Editing" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="selectedTab = 2; selectMultiStudentTab();">
+                            <md-button aria-label="Done Editing" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="selectedTab = tabIndexes.multi_student;">
                                 <i class="material-icons inline-icon">done</i>
                                 <span>Done Editing</span>
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
-                                    Erases the comments, but not the introduction or conclusion
+                                    Saves the changes you've made and goes back to the Multi Student tab
                                 </md-tooltip>
                             </md-button>
 
@@ -334,7 +348,7 @@
 
                         <div ng-show="comments.length > 0">
                             <table class="comment-bank-table">
-                                <tr ng-repeat="comment in comments | filter:searchComments | limitTo : commentViewLimit : commentViewBegin" class="rounded-corners">
+                                <tr ng-repeat="comment in comments | filter:searchComments | limitTo : commentViewLimit : commentViewBegin" class="rounded-corners repeated-item">
                                     <td ng-click="showEditToneDialog(comment)" ng-show="showTone">
                                         <span ng-show="comment.pos_neg == -1" class="negative edit-tone">
                                             <i class="material-icons">thumb_down</i>
@@ -499,7 +513,7 @@
                                     Use Smart Search
                                 </md-checkbox>
                                 <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
-                                    <span ng-show="smartSearch.length > 0">Auto generates the comment for all new multi students with the pattern you defined on the smart search tab</span>
+                                    <span ng-show="smartSearch.length > 0">Auto generates the comment for all new multi students with the global Smart Search pattern you defined</span>
                                     <span ng-show="smartSearch.length < 1">To use smart search here, first define a pattern on the smart search tab</span>
                                 </md-tooltip>
                             </div>
@@ -561,67 +575,122 @@
 
                         <div ng-show="multiStudent.length > 0">
                             <table class="comment-bank-table">
-                                <tr ng-repeat="student in multiStudent" class="rounded-corners multi-student-comment-row animate" layout-xs="column" layout-sm="column" layout-gt-sm="row" layout-fill>
-                                    <td flex-gt-sm="60">
+                                <tr ng-repeat="student in multiStudent" class="rounded-corners multi-student-comment-row repeated-item" layout-xs="column" layout-sm="column" layout-gt-sm="row" layout-fill>
+                                    <td flex-gt-sm="80">
                                         <md-input-container class="full-width">
-                                            <label>Comment for <span ng-bind="student.name"></span> (<span ng-show="student.gender == 'male'">Male</span><span ng-show="student.gender == 'female'">Female</span><span ng-show="student.gender == 'neutral'">Neutral</span>)</label>
+                                            <label>
+                                                Comment for student {{$index + 1}} - <span ng-bind="student.name"></span> - <span ng-bind="student.gender"></span>
+                                            </label>
                                             <textarea ng-model="student.comment" class="comment-text-box full-width"></textarea>
                                         </md-input-container>
                                     </td>
+
                                     <td flex-gt-sm="20" class="multi-student-button-td">
                                         <div class="multi-student-button-container" layout-xs="column" layout-sm="column" layout-gt-sm="column" layout-fill>
-                                            <md-button class="button-hover full-width" flex ng-click="regenerateMultiStudentComment(student)">
-                                                <i class="material-icons inline-icon">autorenew</i>
-                                                <span>Regenerate</span>
-                                                <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
-                                                    Get a new set of random comments for this student
-                                                </md-tooltip>
-                                            </md-button>
 
-                                            <md-button class="button-hover" ng-disabled="student.comment == ''" ng-click="shuffleMultiStudentComment(student)">
-                                                <i class="material-icons inline-icon">shuffle</i>
-                                                <span>Shuffle Comments</span>
-                                                <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
-                                                    Shuffle the current comments for this student
-                                                </md-tooltip>
-                                            </md-button>
+                                            <md-menu class="menu">
+                                                <md-button ng-click="$mdOpenMenu($event)" class="full-width">
+                                                    <i class="material-icons inline-icon">menu</i>
+                                                    <span>Menu</span>
+                                                </md-button>
+                                                <md-menu-content class="menu-content">
+                                                    <md-menu-item ng-hide="student.smartSearch">
+                                                        <md-button md-prevent-menu-close class="button-hover full-width" flex ng-click="regenerateMultiStudentComment(student)">
+                                                            <i class="material-icons inline-icon">autorenew</i>
+                                                            <span>Regenerate Random</span>
+                                                            <!--<md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">-->
+                                                                <!--Get a new set of random comments for this student-->
+                                                            <!--</md-tooltip>-->
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-hide="!student.smartSearch">
+                                                        <md-button md-prevent-menu-close class="button-hover full-width" flex ng-click="regenerateMultiStudentComment(student)">
+                                                            <i class="material-icons inline-icon">autorenew</i>
+                                                            <span>Regenerate Smart</span>
+                                                            <!--<md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">-->
+                                                            <!--Get a new set of random comments for this student-->
+                                                            <!--</md-tooltip>-->
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item>
+                                                        <md-button md-prevent-menu-close class="button-hover" ng-disabled="student.comment == ''" ng-click="shuffleMultiStudentComment(student)">
+                                                            <i class="material-icons inline-icon">shuffle</i>
+                                                            <span>Shuffle Comments</span>
+                                                            <!--<md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">-->
+                                                                <!--Shuffle the current comments for this student-->
+                                                            <!--</md-tooltip>-->
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item>
+                                                        <md-button class="button-hover full-width" flex ng-click="editMultiStudentAsSingleStudent(student)">
+                                                            <i class="material-icons inline-icon">person</i>
+                                                            <span>Edit as Single Student</span>
+                                                            <!--<md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">-->
+                                                                <!--Edit this student's comments-->
+                                                            <!--</md-tooltip>-->
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item>
+                                                        <md-button class="button-hover full-width" flex ng-click="editMultiStudentAsSmartSearch(student)">
+                                                            <i class="material-icons inline-icon">lightbulb_outline</i>
+                                                            <span ng-show="!student.smartSearch">Add Smart Search</span>
+                                                            <span ng-show="student.smartSearch">Edit Smart Search</span>
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-show="student.smartSearchType != 'global' && smartSearch.length > 0">
+                                                        <md-button class="button-hover full-width" flex ng-click="student.smartSearch = smartSearch; student.smartSearchType = 'global'">
+                                                            <i class="material-icons inline-icon">lightbulb_outline</i>
+                                                            <span>Apply Global Pattern</span>
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item>
+                                                        <md-button ng-disabled="(student.comment.length + yourCommentIntroduction.length + yourCommentConclusion.length) < 1" aria-label="Copy Comments" md-ink-ripple flex class="button-hover full-width" ng-disabled="yourCommentIntroduction == '' && student.comment == '' && yourCommentConclusion == ''" ng-click="illToastToThat('Comments copied to clipboard')" md-ripple-size="auto" clipboard text="yourCommentIntroduction + ' ' + student.comment + ' ' + yourCommentConclusion">
+                                                            <i class="material-icons inline-icon">content_copy</i>
+                                                            <span>Copy Comment</span>
+                                                            <!--<md-tooltip ng-show="showTooltips" class="tooltip">-->
+                                                                <!--Copies just this student's comment to the clipboard-->
+                                                            <!--</md-tooltip>-->
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item>
+                                                        <md-button class="button-hover full-width" flex ng-click="removeMultiStudent(student)">
+                                                            <i class="material-icons inline-icon">delete</i>
+                                                            <span>Remove Student</span>
+                                                            <!--<md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">-->
+                                                                <!--Remove this student from the list-->
+                                                            <!--</md-tooltip>-->
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item>
+                                                        <md-button class="button-hover full-width" flex>
+                                                            <i class="material-icons inline-icon">close</i>
+                                                            <span>Close Menu</span>
+                                                            <!--<md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">-->
+                                                                <!--Remove this student from the list-->
+                                                            <!--</md-tooltip>-->
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                </md-menu-content>
+                                            </md-menu>
 
-                                            <md-button aria-label="Copy Comments" md-ink-ripple flex class="button-hover full-width" ng-disabled="yourCommentIntroduction == '' && student.comment == '' && yourCommentConclusion == ''" ng-click="illToastToThat('Comments copied to clipboard')" md-ripple-size="auto" clipboard text="yourCommentIntroduction + ' ' + student.comment + ' ' + yourCommentConclusion">
-                                                <i class="material-icons inline-icon">content_copy</i>
-                                                <span>Copy Comment</span>
-                                                <md-tooltip ng-show="showTooltips" class="tooltip">
-                                                    Copies just this student's comment to the clipboard
-                                                </md-tooltip>
-                                            </md-button>
                                         </div>
-                                    </td>
-                                    <td flex-gt-sm="20" class="multi-student-button-td">
-                                        <div class="multi-student-button-container" layout-xs="column" layout-sm="column" layout-gt-sm="column" layout-fill>
-                                            <md-button class="button-hover full-width" flex ng-click="editMultiStudentComment(student, 1)">
-                                                <i class="material-icons inline-icon">mode_edit</i>
-                                                <span>Edit as Single Student</span>
-                                                <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
-                                                    Edit this student's comments
-                                                </md-tooltip>
-                                            </md-button>
 
-                                            <md-button class="button-hover full-width" flex ng-click="editMultiStudentComment(student, 3)">
-                                                <i class="material-icons inline-icon">mode_edit</i>
-                                                <span>Edit as Smart Search</span>
-                                                <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
-                                                    Edit this student's comments
-                                                </md-tooltip>
-                                            </md-button>
-
-                                            <md-button class="button-hover full-width" flex ng-click="removeMultiStudent(student)">
-                                                <i class="material-icons inline-icon">delete</i>
-                                                <span>Remove Student</span>
-                                                <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
-                                                    Remove this student from the list
-                                                </md-tooltip>
-                                            </md-button>
+                                        <div ng-show="student.smartSearch && student.smartSearchType == 'global'" class="center-aligned">
+                                            <i class="material-icons inline-icon">lightbulb_outline</i> Global Pattern
+                                            <md-tooltip ng-show="showTooltips" class="tooltip">
+                                                This student is using the global / default Smart Search pattern
+                                            </md-tooltip>
                                         </div>
+
+                                        <div ng-show="student.smartSearch && student.smartSearchType == 'individual'" class="center-aligned">
+                                            <i class="material-icons inline-icon">lightbulb_outline</i> Individual Pattern
+                                            <md-tooltip ng-show="showTooltips" class="tooltip">
+                                                This student is using a Smart Search patter distinct to them
+                                            </md-tooltip>
+                                        </div>
+
                                     </td>
+
                                 </tr>
                             </table>
 
@@ -794,19 +863,19 @@
 
                         <div layout-sm="column" layout-gt-sm="row" layout-fill ng-show="editingMultiStudent != null">
 
-                            <md-button aria-label="Cancel Editing" md-ink-ripple flex class="md-button md-raised md-accent" ng-click="selectedTab = 2; editingMultiStudent = null;" md-ripple-size="auto">
+                            <md-button aria-label="Cancel Editing" md-ink-ripple flex class="md-button md-raised md-accent" ng-click="cancelEditingMultiStudentAsSmartSearch();" md-ripple-size="auto">
                                 <i class="material-icons inline-icon">cancel</i>
                                 <span>Cancel Editing</span>
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
-                                    Copies everything above to the clipboard
+                                    Goes back to the Multi Student tab without saving anything
                                 </md-tooltip>
                             </md-button>
 
-                            <md-button aria-label="Done Editing" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="selectedTab = 2; selectMultiStudentTab();">
+                            <md-button aria-label="Done Editing" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="submitEditingMultiStudentAsSmartSearch();">
                                 <i class="material-icons inline-icon">done</i>
                                 <span>Done Editing</span>
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
-                                    Erases the comments, but not the introduction or conclusion
+                                    Saves the changes you've made and goes back to the Multi Student tab
                                 </md-tooltip>
                             </md-button>
 
@@ -818,7 +887,7 @@
 
                             <form ng-submit="smartSearch.push(getSmartSearchResult(newSmartSearch)); newSmartSearch.search_text = ''; buildAllSmartSearchComments();" flex>
                                 <md-input-container class="input-container full-width">
-                                    <label>Search Text</label>
+                                    <label>Smart Search</label>
                                     <input type="text" ng-change="setSearchTextCheckboxes(newSmartSearch);" autocomplete="off" ng-model="newSmartSearch.search_text">
                                 </md-input-container>
                                 <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
@@ -830,10 +899,10 @@
                                 </md-tooltip>
                             </form>
 
-                            <div layout="column" flex>
+                            <div layout="column" flex class="search-checkboxes">
                                 <div>
                                     <md-checkbox ng-disabled="newSmartSearch.search_text == ''" ng-model="newSmartSearch.text" aria-label="Hide or show the tooltips">
-                                        Search Comment Text
+                                        Search Text
                                     </md-checkbox>
                                     <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
                                         <span ng-hide="newSmartSearch.search_text == ''">Search the comment text for the search text</span>
@@ -881,7 +950,7 @@
                         <br>
 
                         <table class="comment-bank-table">
-                            <tr ng-repeat="search in smartSearch" class="rounded-corners multi-student-comment-row" layout-fill layout-xs="column" layout-sm="column" layout-gt-sm="row">
+                            <tr ng-repeat="search in smartSearch" class="rounded-corners multi-student-comment-row repeated-item" layout-fill layout-xs="column" layout-sm="column" layout-gt-sm="row">
                                 <td flex-xs flex-sm flex-gt-sm="50">
                                     <md-input-container class="full-width">
                                         <label>Search result for sentence {{$index + 1}}</label>
@@ -890,7 +959,7 @@
                                 </td>
                                 <td flex layout="column">
 
-                                    <form ng-submit="smartSearch.splice($index, 1, getSmartSearchResult(search));  buildAllSmartSearchComments();">
+                                    <form ng-submit="search.found_comment = getSmartSearchResult(search).found_comment;  buildAllSmartSearchComments();">
                                         <md-input-container class="input-container full-width">
                                             <label>Search Text</label>
                                             <input type="text" autocomplete="off" ng-change="setSearchTextCheckboxes(search);" ng-model="search.search_text">
@@ -899,7 +968,7 @@
 
                                     <div layout-xs="column" layout-gt-xs="row" layout-fill>
                                         <div flex>
-                                            <md-checkbox ng-model="search.text" ng-disabled="search.search_text == ''" ng-change="smartSearch.splice($index, 1, getSmartSearchResult(search));  buildAllSmartSearchComments();" aria-label="Search comment text for search text">
+                                            <md-checkbox ng-model="search.text" ng-disabled="search.search_text == ''" ng-change="search.found_comment = getSmartSearchResult(search).found_comment;  buildAllSmartSearchComments();" aria-label="Search comment text for search text">
                                                 Text
                                             </md-checkbox>
                                             <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
@@ -909,7 +978,7 @@
                                         </div>
 
                                         <div flex>
-                                            <md-checkbox ng-model="search.tags" ng-disabled="search.search_text == ''" ng-change="smartSearch.splice($index, 1, getSmartSearchResult(search));  buildAllSmartSearchComments();" aria-label="Search tags for search text">
+                                            <md-checkbox ng-model="search.tags" ng-disabled="search.search_text == ''" ng-change="search.found_comment = getSmartSearchResult(search).found_comment;  buildAllSmartSearchComments();" aria-label="Search tags for search text">
                                                 Tags
                                             </md-checkbox>
                                             <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
@@ -920,7 +989,7 @@
 
                                         <md-input-container flex class="search-and-filter">
                                             <label>Filter on Tone</label>
-                                            <md-select ng-model="search.tone" md-on-close="smartSearch.splice($index, 1, getSmartSearchResult(search));  buildAllSmartSearchComments();">
+                                            <md-select ng-model="search.tone" md-on-close="search.found_comment = getSmartSearchResult(search).found_comment;  buildAllSmartSearchComments();">
                                                 <md-option ng-value="option" ng-repeat="option in limitedToneFilterOptions">{{option}}</md-option>
                                             </md-select>
                                         </md-input-container>
@@ -928,7 +997,7 @@
 
                                 </td>
                                 <td flex layout-xs="column" layout-sm="row" layout-gt-sm="column">
-                                    <md-button aria-label="Remove All Students" md-ink-ripple flex class="button-hover full-width" md-ripple-size="auto" ng-click="smartSearch.splice($index, 1, getSmartSearchResult(search));  buildAllSmartSearchComments();">
+                                    <md-button aria-label="Remove All Students" md-ink-ripple flex class="button-hover full-width" md-ripple-size="auto" ng-click="search.found_comment = getSmartSearchResult(search).found_comment;  buildAllSmartSearchComments();">
                                         <i class="material-icons inline-icon">autorenew</i>
                                         <span>Regenerate</span>
                                         <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
@@ -958,14 +1027,34 @@
                                 5. Repeat steps 3 - 4 for all of the sentences that you want in the comment<br><br>
                                 If you wish to use this pattern with the Multi Student tab then just build the search pattern and then switch to that tab.<br><br>
 
-                                <span ng-click="showSmartSearchHelp()" class="common-tag">See the help for more details.</span>
+                                <span ng-click="loadSampleSmartSearch()" class="common-tag">Load sample search pattern</span><br><br>
+
+                                <span ng-click="showSmartSearchHelp()" class="common-tag">See the help for more details</span>
                                 <br><br>
                             </fieldset>
                         </div>
 
                         <div class="copy-all-container" ng-show="smartSearch.length > 0">
 
-                            <md-button aria-label="Remove All Searches" md-ink-ripple ng-disabled="smartSearch.length == 0" flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="regenerateAllSmartSearch();">
+                            <span ng-hide="editingMultiStudent">
+                                You are editing the global Smart Search pattern.<br>
+                                This pattern can be applied by default to new Multi Student entries.<br><br>
+                            </span>
+
+                            <span ng-show="editingMultiStudent">
+                                You are editing <span ng-bind="editingMultiStudent.name"></span>'s individual Smart Search pattern.<br>
+                                Changes to this pattern will only affect this student.<br><br>
+                            </span>
+
+                            <md-button aria-label="Remove All Searches" md-ink-ripple ng-hide="multiStudent.length < 1 || editingMultiStudent" flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="useSmartSearch = true; applyGlobalToAll();">
+                                <i class="material-icons inline-icon">group</i>
+                                <span>Apply to All Multi Student</span>
+                                <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
+                                    Apply this search pattern to all multi students
+                                </md-tooltip>
+                            </md-button>
+
+                            <md-button aria-label="Remove All Searches" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="regenerateAllSmartSearch();">
                                 <i class="material-icons inline-icon">autorenew</i>
                                 <span>Regenerate All</span>
                                 <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">

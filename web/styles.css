@@ -271,7 +271,7 @@ tr:nth-child(odd) {
     padding-top: 2em;
 }
 
-.full-width {
+.almost-full-width {
     width: 98%;
 }
 
@@ -368,4 +368,98 @@ tr:nth-child(odd) {
 md-input-container label {
     /*color: #A9B7C6;*/
     color: #929DA8;
+}
+
+.repeated-item.ng-enter, .repeated-item.ng-move {
+    -webkit-transition:0.4s linear all;
+    -moz-transition:0.4s linear all;
+    -o-transition:0.4s linear all;
+    transition:0.4s linear all;
+    opacity:0;
+}
+
+.repeated-item.ng-enter.ng-enter-active,
+.repeated-item.ng-move.ng-move-active {
+    opacity:1;
+}
+
+.repeated-item.ng-leave {
+    -webkit-animation:0.4s my_animation;
+    -moz-animation:0.4s my_animation;
+    -o-animation:0.4s my_animation;
+    animation:0.4s my_animation;
+}
+
+@keyframes my_animation {
+    from { opacity:1; }
+    to { opacity:0; }
+}
+
+@-webkit-keyframes my_animation {
+    from { opacity:1; }
+    to { opacity:0; }
+}
+
+@-moz-keyframes my_animation {
+    from { opacity:1; }
+    to { opacity:0; }
+}
+
+@-o-keyframes my_animation {
+    from { opacity:1; }
+    to { opacity:0; }
+}
+
+.walkthrough-name-form {
+    margin: auto;
+}
+
+.walkthrough-name-input-container {
+    margin: auto;
+    text-align: center;
+    max-width: 40em;
+}
+
+.walkthrough-checkbox-container {
+    text-align: left;
+    max-width: 300px;
+}
+
+.walkthrough-checkbox {
+    margin: auto;
+}
+
+.walkthrough-text {
+    max-width: 40em;
+    text-align: justify;
+    text-justify: auto;
+}
+
+.walkthrough-multi-name {
+    top: 1.2em;
+}
+
+.ng-hide-add, .ng-hide-remove {
+    /* ensure visibility during the transition */
+    display: block !important; /* yes, important */
+}
+
+.cssFade {
+    transition: 0.5s linear all;
+    opacity: 1;
+}
+.cssFade.ng-hide {
+    opacity: 0;
+}
+
+.menu-content {
+    max-height: 1000px;
+}
+
+.menu {
+    padding: 0 !important;
+}
+
+.search-checkboxes {
+    margin-left: 2em;
 }
