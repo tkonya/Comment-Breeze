@@ -1,0 +1,469 @@
+.comment-text-box {
+    width: 98%;
+}
+
+.comment-text {
+    padding: .4em;
+    cursor: pointer;
+}
+
+td.comment-text:hover {
+    color: #FFC107;
+    /*color: #673AB7;*/
+}
+
+.common-tag:hover {
+    cursor: pointer;
+    color: #FFC107;
+}
+
+.button-hover:hover {
+    color: #FFC107;
+}
+
+.button-hover-accent:hover {
+    color: #673AB7;
+}
+
+.comment-edit {
+    padding: .4em;
+    cursor: pointer;
+}
+
+.comment-delete {
+    padding: .4em;
+    cursor: pointer;
+}
+
+.your-comment-div {
+    margin: auto;
+    text-align: center;
+}
+
+.darkula-background {
+    color: #A9B7C6;
+    background-color: #2b2b2b;
+}
+
+.yellow-color {
+    color: #FFC107;
+}
+
+.toast-style {
+    color: #FFC107;
+    overflow: hidden;
+    position: fixed;
+}
+
+.center-aligned {
+    text-align: center;
+}
+
+.centered {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+}
+
+tr:nth-child(odd) {
+    border-radius: 5px;
+    background-color: #383838;
+}
+
+.comment-bank-table {
+    width: 100%;
+    border: none;
+    border-collapse:collapse;
+}
+
+.invisible-button {
+    height: 0px;
+    width: 0px;
+    visibility: hidden;
+    position: relative;
+    bottom: 30px;
+}
+
+.input-container {
+    padding-bottom: 0;
+    margin: 0;
+}
+
+.intro-conclusion-multi {
+    margin-top: 0;
+}
+
+.tooltip {
+    font-weight: bold;
+    color: #2b2b2b;
+}
+
+.main-tab {
+    text-align: center;
+    padding-top: 1em;
+}
+
+.donate-tab {
+    padding-top: 1em;
+    text-align: center;
+}
+
+.tab-body-style {
+    background-color: #171717;
+}
+
+.front-page-content-container {
+    text-align: center;
+    margin: auto;
+}
+
+.front-page-content {
+    margin: auto;
+    border-radius: 5px;
+    max-width: 1000px;
+}
+
+.all-tabs {
+    padding-top: 2em;
+    max-width: 1600px;
+    margin: auto;
+}
+
+.inline-icon {
+    position: relative;
+    top: .2em;
+}
+
+.paragraphs {
+    margin:auto;
+    text-align: center;
+    max-width: 50em;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-bottom: 1.5em;
+}
+
+.positive {
+    color: #FFC107;
+}
+
+.negative {
+    color: #673AB7;
+}
+
+.neutral {
+    color: #A9B7C6;
+}
+
+.unrated {
+    color: black;
+}
+
+.edit-box {
+    padding: 2em;
+}
+
+.waiting-spinner {
+    margin:auto;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.comment-column {
+    width: 80%;
+}
+
+.multi-student-button-td {
+    vertical-align: middle;
+    margin: 0.5em;
+}
+
+.multi-student-button-container {
+    margin: auto;
+    max-height: 210px;
+}
+
+.button-min-size {
+    max-height: 2.5em;
+}
+
+.multi-instructions-container {
+    text-align: center;
+    margin: auto;
+}
+
+.multi-instructions {
+    margin: auto;
+    text-align: left;
+    max-width: 1000px;
+    border-radius: 5px;
+}
+
+.copy-all-container {
+    padding-top: 1em;
+    text-align: center;
+    margin: auto;
+}
+
+.rounded-corners {
+    border-radius: 5px;
+}
+
+.multi-student-comment-row {
+    padding-top: 1em;
+    line-height: normal;
+}
+
+.settings-tab {
+    max-width: 800px;
+    border-radius: 5px;
+}
+
+.settings-header {
+    text-align: center;
+}
+
+.settings-text {
+    margin-top: 0;
+    padding-left: 1em;
+}
+
+
+.settings-number-input {
+    /*padding-left: 1em;*/
+    /*padding-top: 1em;*/
+    max-width: 60%;
+}
+
+.help-modal {
+    max-width: 1000px;
+}
+
+.fa-rotate-45 {
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+
+.hint {
+    /* Position the hint */
+    position: absolute;
+    left: 2px;
+    right: auto;
+    bottom: 7px;
+    /* Copy styles from ng-messages */
+    font-size: 12px;
+    line-height: 14px;
+    transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+    /* Set our own color */
+    color: grey;
+}
+
+.multi-student-reminder {
+    cursor: pointer;
+    text-align: center;
+    padding-top: 2em;
+}
+
+.almost-full-width {
+    width: 98%;
+}
+
+.radio-button-container {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.radio-button-group {
+    margin: auto;
+    padding-left: 0.3em;
+    padding-right: 1em;
+}
+
+.help-button {
+    position: relative;
+    bottom: 1em;
+}
+
+.search-and-filter {
+    margin-bottom: 0.2em;
+    /*position: relative;*/
+    /*top: 1em;*/
+}
+
+.whole-comment-container {
+    padding-top: 1.5em;
+}
+
+.small-margin {
+    margin-top: 2em;
+}
+
+.no-bottom-margin {
+    margin-bottom: 0;
+}
+
+.gender-radio {
+    margin-left: 0;
+}
+
+.setting-control-container {
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    vertical-align: middle;
+    margin-bottom: 0.5em;
+}
+
+.setting-control {
+    margin-bottom: 0;
+    width: auto;
+    vertical-align: bottom;
+}
+
+.zero-size {
+    height: 0;
+    width: 0;
+}
+
+.tone-radio-button {
+    padding-bottom: 1em;
+}
+
+.spacer-div {
+    margin-bottom: 0.5em;
+}
+
+.edit-tone {
+    cursor: pointer;
+}
+
+.empty-tag {
+    cursor: pointer;
+    color: black;
+}
+
+.chip-style {
+    color: black;
+    background-color: #FFC107;
+}
+
+.quick-instructions {
+    max-width: 800px;
+    border-radius: 5px;
+    margin: auto;
+    text-align: left;
+}
+
+.quick-instructions-container {
+    margin-top: 2em;
+}
+
+md-input-container label {
+    /*color: #A9B7C6;*/
+    color: #929DA8;
+}
+
+.repeated-item.ng-enter, .repeated-item.ng-move {
+    -webkit-transition:0.4s linear all;
+    -moz-transition:0.4s linear all;
+    -o-transition:0.4s linear all;
+    transition:0.4s linear all;
+    opacity:0;
+}
+
+.repeated-item.ng-enter.ng-enter-active,
+.repeated-item.ng-move.ng-move-active {
+    opacity:1;
+}
+
+.repeated-item.ng-leave {
+    -webkit-animation:0.4s my_animation;
+    -moz-animation:0.4s my_animation;
+    -o-animation:0.4s my_animation;
+    animation:0.4s my_animation;
+}
+
+@keyframes my_animation {
+    from { opacity:1; }
+    to { opacity:0; }
+}
+
+@-webkit-keyframes my_animation {
+    from { opacity:1; }
+    to { opacity:0; }
+}
+
+@-moz-keyframes my_animation {
+    from { opacity:1; }
+    to { opacity:0; }
+}
+
+@-o-keyframes my_animation {
+    from { opacity:1; }
+    to { opacity:0; }
+}
+
+.walkthrough-name-form {
+    margin: auto;
+}
+
+.walkthrough-name-input-container {
+    margin: auto;
+    text-align: center;
+    max-width: 40em;
+}
+
+.walkthrough-checkbox-container {
+    text-align: left;
+    max-width: 300px;
+}
+
+.walkthrough-checkbox {
+    margin: auto;
+}
+
+.walkthrough-text {
+    max-width: 40em;
+    text-align: justify;
+    text-justify: auto;
+}
+
+.walkthrough-multi-name {
+    top: 1.2em;
+}
+
+.ng-hide-add, .ng-hide-remove {
+    /* ensure visibility during the transition */
+    display: block !important; /* yes, important */
+}
+
+.cssFade {
+    transition: 0.5s linear all;
+    opacity: 1;
+}
+.cssFade.ng-hide {
+    opacity: 0;
+}
+
+.menu-content {
+    max-height: 1000px;
+}
+
+.menu {
+    padding: 0 !important;
+}
+
+.search-checkboxes {
+    margin-left: 2em;
+}
+
+.align-left {
+    text-align: left;
+}
