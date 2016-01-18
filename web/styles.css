@@ -463,3 +463,7 @@ md-input-container label {
 .search-checkboxes {
     margin-left: 2em;
 }
+
+.align-left {
+    text-align: left;
+}

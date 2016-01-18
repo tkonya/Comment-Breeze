@@ -63,6 +63,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
     $scope.showTags = true;
     $scope.showEditButtons = true;
     $scope.makeSomethingUpSize = 10;
+    $scope.getSearchResultCount = false;
     $scope.avoidHer = true;
     $scope.enableNeutralGender = false;
     $scope.reduceCommentsSize = 10000;
@@ -878,7 +879,12 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     };
 
-    $scope.getSmartSearchResult = function(search) {
+    $scope.getSmartSearchResult = function(search, getResultCount) {
+
+        // if there are no working search parameters passed then do not actually count the results, it's pointless!
+        if (getResultCount && search.tone == 'Any' && (search.search_text == '' || (!search.tags && !search.text))) {
+            getResultCount = false;
+        }
 
         search.found_comment = '';
 
@@ -888,6 +894,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         var randomStartingPoint = Math.floor((Math.random() * $scope.comments.length));
         console.log('Starting at random index ' + randomStartingPoint);
 
+        var searchResults = 0;
         for (var i = randomStartingPoint; i < $scope.comments.length + randomStartingPoint; ++i) {
 
             var index = i;
@@ -915,7 +922,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
                     continue;
                 }
             } else if (search.tags) {
-                if (!$scope.comments[index].hasOwnProperty('tags') || $scope.comments[i].tags.indexOf(search.search_text) < 0) {
+                if (!$scope.comments[index].hasOwnProperty('tags') || $scope.comments[index].tags.indexOf(search.search_text) < 0) {
                     continue;
                 }
             } else if (search.text) {
@@ -924,17 +931,38 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
                 }
             }
 
-            console.log('Searched ' + i + ' comments');
-            console.log('Found comment matching search: ' + $scope.comments[index].comment_text);
-            search.found_comment = $scope.comments[index].comment_text;
-            break;
+            //console.log('Searched ' + i + ' comments');
+            //console.log('Found comment matching search: ' + $scope.comments[index].comment_text);
+
+            ++searchResults;
+            if (!getResultCount) {
+                search.found_comment = $scope.comments[index].comment_text;
+                break;
+            } else if (search.found_comment == '') {
+                search.found_comment = $scope.comments[index].comment_text;
+            }
         }
 
         if ($scope.selectedTab == $scope.tabIndexes.smart_search && $scope.smartSearch.length > 0) {
             $scope.useSmartSearch = true;
         }
 
+        if (getResultCount) {
+            search.result_count = searchResults;
+        }
+
         return angular.copy(search);
+    };
+
+    $scope.resubmitSearch = function(search, getResultCount) {
+        console.log('resubmitting search for ' + search.search_text);
+        console.log('getResultCount ? ' + getResultCount);
+        var newSearch = $scope.getSmartSearchResult(search, getResultCount);
+        search.found_comment = newSearch.found_comment;
+        if (getResultCount) {
+            console.log('result count for new search parameters: ' + newSearch.result_count);
+            search.result_count = newSearch.result_count;
+        }
     };
 
     $scope.shuffleSmartSearch = function() {
@@ -943,8 +971,8 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
     };
 
     $scope.buildAllSmartSearchComments = function() {
-        console.log('Building smart search comments');
-        console.log('Have ' + $scope.smartSearch.length + ' smart search comments');
+        //console.log('Building smart search comments');
+        //console.log('Have ' + $scope.smartSearch.length + ' smart search comments');
         $scope.yourComment = '';
         for (var i = 0; i < $scope.smartSearch.length; ++i) {
             $scope.yourComment += $scope.capitalizeFirstLetter($scope.replaceClassName($scope.replaceMultiStudentName($scope.smartSearch[i].found_comment, $scope.studentName, $scope.oldStudentName), true), $scope.gender) + ' ';
@@ -962,7 +990,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
     $scope.regenerateAllSmartSearch = function() {
         console.log('Regenerating ' + $scope.smartSearch.length + ' searches');
         for (var i = 0; i < $scope.smartSearch.length; ++i) {
-            $scope.smartSearch.splice(i, 1, $scope.getSmartSearchResult($scope.smartSearch[i]));
+            $scope.smartSearch[i].found_comment = $scope.getSmartSearchResult($scope.smartSearch[i]).found_comment;
         }
         $scope.buildAllSmartSearchComments();
     };

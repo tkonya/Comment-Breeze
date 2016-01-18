@@ -32,8 +32,6 @@ public class CommentResource {
     private static boolean updated = false;
     private static String editingPasswordAnswer;
 
-    private static final boolean NO_DB_MODE = false;
-
     private static LockoutHandler lockoutHandler = new LockoutHandler();
 
     /**
@@ -47,26 +45,12 @@ public class CommentResource {
         DatabaseHandler databaseHandler = null;
         PreparedStatement preparedStatement = null;
         try {
-            // maybe record page hit - ignore local development hits
-            String ip = request.getRemoteAddr();
-            if (!"0:0:0:0:0:0:0:1".equals(ip)) {
-                databaseHandler = new DatabaseHandler();
-                preparedStatement = databaseHandler.getConnection().prepareStatement(
-                        "INSERT INTO page_hits (ip_address, user_agent, time) VALUES (?, ?, CURRENT_TIMESTAMP)"
-                );
-
-                preparedStatement.setString(1, request.getRemoteAddr());
-                preparedStatement.setString(2, request.getHeader("User-Agent"));
-                preparedStatement.executeUpdate();
-            }
 
             // get the comments object if necessary
             if (updated || lastCached.isBefore(LocalDateTime.now().minusDays(1)) || comments == null || comments.length() == 0) {
                 System.out.println("Has been over 1 day, will reload cache");
 
-                if (databaseHandler == null) {
-                    databaseHandler = new DatabaseHandler();
-                }
+                databaseHandler = new DatabaseHandler();
                 JSONArray fetchedComments = databaseHandler.getJSONArrayFor("SELECT comment_id, comment_text, flagged, COALESCE(verified_pos_neg, pos_neg) as pos_neg FROM comment_breeze.comments WHERE deleted = FALSE GROUP BY comment_text ORDER BY RAND()");
 
                 if (fetchedComments != null && fetchedComments.length() > 0) {
@@ -97,12 +81,8 @@ public class CommentResource {
                 }
                 databaseHandler.closeConnection();
 
-            } else {
-//            System.out.println("Has not been 1 day yet, will load from cache");
             }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
         } finally {
             try {
                 if (preparedStatement != null) {

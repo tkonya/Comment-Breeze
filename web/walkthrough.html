@@ -89,7 +89,7 @@
 
             <br ng-show="walkthrough.single_multi">
 
-            <md-radio-group class="md-primary radio-button-group" ng-model="walkthrough.single_multi" layout="row">
+            <md-radio-group class="md-primary radio-button-group" ng-model="walkthrough.single_multi" layout="column">
                 <md-radio-button class="gender-radio" value="single">
                     One Student
                 </md-radio-button>
@@ -147,7 +147,7 @@
                 <br><br>
             </div>
 
-            <div ng-show="walkthrough.single_multi == 'single' && walkthrough.single_type == 'search'" class="center-aligned walkthrough-name-input-container">
+            <div ng-show="walkthrough.single_multi == 'single' && walkthrough.single_type == 'search'" class="walkthrough-name-input-container align-left">
                 OK! I think I know what would work best for you.<br><br>
                 You should go to the Single Student tab and use the search functionality to find comments that are applicable to your student. Add them by clicking on the text and edit as necessary.<br><br>
                 <span ng-show="walkthrough.introduction && walkthrough.conclusion">
@@ -167,25 +167,25 @@
 
             </div>
 
-            <div ng-show="walkthrough.single_multi == 'single' && walkthrough.single_type == 'pattern'" class="walkthrough-name-input-container">
+            <div ng-show="walkthrough.single_multi == 'single' && walkthrough.single_type == 'pattern'" class="walkthrough-name-input-container align-left">
                 OK! I think I know what would work best for you.<br><br>
                 You should go to the Smart Search tab to build a sentence-by-sentence pattern.<br>
                 Each Smart Search you add tries to find 1 sentence matching the rules you set for it.<br><br>
-                So for instance if you want your first sentence to include the word "welcome", type that in the search
+                So for instance if you want your first sentence to include the word "welcome", type that in the search and click "Add Smart Search".<br><br>
                 <span ng-show="walkthrough.introduction && walkthrough.conclusion">
-                    When you're done hit "Copy Comments" and your introduction and conclusion will be copied along with the comments you have added.
+                    When you're done hit "Copy Comments" and your introduction and conclusion will be copied along with the comments you have added. If you put the variables STUDENT_NAME or CLASS_NAME in the introduction or conclusion this is when they will be replaced.
                 </span>
                 <span ng-show="walkthrough.introduction && !walkthrough.conclusion">
-                    When you're done hit "Copy Comments" and your introduction will be copied along with the comments you have added.
+                    When you're done hit "Copy Comments" and your introduction will be copied along with the comments you have added. If you put the variables STUDENT_NAME or CLASS_NAME in the introduction this is when they will be replaced.
                 </span>
                 <span ng-show="!walkthrough.introduction && walkthrough.conclusion">
-                    When you're done hit "Copy Comments" and your conclusion will be copied along with the comments you have added.
+                    When you're done hit "Copy Comments" and your conclusion will be copied along with the comments you have added. If you put the variables STUDENT_NAME or CLASS_NAME in the conclusion this is when they will be replaced.
                 </span>
                 <span ng-show="!walkthrough.introduction && !walkthrough.conclusion">
                     When you're done hit "Copy Comments" and your comments will be copied to the clipboard.
                 </span><br><br>
 
-                If you want we can load up the sample pattern for you to start off with.<br><br>
+                If you want we can load up the sample pattern for you to start off with. Then you can just modify it as you see fit.<br><br>
 
                 <md-checkbox ng-model="walkthrough.load_sample_pattern" aria-label="Do an introduction">
                     Load sample Smart Search pattern
@@ -270,7 +270,7 @@
                     <br><br>
                 </div>
 
-                <div ng-show="walkthrough.multi_type == 'scratch'">
+                <div ng-show="walkthrough.multi_type == 'scratch'" class="align-left">
                     OK! I think I know what would work best for you.<br><br>
                     We'll start you off with your list of students on the Multi Student tab.<br>
                     For each one click the menu for them and then "Edit as Single Student". This will take you to the Single Student tab where you can search for applicable comments. Add comments by clicking on them and edit as necessary.<br>
@@ -278,7 +278,7 @@
                     Repeat for each student.<br>
                 </div>
 
-                <div ng-show="walkthrough.multi_type == 'random'">
+                <div ng-show="walkthrough.multi_type == 'random'" class="align-left">
                     OK! I think I know what would work best for you.<br><br>
                     We'll start you off with your list of students on the Multi Student tab.<br><br>
                     We've already put some random comments there for each student.<br>
@@ -299,7 +299,7 @@
                     <br>
                 </div>
 
-                <div ng-show="walkthrough.multi_type == 'pattern'">
+                <div ng-show="walkthrough.multi_type == 'pattern'" class="align-left">
                     OK! I think I know what would work best for you.<br><br>
                     We'll start you off on the Smart Search tab.<br>
                     We've pre-built a sample comment pattern for you, but you can modify it as necessary to fit your needs.<br>

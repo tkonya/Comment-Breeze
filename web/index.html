@@ -74,7 +74,7 @@
                         <div class="front-page-content-container">
                             <md-content class="front-page-content">
                                 <br>
-                                <h3 class="yellow-color">Welcome to Comment Breeze!</h3>
+                                <h3 class="yellow-color"><span ng-click="walkthrough = {}; showWalkthrough();">Welcome</span> to Comment Breeze!</h3>
 
                                 <p class="paragraphs">
                                     I made this site to help my girlfriend, friends and other ESL teachers build report card comments.<br>
@@ -823,7 +823,7 @@
                                 <i class="material-icons inline-icon">warning</i>
                                 Just Make Something Up
                                 <md-tooltip ng-show="showTooltips" class="tooltip">
-                                    Generates {{makeSomethingUpSize}} random comments, based on current settings
+                                    Generates {{makeSomethingUpSize}} searches, based on current settings
                                 </md-tooltip>
                             </md-button>
 
@@ -885,7 +885,7 @@
 
                         <div layout-xs="column" layout-sm="column" layout-md="row" layout-gt-md="row" layout-fill>
 
-                            <form ng-submit="smartSearch.push(getSmartSearchResult(newSmartSearch)); newSmartSearch.search_text = ''; buildAllSmartSearchComments();" flex>
+                            <form ng-submit="smartSearch.push(getSmartSearchResult(newSmartSearch, getSearchResultCount)); newSmartSearch.search_text = ''; buildAllSmartSearchComments();" flex>
                                 <md-input-container class="input-container full-width">
                                     <label>Smart Search</label>
                                     <input type="text" ng-change="setSearchTextCheckboxes(newSmartSearch);" autocomplete="off" ng-model="newSmartSearch.search_text">
@@ -929,7 +929,7 @@
                             </md-input-container>
 
                             <div flex layout="column">
-                                <md-button aria-label="Add new smart search" md-ink-ripple class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="smartSearch.push(getSmartSearchResult(newSmartSearch)); newSmartSearch.search_text = ''; buildAllSmartSearchComments(); useSmartSearch = true;">
+                                <md-button aria-label="Add new smart search" md-ink-ripple class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="smartSearch.push(getSmartSearchResult(newSmartSearch, getSearchResultCount)); newSmartSearch.search_text = ''; buildAllSmartSearchComments(); useSmartSearch = true;">
                                     <i class="material-icons inline-icon">lightbulb_outline</i>
                                     <span>Add Smart Search</span>
                                     <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
@@ -953,22 +953,22 @@
                             <tr ng-repeat="search in smartSearch" class="rounded-corners multi-student-comment-row repeated-item" layout-fill layout-xs="column" layout-sm="column" layout-gt-sm="row">
                                 <td flex-xs flex-sm flex-gt-sm="50">
                                     <md-input-container class="full-width">
-                                        <label>Search result for sentence {{$index + 1}}</label>
-                                        <textarea ng-model="search.found_comment" placeholder="No matching comment found" class="comment-text-box full-width"></textarea>
+                                        <label><span ng-show="search.result_count && getSearchResultCount">{{search.result_count}} s</span><span ng-hide="search.result_count && getSearchResultCount">S</span>earch results for sentence {{$index + 1}}</label>
+                                        <textarea ng-model="search.found_comment" placeholder="No matching comments found" class="comment-text-box full-width"></textarea>
                                     </md-input-container>
                                 </td>
                                 <td flex layout="column">
 
-                                    <form ng-submit="search.found_comment = getSmartSearchResult(search).found_comment;  buildAllSmartSearchComments();">
+                                    <form ng-submit="resubmitSearch(search, getSearchResultCount);  buildAllSmartSearchComments();">
                                         <md-input-container class="input-container full-width">
                                             <label>Search Text</label>
-                                            <input type="text" autocomplete="off" ng-change="setSearchTextCheckboxes(search);" ng-model="search.search_text">
+                                            <input type="text" autocomplete="off" ng-change="setSearchTextCheckboxes(search, getSearchResultCount);" ng-model="search.search_text">
                                         </md-input-container>
                                     </form>
 
                                     <div layout-xs="column" layout-gt-xs="row" layout-fill>
                                         <div flex>
-                                            <md-checkbox ng-model="search.text" ng-disabled="search.search_text == ''" ng-change="search.found_comment = getSmartSearchResult(search).found_comment;  buildAllSmartSearchComments();" aria-label="Search comment text for search text">
+                                            <md-checkbox ng-model="search.text" ng-disabled="search.search_text == ''" ng-change="resubmitSearch(search, getSearchResultCount);  buildAllSmartSearchComments();" aria-label="Search comment text for search text">
                                                 Text
                                             </md-checkbox>
                                             <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
@@ -978,7 +978,7 @@
                                         </div>
 
                                         <div flex>
-                                            <md-checkbox ng-model="search.tags" ng-disabled="search.search_text == ''" ng-change="search.found_comment = getSmartSearchResult(search).found_comment;  buildAllSmartSearchComments();" aria-label="Search tags for search text">
+                                            <md-checkbox ng-model="search.tags" ng-disabled="search.search_text == ''" ng-change="resubmitSearch(search, getSearchResultCount);  buildAllSmartSearchComments();" aria-label="Search tags for search text">
                                                 Tags
                                             </md-checkbox>
                                             <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
@@ -989,7 +989,7 @@
 
                                         <md-input-container flex class="search-and-filter">
                                             <label>Filter on Tone</label>
-                                            <md-select ng-model="search.tone" md-on-close="search.found_comment = getSmartSearchResult(search).found_comment;  buildAllSmartSearchComments();">
+                                            <md-select ng-model="search.tone" md-on-close="resubmitSearch(search);  buildAllSmartSearchComments();">
                                                 <md-option ng-value="option" ng-repeat="option in limitedToneFilterOptions">{{option}}</md-option>
                                             </md-select>
                                         </md-input-container>
@@ -997,7 +997,7 @@
 
                                 </td>
                                 <td flex layout-xs="column" layout-sm="row" layout-gt-sm="column">
-                                    <md-button aria-label="Remove All Students" md-ink-ripple flex class="button-hover full-width" md-ripple-size="auto" ng-click="search.found_comment = getSmartSearchResult(search).found_comment;  buildAllSmartSearchComments();">
+                                    <md-button aria-label="Remove All Students" md-ink-ripple flex class="button-hover full-width" md-ripple-size="auto" ng-click="resubmitSearch(search, false);  buildAllSmartSearchComments();">
                                         <i class="material-icons inline-icon">autorenew</i>
                                         <span>Regenerate</span>
                                         <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
@@ -1085,19 +1085,6 @@
                 <div class="darkula-background">
                     <div class="all-tabs settings-tab">
 
-                        <!--<div ng-hide="commentSizeToGet == 0">-->
-                            <!--<h3 class="settings-header yellow-color">Load All Comments</h3>-->
-                            <!--<div layout-xs="column" layout-sm="row"  layout-gt-sm="row" layout-fill>-->
-                                <!--<div flex-gt-xs="25" class="setting-control-container">-->
-                                    <!--<md-button aria-label="Load All" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="commentSizeToGet = 0; getComments(true);">-->
-                                        <!--<i class="material-icons inline-icon">cached</i>-->
-                                        <!--Load All <span ng-bind="totalCommentsSize"></span>-->
-                                    <!--</md-button>-->
-                                <!--</div>-->
-                                <!--<p flex-gt-xs="75" class="settings-text">Because you initially loaded this page with a small screen or window it was suspected that you might be on a mobile device with limited computing power. To improve performance only <span ng-bind="comments.length"></span> were loaded, but you may load all comments if you choose.</p>-->
-                            <!--</div>-->
-                        <!--</div>-->
-
                         <h3 class="settings-header yellow-color">Visibility</h3>
                         <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
                             <div flex-gt-xs="25" class="setting-control-container">
@@ -1176,6 +1163,18 @@
                                 </md-checkbox>
                             </div>
                             <p flex-gt-sm="75" class="settings-text">The gender neutral pronouns are also plural (they, them, etc...) and therefor switching to them from the singular male or female pronouns will often make the sentence grammatically incorrect because verbs will remain singular. You can turn on the ability to use gendered pronouns but more proofreading and correction will be required.</p>
+                        </div>
+
+                        <br>
+
+                        <h3 class="settings-header yellow-color">Smart Search</h3>
+                        <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
+                            <div flex-gt-xs="25" class="setting-control-container">
+                                <md-checkbox ng-model="getSearchResultCount" aria-label="Hide or show the tooltips" class="setting-control">
+                                    Count Matches
+                                </md-checkbox>
+                            </div>
+                            <p flex-gt-xs="75" class="settings-text">Whether or not to count the number of search results. Counting the number of matches takes considerably longer with smart search due to having to examine each comment. With counting turned off the system just stops when it finds the first matching comment.</p>
                         </div>
 
                         <br>
