@@ -1,0 +1,25 @@
+<md-dialog flex="80">
+    <md-dialog-content style="padding: 2em;">
+        <div class="center-aligned yellow-color">
+            <h2>Pattern Settings</h2>
+        </div>
+
+        <md-divider></md-divider>
+
+        <h3 class="settings-header yellow-color">Counting Matches</h3>
+        <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
+            <div flex-gt-xs="25" class="setting-control-container">
+                <md-checkbox ng-model="state.settings.getSearchResultCount" aria-label="Hide or show the tooltips" class="setting-control">
+                    Count Matches
+                </md-checkbox>
+            </div>
+            <p flex-gt-xs="75" class="settings-text">Counting the number of matches takes considerably longer with smart search due to having to examine each comment. With counting turned off the system just stops when it finds the first matching comment.</p>
+        </div>
+
+        <md-divider></md-divider>
+        <div class="center-aligned yellow-color close-modal-elements">
+            <md-button ng-click="closeDialog()">Close Settings</md-button>
+        </div>
+
+    </md-dialog-content>
+</md-dialog>

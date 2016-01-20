@@ -1,0 +1,55 @@
+<md-dialog flex="90">
+    <md-dialog-content style="padding: 2em;">
+        <div class="center-aligned yellow-color">
+            <h2>Build</h2>
+        </div>
+
+        <h4 class="yellow-color">Setup:</h4>
+        <p>
+            Enter the class name first.<br><br>
+            If you want all comments to start with the same introduction and/or conclusion then enter those on the "Introduction" and "Conclusion" lines.
+            Custom introductions and conclusions will not be shown in the generated comments for the sake of saving space, but will be added to each student's comments at the end.
+            You may use the variables CLASS_NAME and STUDENT_NAME in your introduction and conclusion, they will be replaced with the appropriate values when copied.
+        </p>
+
+        <h4 class="yellow-color">Adding Students:</h4>
+        <p>
+            Enter your student's names, as you would like them to appear in the comments, one after another by typing their name on the "New Student Name" line and hitting enter or press the "Add" button after each one.<br><br>
+            You may put a space after the students name and an "m", "f" or "n" to set their gender. For example I could enter in "Jimmy f", hit enter, and the page would add a female student named "Jimmy".
+            If you don't add one of those letters after the student's name to determine gender it will be whatever is currently selected for the default gender.<br><br>
+            By default a totally random comment whenever a new student is added, but you may also choose to start blank or generate a comment based on the default pattern.
+        </p>
+
+        <h4 class="yellow-color">Using Patterns:</h4>
+        <p>
+            Patterns allow you to fine tune how comments will be generated. To set a default pattern just go straight to the "Patterns" tab or click on the "Add Default Pattern" button under "Add Students".
+            There are instructions on how to make patterns on the Patterns tab.<br><br>
+
+            Once you have made a default pattern you may select "Generate w/ Default Pattern" under "Add Students", and all students added after that point will have the default pattern applied to them, and their generated comment will conform to that pattern.<br><br>
+
+            You can also define individual patterns for students. Once a student is added you can go into their menu and click "Edit w/ Patterns". This will put their current comment into a pattern format and allow you to modify it as necessary.
+        </p>
+
+        <h4 class="yellow-color">Editing:</h4>
+        <p>
+            All of your comments are editable in-place on this tab.
+            You can use a student's menu to regenerate their comments or shuffle their comments.
+            Regenerating can either be totally random or based of their default or individual patterns. When you select "Regenerate w/ Pattern", either for all students or on individual students, the app will try to regenerate with whatever pattern is applied to the student, but if a pattern is not available it will regenerate at random.
+        </p>
+
+        <h4 class="yellow-color">Copying:</h4>
+        <p>
+            An individual student's comment can be copied to the clipboard or viewed by going into their menu and selecting "Copy Comment".
+            All students comments can be copied by going into the all students menu and selecting "Copy All Comments".
+            Both of these will add the introduction and/or conclusion onto the comment, if you have entered them.
+            You may also view all student comments in the all students menu with "Show Finished Comments".
+        </p>
+
+        <br>
+
+        <div class="center-aligned yellow-color">
+            <md-button ng-click="closeDialog()">OK, I got it</md-button>
+        </div>
+
+    </md-dialog-content>
+</md-dialog>

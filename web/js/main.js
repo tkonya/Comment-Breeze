@@ -6,6 +6,39 @@ var commentApp = angular.module('commentApp', ['angular-clipboard', 'ngMaterial'
             .backgroundPalette('grey').dark();
     });
 
+commentApp.directive('onReadFile', function ($parse) {
+    return {
+        restrict: 'A',
+        scope: false,
+        link: function(scope, element, attrs) {
+            var fn = $parse(attrs.onReadFile);
+
+            element.on('change', function(onChangeEvent) {
+                var reader = new FileReader();
+
+                reader.onload = function(onLoadEvent) {
+                    scope.$apply(function() {
+                        fn(scope, {$fileContent:onLoadEvent.target.result});
+                    });
+                };
+
+                reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
+            });
+        }
+    };
+});
+
+commentApp.directive('chooseFileButton', function() {
+    return {
+        restrict: 'A',
+        link: function (scope, elem, attrs) {
+            elem.bind('click', function() {
+                angular.element(document.querySelector('#' + attrs.chooseFileButton))[0].click();
+            });
+        }
+    };
+});
+
 commentApp.controller('CommentController', function($scope, $http, $mdToast, $mdDialog, $mdMedia, $document, $location, $timeout) {
 
     // comments
@@ -16,67 +49,63 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
     $scope.commentSizeToGet = 0; // 0 should indicate that we intend to get them all or have gotten them all
     $scope.totalCommentsSize = '20000';
     $scope.commonTags = [];
-
-    // pagination
-    $scope.commentViewLimit = 20;
-    $scope.commentViewBegin = 0;
-    $scope.currentCommentsPage = 1;
-    $scope.totalCommentPages = null;
-
-    // single student
-    $scope.studentName = '';
-    $scope.oldStudentName = null;
-    $scope.className = '';
-    $scope.oldClassName = null;
+    
+    // application state - this is the object that gets saved or loaded
+    $scope.state = {
+        class_name: '',
+        old_class_name: '',
+        introduction: '',
+        conclusion: '',
+        students: [],
+        all_student_comments: '',
+        global_pattern: [],
+        settings: {
+            showTooltips: true,
+            showHints: false,
+            showTone: true,
+            showTags: true,
+            showEditButtons: true,
+            makeSomethingUpSize: 10,
+            getSearchResultCount: false,
+            avoidHer: true,
+            enableNeutralGender: false,
+            reduceCommentsSize: 10000,
+            showCommonTags: false,
+            newStudentFill: 'random',
+            useSmartSearch: false
+        }
+    };
 
     // single student search and filter
     $scope.searchComments = '';
     $scope.toneFilterSetting = 'Any';
     $scope.toneFilterOptions = ['Any', 'Positive', 'Neutral', 'Negative', 'Unrated', 'Flagged'];
 
-    // multi student
-    $scope.newMultiStudent = '';
-    $scope.multiStudent = [];
-    $scope.editingMultiStudent = null;
-    $scope.allMultiStudentComments = ''; // this must be updated any time it changes for the copy to work right, it has to already be correct by the time copy is hit
-    $scope.useSmartSearch = false;
-
-    // both single and multi
-    $scope.yourCommentIntroduction = '';
-    $scope.yourComment = '';
-    $scope.yourCommentConclusion = '';
+    // adding a student
     $scope.gender = 'male';
+    $scope.newMultiStudent = '';
+    
+    // editing a student
+    $scope.editingStudent = null;
 
-    // smart search
-    $scope.smartSearch = [];
-    $scope.savedSmartSearch = null; // this is the smart search that is not connected to any multi student, save and load when tab is activated
-    $scope.newSmartSearch = {search_text: '', found_comment: '', tone: 'Any', tags: false, text: false};
+    // patterns
+    $scope.editingPattern = [];
+    $scope.newPatternPiece = {search_text: '', found_comment: '', tone: 'Any', tags: false, text: false};
     $scope.limitedToneFilterOptions = ['Any', 'Positive', 'Neutral', 'Negative'];
 
-    // walkthrough
-    $scope.walkthrough = [];
-
-    // settings
-    $scope.showTooltips = true;
-    $scope.showHints = false;
-    $scope.showTone = true;
-    $scope.showTags = true;
-    $scope.showEditButtons = true;
-    $scope.makeSomethingUpSize = 10;
-    $scope.getSearchResultCount = false;
-    $scope.avoidHer = true;
-    $scope.enableNeutralGender = false;
-    $scope.reduceCommentsSize = 10000;
-    $scope.showCommonTags = false;
-
+    // pagination
+    $scope.commentViewLimit = 20;
+    $scope.commentViewBegin = 0;
+    $scope.currentCommentsPage = 1;
+    $scope.totalCommentPages = null;
+    
     // navigation
     $scope.tabIndexes = {
         main_page: 0,
-        single_student: 1,
-        multi_student: 2,
-        smart_search: 3,
-        settings: 4,
-        donate: 5
+        build: 1,
+        search: 2,
+        patterns: 3,
+        donate: 4
     };
     $scope.selectedTab = $scope.tabIndexes.main_page;
 
@@ -98,8 +127,8 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
 
         $http.get('/rest/comments?size=' + commentsToGet).
             success(function (data) {
-                console.log('returned success');
-                console.log(data.comments.length + ' comments received');
+                //console.log('returned success');
+                //console.log(data.comments.length + ' comments received');
 
                 $scope.comments = data.comments;
                 $scope.totalCommentsSize = data.total_size;
@@ -127,16 +156,24 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
 
     $scope.addComment = function(comment, showToast) {
 
-        console.log('Adding comment: ' + comment);
+        if ($scope.editingStudent == null) {
+            return;
+        }
 
-        $scope.oldStudentName = $scope.studentName;
+        //console.log('Adding comment: ' + comment);
 
-        comment = $scope.capitalizeFirstLetter($scope.fixGenderPronouns($scope.replaceClassName($scope.replaceStudentName(comment))));
+        comment = $scope.capitalizeFirstLetter(
+            $scope.fixGenderPronouns(
+                $scope.replaceClassName(
+                    $scope.replaceStudentName(comment, $scope.editingStudent.name, $scope.editingStudent.old_name)
+                ), $scope.editingStudent.gender
+            )
+        );
 
-        if ($scope.yourComment == '') {
-            $scope.yourComment = comment;
+        if ($scope.editingStudent.comment == '') {
+            $scope.editingStudent.comment = comment;
         } else {
-            $scope.yourComment = $scope.yourComment + ' ' + comment;
+            $scope.editingStudent.comment = $scope.editingStudent.comment + ' ' + comment;
         }
 
         if (showToast) {
@@ -144,29 +181,16 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         }
     };
 
-    $scope.fixCommentPronouns = function() {
-        // I'm not sure why I did this in a timeout initially, maybe it's not necessary anymore?
-        //$timeout(function() {
-        //    $scope.yourCommentIntroduction = $scope.fixGenderPronouns($scope.yourCommentIntroduction);
-        //    $scope.yourComment = $scope.fixGenderPronouns($scope.yourComment);
-        //    $scope.yourCommentConclusion = $scope.fixGenderPronouns($scope.yourCommentConclusion);
-        //
-        //    $scope.illToastToThat('Gender pronouns changed to ' + $scope.gender);
-        //
-        //}, 50);
-
-        $scope.yourCommentIntroduction = $scope.fixGenderPronouns($scope.yourCommentIntroduction);
-        $scope.yourComment = $scope.fixGenderPronouns($scope.yourComment);
-        $scope.yourCommentConclusion = $scope.fixGenderPronouns($scope.yourCommentConclusion);
-
-        $scope.illToastToThat('Gender pronouns changed to ' + $scope.gender);
+    $scope.changeStudentGender = function(student) {
+        student.comment = $scope.fixGenderPronouns(student.comment, student.gender);
+        $scope.illToastToThat('Gender for ' + student.name + ' changed to ' + student.gender);
     };
 
     $scope.fixGenderPronouns = function(text, gender) {
 
         if (gender == undefined) {
             gender = $scope.gender;
-            console.log('using single student gender of ' + $scope.gender);
+            //console.log('using single student gender of ' + $scope.gender);
         }
 
         var subject;
@@ -175,8 +199,9 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         var possessivePronouns;
         var reflexivePronouns;
         var girlBoyChild;
+        var manLadyAdult;
 
-        console.log('Changing gender to ' + gender + ' for the text:\n' + text);
+        //console.log('Changing gender to ' + gender + ' for the text:\n' + text);
         if (gender == 'male') {
             subject = 'he';
             object = 'him';
@@ -184,6 +209,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
             possessivePronouns = 'his';
             reflexivePronouns = 'himself';
             girlBoyChild = 'boy';
+            manLadyAdult = 'man';
         } else if (gender == 'female') {
             subject = 'she';
             object = 'her';
@@ -191,6 +217,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
             possessivePronouns = 'hers';
             reflexivePronouns = 'herself ';
             girlBoyChild = 'girl';
+            manLadyAdult = 'lady';
         } else {
             subject = 'they';
             object = 'them';
@@ -198,100 +225,77 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
             possessivePronouns = 'theirs';
             reflexivePronouns = 'themselves';
             girlBoyChild = 'child';
+            manLadyAdult = 'adult';
         }
 
         text = text.replace(/\bboy\b|\bgirl\b|\bchild\b/g,girlBoyChild).replace(/\bBoy\b|\bGirl\b|\bChild\b/g,$scope.capitalizeFirstLetter(girlBoyChild));
+        text = text.replace(/\bman\b|\blady\b|\badult\b/g,girlBoyChild).replace(/\bMan\b|\bLady\b|\bAdult\b/g,$scope.capitalizeFirstLetter(manLadyAdult));
         text = text.replace(/\bhe\b|\bshe\b|\bthey\b/g,subject).replace(/\bhis\b|\bhers\b|\btheirs\b/g,possessivePronouns).replace(/\bhim\b|\bher\b|\bthem\b/g,object).replace(/\bhis\b|\bher\b|\btheir\b/g,possessiveAdjectives).replace(/\bhimself\b|\bherself\b|\btheirself\b/g,reflexivePronouns);
         text = text.replace(/\bHe\b|\bShe\b|\bThey\b/g,$scope.capitalizeFirstLetter(subject)).replace(/\bHim\b|\bHer\b|\bThem\b/g,$scope.capitalizeFirstLetter(object)).replace(/\bHis\b|\bHers\b|\bTheirs\b/g,$scope.capitalizeFirstLetter(possessivePronouns)).replace(/\bHis\b|\bHer\b|\bTheir\b/g,$scope.capitalizeFirstLetter(possessiveAdjectives)).replace(/\bHimself\b|\bHerself\b|\bTheirself\b/g,$scope.capitalizeFirstLetter(reflexivePronouns));
-        console.log('Fixed text: ' + text);
+        //console.log('Gender Fixed text length: ' + text.length);
         return text;
-    };
-
-    $scope.changeStudentName = function() {
-        console.log('student name: ' + $scope.studentName);
-        console.log('old student name: ' + $scope.oldStudentName);
-
-        if ($scope.studentName == null || $scope.studentName == '' || $scope.studentName == $scope.oldStudentName) {
-            return;
-        }
-
-        $scope.yourCommentIntroduction = $scope.replaceStudentName($scope.yourCommentIntroduction, true);
-        $scope.yourComment = $scope.replaceStudentName($scope.yourComment, true);
-        $scope.yourCommentConclusion = $scope.replaceStudentName($scope.yourCommentConclusion);
-
-        $scope.illToastToThat('Student name changed to ' + $scope.studentName);
     };
 
     $scope.changeClassName = function() {
-        console.log('class name: ' + $scope.className);
-        console.log('old class name: ' + $scope.oldClassName);
+        //console.log('class name: ' + $scope.state.class_name);
+        //console.log('old class name: ' + $scope.state.old_class_name);
 
-        if ($scope.className == null || $scope.className == '' || $scope.className == $scope.oldClassName) {
+        if ($scope.state.class_name == null || $scope.state.class_name == '' || $scope.state.class_name == $scope.state.old_class_name) {
             return;
         }
 
-        $scope.yourCommentIntroduction = $scope.replaceClassName($scope.yourCommentIntroduction, true);
-        $scope.yourComment = $scope.replaceClassName($scope.yourComment, true);
+        $scope.state.introduction = $scope.replaceClassName($scope.state.introduction);
+        $scope.state.conclusion = $scope.replaceClassName($scope.state.conclusion);
 
-        // replace it in all of the multi student texts too
-        if ($scope.multiStudent.length > 0) {
-            for (var i = 0; i < $scope.multiStudent.length; ++i) {
-                $scope.multiStudent[i].comment = $scope.replaceClassName($scope.multiStudent[i].comment, true);
+        if ($scope.state.students.length > 0) {
+            for (var i = 0; i < $scope.state.students.length; ++i) {
+                $scope.state.students[i].comment = $scope.replaceClassName($scope.state.students[i].comment, true);
             }
-            $scope.buildAllMultiStudentComments();
+            $scope.state.all_student_comments();
         }
+        
+        $scope.state.old_class_name = $scope.state.class_name;
 
-
-        $scope.yourCommentConclusion = $scope.replaceClassName($scope.yourCommentConclusion);
-
-        $scope.illToastToThat('Class name changed to ' + $scope.className);
+        $scope.illToastToThat('Class name changed to ' + $scope.state.class_name);
     };
 
-    $scope.replaceStudentName = function(text, dontSet) {
-        var studentName;
-        if ($scope.studentName == null || $scope.studentName == '') {
-            studentName = 'STUDENT_NAME';
-        } else {
-            studentName = $scope.studentName;
-        }
-
-        if ($scope.oldStudentName != null && $scope.oldStudentName.length > 0) {
-            text = text.replace(new RegExp($scope.oldStudentName, 'g'), studentName);
-        }
-
-        if (!dontSet) {
-            $scope.oldStudentName = studentName;
-        }
-
-        return text.replace(/STUDENT_NAME/g, studentName);
-    };
-
-    $scope.replaceMultiStudentName = function(text, studentName, oldStudentName) {
+    $scope.replaceStudentName = function(text, studentName, oldStudentName) {
+        //console.log('replacing ' + oldStudentName + ' with ' + studentName + ' for the text ' + text);
         if (studentName != null && studentName != '') {
-            if (oldStudentName != null) {
+            if (oldStudentName != null && oldStudentName != '' && studentName != oldStudentName) {
                 text = text.replace(new RegExp($scope.oldStudentName, 'g'), studentName);
             }
-            return text.replace(/STUDENT_NAME/g, studentName);
+            text = text.replace(/STUDENT_NAME/g, studentName);
+            //console.log('Fixed text: ' + text);
+            return text;
         }
         return text;
     };
 
-    $scope.replaceClassName = function(text, dontSet) {
+    $scope.changeStudentName = function(student) {
+        if (student.name != null && student.name != '' && student.name != student.old_name) {
+            if (student.old_name != null && student.old_name != '') {
+                student.comment = student.comment.replace(new RegExp(student.old_name, 'g'), student.name);
+            }
+            student.old_name = student.name;
+            student.comment = student.comment.replace(/STUDENT_NAME/g, student.name);
+            $scope.illToastToThat('Changed student name to ' + student.name);
+        }
+    };
+    
+    $scope.replaceClassName = function(text) {
+        //console.log('Changing class name for ' + text);
         var className;
-        if ($scope.className == null || $scope.className == '') {
+        if ($scope.state.class_name == null || $scope.state.class_name == '') {
             className = 'CLASS_NAME';
         } else {
-            className = $scope.className;
+            className = $scope.state.class_name;
         }
 
-        if ($scope.oldClassName != null && $scope.oldClassName.length > 0) {
-            text = text.replace(new RegExp($scope.oldClassName, 'g'), className);
+        if ($scope.state.old_class_name != null && $scope.state.old_class_name.length > 0) {
+            text = text.replace(new RegExp($scope.state.old_class_name, 'g'), className);
         }
-
-        if (!dontSet) {
-            $scope.oldClassName = className;
-        }
-
+        
         return text.replace(/CLASS_NAME/g, className);
     };
 
@@ -300,7 +304,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
     };
 
     $scope.changeCommentsPerPage = function() {
-        console.log('Changing comment limit to ' + $scope.commentViewLimit);
+        //console.log('Changing comment limit to ' + $scope.commentViewLimit);
         $scope.currentCommentsPage = 1;
         $scope.totalCommentPages = Math.ceil($scope.comments.length / $scope.commentViewLimit);
         $scope.commentViewBegin = 0;
@@ -308,7 +312,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
 
     $scope.changeCommentsPage = function(newPage) {
         if ($scope.currentCommentsPage != newPage) {
-            console.log('Changing page to ' + newPage);
+            //console.log('Changing page to ' + newPage);
             if (newPage >= 1 && newPage <= $scope.totalCommentPages) {
                 $scope.currentCommentsPage = newPage;
                 $scope.commentViewBegin = ($scope.currentCommentsPage - 1) * $scope.commentViewLimit;
@@ -316,19 +320,15 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         }
     };
 
-    $scope.shuffleSingleStudentComment = function() {
-        $scope.yourComment = $scope.shuffleText($scope.yourComment);
-    };
-
     $scope.showEditCommentDialog = function(comment) {
 
         $scope.editingComment = angular.copy(comment);
 
-        console.log('editing comment: ' + $scope.editingComment);
+        //console.log('editing comment: ' + $scope.editingComment);
         if (!$scope.editingComment.hasOwnProperty('tags')) {
             $scope.editingComment.tags = [];
         } else {
-            console.log('copying old tags');
+            //console.log('copying old tags');
             $scope.editingComment.old_tags = angular.copy($scope.editingComment.tags); // copy the old ones so we know which ones are deleted later
         }
 
@@ -343,7 +343,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
                 };
                 $scope.saveDialog = function() {
 
-                    console.log('in saveDialog');
+                    //console.log('in saveDialog');
                     $mdDialog.hide();
                     $http({
                         url: "/rest/comments",
@@ -404,7 +404,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
 
                     $scope.editingComment.pos_neg = tone;
 
-                    console.log('in saveDialog');
+                    //console.log('in saveDialog');
                     $mdDialog.hide();
                     $http({
                         url: "/rest/comments",
@@ -431,11 +431,11 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
 
         $scope.editingComment = angular.copy(comment);
 
-        console.log('editing comment: ' + $scope.editingComment);
+        //console.log('editing comment: ' + $scope.editingComment);
         if (!$scope.editingComment.hasOwnProperty('tags')) {
             $scope.editingComment.tags = [];
         } else {
-            console.log('copying old tags');
+            //console.log('copying old tags');
             $scope.editingComment.old_tags = angular.copy($scope.editingComment.tags); // copy the old ones so we know which ones are deleted later
         }
 
@@ -452,7 +452,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
 
                     $scope.editingComment.pos_neg = tone;
 
-                    console.log('in saveDialog');
+                    //console.log('in saveDialog');
                     $mdDialog.hide();
                     $http({
                         url: "/rest/comments",
@@ -482,12 +482,12 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         });
     };
 
-    $scope.showSingleStudentHelp = function() {
+    $scope.showFinishedComments = function() {
         $mdDialog.show({
             clickOutsideToClose: true,
             scope: $scope,        // use parent scope in template
             preserveScope: true,  // do not forget this if use parent scope
-            templateUrl: '/single-student-help.html',
+            templateUrl: '/finished-comments.html',
             controller: function DialogController($scope, $mdDialog) {
                 $scope.closeDialog = function () {
                     $mdDialog.hide();
@@ -496,12 +496,12 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         });
     };
 
-    $scope.showMultiStudentHelp = function() {
+    $scope.showSettings = function() {
         $mdDialog.show({
             clickOutsideToClose: true,
             scope: $scope,        // use parent scope in template
             preserveScope: true,  // do not forget this if use parent scope
-            templateUrl: '/multi-student-help.html',
+            templateUrl: '/settings.html',
             controller: function DialogController($scope, $mdDialog) {
                 $scope.closeDialog = function () {
                     $mdDialog.hide();
@@ -510,12 +510,26 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         });
     };
 
-    $scope.showSmartSearchHelp = function() {
+    $scope.showSearchSettings = function() {
         $mdDialog.show({
             clickOutsideToClose: true,
             scope: $scope,        // use parent scope in template
             preserveScope: true,  // do not forget this if use parent scope
-            templateUrl: '/smart-search-help.html',
+            templateUrl: '/search-settings.html',
+            controller: function DialogController($scope, $mdDialog) {
+                $scope.closeDialog = function () {
+                    $mdDialog.hide();
+                };
+            }
+        });
+    };
+
+    $scope.showPatternSettings = function() {
+        $mdDialog.show({
+            clickOutsideToClose: true,
+            scope: $scope,        // use parent scope in template
+            preserveScope: true,  // do not forget this if use parent scope
+            templateUrl: '/pattern-settings.html',
             controller: function DialogController($scope, $mdDialog) {
                 $scope.closeDialog = function () {
                     $mdDialog.hide();
@@ -538,8 +552,50 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         });
     };
 
+    $scope.showBuildHelp = function() {
+        $mdDialog.show({
+            clickOutsideToClose: true,
+            scope: $scope,        // use parent scope in template
+            preserveScope: true,  // do not forget this if use parent scope
+            templateUrl: '/build-help.html',
+            controller: function DialogController($scope, $mdDialog) {
+                $scope.closeDialog = function () {
+                    $mdDialog.hide();
+                };
+            }
+        });
+    };
+
+    $scope.showSearchHelp = function() {
+        $mdDialog.show({
+            clickOutsideToClose: true,
+            scope: $scope,        // use parent scope in template
+            preserveScope: true,  // do not forget this if use parent scope
+            templateUrl: '/search-help.html',
+            controller: function DialogController($scope, $mdDialog) {
+                $scope.closeDialog = function () {
+                    $mdDialog.hide();
+                };
+            }
+        });
+    };
+
+    $scope.showPatternsHelp = function() {
+        $mdDialog.show({
+            clickOutsideToClose: true,
+            scope: $scope,        // use parent scope in template
+            preserveScope: true,  // do not forget this if use parent scope
+            templateUrl: '/patterns-help.html',
+            controller: function DialogController($scope, $mdDialog) {
+                $scope.closeDialog = function () {
+                    $mdDialog.hide();
+                };
+            }
+        });
+    };
+
     $scope.changeFilter = function() {
-        console.log('changing the filter to ' + $scope.toneFilterSetting);
+        //console.log('changing the filter to ' + $scope.toneFilterSetting);
         //$scope.commentsLoaded = false;
 
         if ($scope.toneFilterSetting == 'Any') {
@@ -575,7 +631,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
 
         //$scope.commentsLoaded = true;
         $scope.changeCommentsPerPage();
-        console.log('done changing filter');
+        //console.log('done changing filter');
     };
 
     $scope.illToastToThat = function(text) {
@@ -600,74 +656,91 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         if ($scope.newMultiStudent.endsWith(' m') || $scope.newMultiStudent.endsWith(' M')) {
             student.gender = "male";
             student.name = $scope.newMultiStudent.replace(' m', '').replace(' M', '');
-            console.log('detected male');
+            //console.log('detected male');
         } else if ($scope.newMultiStudent.endsWith(' f') || $scope.newMultiStudent.endsWith(' F')) {
             student.gender = "female";
             student.name = $scope.newMultiStudent.replace(' f', '').replace(' F', '');
-        } else if ($scope.enableNeutralGender && ($scope.newMultiStudent.endsWith(' n') || $scope.newMultiStudent.endsWith(' N'))) {
+        } else if ($scope.state.enableNeutralGender && ($scope.newMultiStudent.endsWith(' n') || $scope.newMultiStudent.endsWith(' N'))) {
             student.gender = "neutral";
             student.name = $scope.newMultiStudent.replace(' n', '').replace(' N', '');
         } else {
             student.name = $scope.newMultiStudent;
             student.gender = $scope.gender;
-            console.log('Setting to default gender of ' + $scope.gender);
+            //console.log('Setting to default gender of ' + $scope.gender);
         }
         student.old_name = student.name;
 
-        if ($scope.useSmartSearch && $scope.smartSearch.length > 0) {
-            // generated based on default smart search
-            student.comment = '';
-            for (var i = 0; i < $scope.smartSearch.length; ++i) {
-                student.comment += $scope.capitalizeFirstLetter($scope.getSmartSearchResult($scope.smartSearch[i]).found_comment + ' ');
-            }
-            student.comment = $scope.fixGenderPronouns($scope.replaceClassName($scope.replaceMultiStudentName(student.comment, student.name, student.old_name), true), student.gender);
-            student.smartSearch = angular.copy($scope.smartSearch);
-            student.smartSearchType = 'global';
-        } else {
-            // just totally random generation
-            student.comment = $scope.fixGenderPronouns($scope.replaceClassName($scope.replaceMultiStudentName($scope.getRandomComments(), student.name, student.old_name), true), student.gender);
+        // make an id for this student, based on their name + 8 random characters
+        student.student_id = student.name.replace(/\s+/g, '');
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        for (var random = 0; random < 8; ++random) {
+            student.student_id += possible.charAt(Math.floor(Math.random() * possible.length));
         }
 
-        $scope.multiStudent.push(student);
+        if ($scope.state.settings.newStudentFill == 'blank') {
+
+            // start with blank pattern
+            student.comment = '';
+
+        } else if ($scope.state.settings.newStudentFill == 'random') {
+
+            // start with totally random comment
+            student.comment = $scope.fixGenderPronouns($scope.replaceClassName($scope.replaceStudentName($scope.getRandomComments(), student.name, student.old_name), true), student.gender);
+
+        } else if ($scope.state.settings.newStudentFill == 'default_pattern' && $scope.state.global_pattern.length > 0) {
+
+            // start with global pattern, put global pattern on student
+            student.comment = '';
+            for (var i = 0; i < $scope.state.global_pattern.length; ++i) {
+                student.comment += $scope.capitalizeFirstLetter($scope.getSmartSearchResult($scope.state.global_pattern[i]).found_comment + ' ');
+            }
+            student.comment = $scope.fixGenderPronouns($scope.replaceClassName($scope.replaceStudentName(student.comment, student.name, student.old_name), true), student.gender);
+            student.pattern = angular.copy($scope.state.global_pattern);
+            student.pattern_type = 'global';
+
+        }
+
+        $scope.state.students.push(student);
         $scope.newMultiStudent = '';
 
         $scope.illToastToThat('Added student: ' + student.name + ' (' + student.gender + ')');
 
-        $scope.buildAllMultiStudentComments();
+        $scope.buildAllStudentComments();
     };
 
-    $scope.regenerateMultiStudentComment = function(student) {
-
-        if ($scope.useSmartSearch) {
-            student.comment = '';
-
-            var i;
-            if (student.smartSearch) {
-                for (i = 0; i < student.smartSearch.length; ++i) {
-                    student.comment += $scope.capitalizeFirstLetter($scope.getSmartSearchResult(student.smartSearch[i]).found_comment + ' ');
-                }
-            } else {
-                for (i = 0; i < $scope.smartSearch.length; ++i) {
-                    student.comment += $scope.capitalizeFirstLetter($scope.getSmartSearchResult($scope.smartSearch[i]).found_comment + ' ');
-                }
-            }
-
-            student.comment = $scope.fixGenderPronouns($scope.replaceClassName($scope.replaceMultiStudentName(student.comment, student.name, student.old_name), true), student.gender);
+    $scope.regenerateMultiStudentComment = function(student, forceRandom) {
+        if (forceRandom || !student.pattern) {
+            //console.log('regenerating random');
+            student.comment = $scope.getRandomComments();
         } else {
-            student.comment = $scope.fixGenderPronouns($scope.replaceClassName($scope.replaceMultiStudentName($scope.getRandomComments(), student.name, student.old_name), true), student.gender);
+            //console.log('regenerating based on pattern');
+            student.comment = '';
+            for (var i = 0; i < student.pattern.length; ++i) {
+                var matchFound = $scope.getSmartSearchResult(student.pattern[i]).found_comment + ' ';
+                //console.log('adding ' + matchFound + ' to ' + student.name);
+                student.comment += matchFound;
+                //student.comment += $scope.getSmartSearchResult(student.pattern[i]).found_comment + ' ';
+            }
         }
 
-        $scope.buildAllMultiStudentComments();
+        student.comment = $scope.fixGenderPronouns($scope.replaceClassName($scope.replaceStudentName(student.comment, student.name, student.old_name)), student.gender);
+        //console.log('regenerated student comment length: ' + student.comment.length);
+    };
+
+
+    $scope.regenerateAllStudentComments = function(random) {
+        for (var i = 0; i < $scope.state.students.length; ++i) {
+            $scope.regenerateMultiStudentComment($scope.state.students[i], random);
+        }
     };
 
     $scope.applyGlobalToAll = function() {
-        for (var i = 0; i < $scope.multiStudent.length; ++i) {
-
-            $scope.multiStudent[i].smartSearch = angular.copy($scope.smartSearch);
-            $scope.multiStudent[i].smartSearchType = 'global';
-            $scope.regenerateMultiStudentComment($scope.multiStudent[i]);
+        for (var i = 0; i < $scope.state.students.length; ++i) {
+            $scope.state.students[i].pattern = angular.copy($scope.editingPattern);
+            $scope.state.students[i].pattern_type = 'global';
+            $scope.regenerateMultiStudentComment($scope.state.students[i]);
         }
-        $scope.illToastToThat('Global Smart Search pattern applied to all multi students');
+        $scope.illToastToThat('Default pattern applied to all students');
     };
 
     $scope.makeSomethingUp = function() {
@@ -680,16 +753,18 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         var fullRandomComment = '';
 
         if (size == null) {
-            size = $scope.makeSomethingUpSize;
+            size = $scope.state.settings.makeSomethingUpSize;
         }
 
         for (var i = 0; i < size; ++i) {
             var randomComment = $scope.comments[Math.floor(Math.random() * $scope.comments.length)];
 
-            if ($scope.avoidHer && $scope.gender != 'female' && (randomComment.comment_text.indexOf(' her ') > 0 || randomComment.comment_text.startsWith('Her') || randomComment.comment_text.endsWith(' her.'))) {
+            if ($scope.state.settings.avoidHer && $scope.gender != 'female' && (randomComment.comment_text.indexOf(' her ') > 0 || randomComment.comment_text.startsWith('Her') || randomComment.comment_text.endsWith(' her.'))) {
                 --i;
                 continue;
             }
+
+            //console.log('Found random comment ' + randomComment.comment_id);
 
             if (fullRandomComment == '') {
                 fullRandomComment = $scope.capitalizeFirstLetter(randomComment.comment_text);
@@ -702,25 +777,28 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         return fullRandomComment;
     };
 
-
     $scope.removeMultiStudent = function(student) {
-        var index = $scope.multiStudent.indexOf(student);
+        var index = $scope.state.students.indexOf(student);
         if (index > -1) {
-            $scope.multiStudent.splice(index, 1);
+            $scope.state.students.splice(index, 1);
         }
 
-        $scope.buildAllMultiStudentComments();
+        $scope.state.all_student_comments();
     };
 
+    $scope.shuffleAllStudentComments = function() {
+        for (var i = 0; i < $scope.state.students.length; ++i) {
+            $scope.shuffleMultiStudentComment($scope.state.students[i]);
+        }
+    };
 
     $scope.shuffleMultiStudentComment = function(student) {
         student.comment = $scope.shuffleText(student.comment);
-        $scope.buildAllMultiStudentComments();
     };
 
     $scope.shuffleText = function(text) {
         var sentences = text.match( /[^\.!\?]+[\.!\?]+/g );
-        console.log('Found ' + sentences.length + ' sentences');
+        //console.log('Found ' + sentences.length + ' sentences');
 
         for(var j, x, i = sentences.length; i; j = Math.floor(Math.random() * i), x = sentences[--i], sentences[i] = sentences[j], sentences[j] = x) {}
 
@@ -741,128 +819,137 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         $scope.illToastToThat('Comment bank shuffled');
     };
 
-    $scope.buildAllMultiStudentComments = function() {
-        $scope.allMultiStudentComments = '';
-        for (var i = 0; i < $scope.multiStudent.length; ++i) {
-            $scope.allMultiStudentComments += $scope.multiStudent[i].name + ':\n' +
-                $scope.fixGenderPronouns($scope.replaceClassName($scope.replaceMultiStudentName($scope.yourCommentIntroduction, $scope.multiStudent[i].name, $scope.multiStudent[i].old_name), true), $scope.multiStudent[i].gender) + ' ' +
-                $scope.multiStudent[i].comment + ' ' +
-                $scope.fixGenderPronouns($scope.replaceClassName($scope.replaceMultiStudentName($scope.yourCommentConclusion, $scope.multiStudent[i].name, $scope.multiStudent[i].old_name), true), $scope.multiStudent[i].gender) + '\n\n\n';
+    $scope.buildWholeStudentComment = function(student) {
+        //console.log('building whole comment');
+        student.whole_comment = '';
+        if ($scope.state.introduction.length > 0) {
+            student.whole_comment += $scope.fixGenderPronouns($scope.replaceClassName($scope.replaceStudentName($scope.state.introduction, student.name, student.old_name), true), student.gender).trim() + ' ';
+        }
+        if (student.comment.length > 0) {
+            student.whole_comment += student.comment.trim() + ' ';
+        }
+        if ($scope.state.conclusion.length > 0) {
+            student.whole_comment += $scope.fixGenderPronouns($scope.replaceClassName($scope.replaceStudentName($scope.state.conclusion, student.name, student.old_name), true), student.gender).trim();
+        }
 
-            $scope.allMultiStudentComments = $scope.allMultiStudentComments.replace(/  +/g, ' ');
+        //console.log('whole comment: ' + student.whole_comment);
+    };
+
+    $scope.buildAllStudentComments = function() {
+        $scope.state.all_student_comments = '';
+        for (var i = 0; i < $scope.state.students.length; ++i) {
+            $scope.state.all_student_comments += $scope.state.students[i].name + ':\n\n';
+
+            $scope.state.all_student_comments += '\t';
+            if ($scope.state.introduction.length > 0) {
+                $scope.state.all_student_comments += $scope.fixGenderPronouns($scope.replaceClassName($scope.replaceStudentName($scope.state.introduction, $scope.state.students[i].name, $scope.state.students[i].old_name), true), $scope.state.students[i].gender).trim() + ' ';
+            }
+            if ($scope.state.students[i].comment.length > 0) {
+                $scope.state.all_student_comments += $scope.state.students[i].comment.trim() + ' ';
+            }
+            if ($scope.state.conclusion.length > 0) {
+                $scope.state.all_student_comments += $scope.fixGenderPronouns($scope.replaceClassName($scope.replaceStudentName($scope.state.conclusion, $scope.state.students[i].name, $scope.state.students[i].old_name), true), $scope.state.students[i].gender).trim();
+            }
+
+            if (i < $scope.state.students.length - 1) {
+                $scope.state.all_student_comments += '\n\n\n';
+            } else {
+                $scope.state.all_student_comments += '\n';
+            }
+
+            $scope.state.all_student_comments = $scope.state.all_student_comments.replace(/  +/g, ' ');
         }
     };
 
-    $scope.editMultiStudentAsSingleStudent = function(student) {
-        $scope.copyMultiStudentToSingleInputs(student);
-        $scope.selectedTab = $scope.tabIndexes.single_student;
-        $scope.illToastToThat('Editing '+ student.name +' as single student.');
+    $scope.editStudentWithSearch = function(student) {
+        $scope.editingStudent = angular.copy(student);
+        $scope.selectedTab = $scope.tabIndexes.search;
+    };
+
+    $scope.doneEditingStudentPattern = function() {
+        for (var i = 0; i < $scope.state.students.length; ++i) {
+            if ($scope.state.students[i].student_id == $scope.editingStudent.student_id) {
+                $scope.state.students[i] = $scope.editingStudent;
+                $scope.editingStudent = null;
+
+                if ($scope.editingPattern.length > 0) {
+                    $scope.state.students[i].pattern = angular.copy($scope.editingPattern);
+                    $scope.editingPattern = [];
+                    $scope.state.students[i].pattern_type = 'individual';
+                }
+
+                $scope.selectedTab = $scope.tabIndexes.build;
+                $scope.illToastToThat('Saved pattern changes for ' + $scope.state.students[i].name);
+                $scope.buildWholeStudentComment($scope.state.students[i]);
+                return;
+            }
+        }
+        $scope.illToastToThat('Error saving student changes!');
+    };
+
+    $scope.doneEditingStudentSearch = function() {
+        for (var i = 0; i < $scope.state.students.length; ++i) {
+            if ($scope.state.students[i].student_id == $scope.editingStudent.student_id) {
+                $scope.state.students[i] = $scope.editingStudent;
+                $scope.editingStudent = null;
+                $scope.selectedTab = $scope.tabIndexes.build;
+                $scope.illToastToThat('Saved comment changes for ' + $scope.state.students[i].name);
+                $scope.buildWholeStudentComment($scope.state.students[i]);
+                return;
+            }
+        }
+        $scope.illToastToThat('Error saving student changes!');
+    };
+
+    $scope.applyGlobalPatternToStudent = function(student) {
+        student.pattern = angular.copy($scope.state.global_pattern);
+        $scope.regenerateMultiStudentComment(student, false);
+        student.pattern_type = 'global';
     };
 
     $scope.editMultiStudentAsSmartSearch = function(student) {
-        $scope.copyMultiStudentToSingleInputs(student);
 
-        if (!$scope.editingStudentWorking.smartSearch) {
-            console.log('Creating Multi Student Smart Search profile');
+        $scope.editingStudent = angular.copy(student);
+
+        if ($scope.editingStudent.pattern) {
+            $scope.editingPattern = angular.copy($scope.editingStudent.pattern);
+        } else if ($scope.editingStudent.comment.length > 0) {
+
+            //console.log('Creating Multi Student Smart Search profile');
             // import the existing multi student sentence into smart search
 
-            var sentences = $scope.editingStudentWorking.comment.match( /[^\.!\?]+[\.!\?]+/g );
+            var sentences = $scope.editingStudent.comment.match( /[^\.!\?]+[\.!\?]+/g );
 
-            $scope.editingStudentWorking.smartSearch = [];
+            $scope.editingPattern = [];
             for (var i = 0; i < sentences.length; ++i) {
-                console.log(sentences[i]);
-                $scope.editingStudentWorking.smartSearch.push({search_text: '', found_comment: sentences[i].trim(), tone: 'Any', tags: false, text: false});
+                //console.log(sentences[i]);
+                $scope.editingPattern.push({search_text: '', found_comment: sentences[i].trim(), tone: 'Any'});
             }
 
-        }
-        $scope.editingStudentWorking.smartSearchType = 'individual';
-
-        $scope.savedSmartSearch = angular.copy($scope.smartSearch);
-        console.log('Saved smart search length: ' + $scope.savedSmartSearch.length);
-        $scope.smartSearch = $scope.editingStudentWorking.smartSearch;
-
-        $scope.selectedTab = $scope.tabIndexes.smart_search;
-        $scope.illToastToThat('Editing '+ $scope.editingStudentWorking.name +' as smart search.')
-    };
-
-    $scope.submitEditingMultiStudentAsSmartSearch = function() {
-        if ($scope.editingMultiStudent != null) {
-            var index = $scope.multiStudent.indexOf($scope.editingMultiStudent);
-            console.log('Index of editing student is ' + index);
-            if (index > -1) {
-                $scope.multiStudent[index].name = $scope.studentName;
-                $scope.studentName = null;
-
-                $scope.multiStudent[index].comment = $scope.yourComment;
-                $scope.yourComment = null;
-
-                $scope.multiStudent[index].gender = $scope.gender;
-                $scope.gender = 'male';
-
-                if ($scope.smartSearch.length > 0) {
-                    $scope.multiStudent[index].smartSearch = $scope.smartSearch;
-                    $scope.multiStudent[index].smartSearchType = 'individual';
-                }
-
-            }
-            $scope.editingMultiStudent = null;
-        }
-        $scope.selectedTab = $scope.tabIndexes.multi_student;
-        $scope.illToastToThat('Saved changes');
-    };
-
-    $scope.cancelEditingMultiStudentAsSmartSearch = function() {
-        $scope.editingMultiStudent = null;
-        $scope.editingStudentWorking = null;
-        $scope.selectedTab = $scope.tabIndexes.multi_student;
-        $scope.illToastToThat('Discarded changes');
-    };
-
-    $scope.copyMultiStudentToSingleInputs = function(student) {
-        $scope.editingMultiStudent = student;
-        $scope.editingStudentWorking = angular.copy(student);
-        $scope.studentName = student.name;
-        $scope.oldStudentName = student.name;
-        $scope.yourComment = student.comment;
-        $scope.gender = student.gender;
-    };
-
-    $scope.selectMultiStudentTab = function() {
-        console.log('select multi student tab');
-        if ($scope.editingMultiStudent != null) {
-            var index = $scope.multiStudent.indexOf($scope.editingMultiStudent);
-            console.log('Index of editing student is ' + index);
-            if (index > -1) {
-                $scope.multiStudent[index].name = $scope.studentName;
-                $scope.studentName = null;
-
-                $scope.multiStudent[index].comment = $scope.yourComment;
-                $scope.yourComment = null;
-
-                $scope.multiStudent[index].gender = $scope.gender;
-                $scope.gender = 'male';
-
-            }
-            $scope.editingMultiStudent = null;
-        }
-    };
-
-    $scope.startBlankMulti = function() {
-
-        for (var i = 0; i < $scope.multiStudent.length; ++i) {
-            $scope.multiStudent[i].comment = '';
+        } else if ($scope.editingStudent.comment.length == 0) {
+            $scope.editingPattern = [];
         }
 
-        $scope.selectedTab = $scope.tabIndexes.multi_student;
+        $scope.editingStudent.pattern_type = 'individual';
+
+        $scope.selectedTab = $scope.tabIndexes.patterns;
+        $scope.illToastToThat('Editing '+ $scope.editingStudent.name + ' pattern.')
+    };
+
+    $scope.removeAllSmartSearch = function() {
+        $scope.editingPattern = [];
     };
 
     $scope.loadSampleSmartSearch = function() {
-        $scope.smartSearch.push($scope.getSmartSearchResult({search_text: '', found_comment: '', tone: 'Positive', tags: false, text: false}));
-        $scope.smartSearch.push($scope.getSmartSearchResult({search_text: 'reading', found_comment: '', tone: 'Any', tags: true, text: true}));
-        $scope.smartSearch.push($scope.getSmartSearchResult({search_text: 'behavior', found_comment: '', tone: 'Any', tags: true, text: true}));
-        $scope.smartSearch.push($scope.getSmartSearchResult({search_text: 'speaking', found_comment: '', tone: 'Any', tags: true, text: true}));
-        $scope.smartSearch.push($scope.getSmartSearchResult({search_text: 'writing', found_comment: '', tone: 'Any', tags: true, text: true}));
-        $scope.smartSearch.push($scope.getSmartSearchResult({search_text: '', found_comment: '', tone: 'Positive', tags: false, text: false}));
+        $scope.editingPattern = [];
+        $scope.editingPattern.push($scope.getSmartSearchResult({search_text: '', found_comment: '', tone: 'Positive'}));
+        $scope.editingPattern.push($scope.getSmartSearchResult({search_text: 'reading', found_comment: '', tone: 'Any'}));
+        $scope.editingPattern.push($scope.getSmartSearchResult({search_text: 'behavior', found_comment: '', tone: 'Any'}));
+        $scope.editingPattern.push($scope.getSmartSearchResult({search_text: 'speaking', found_comment: '', tone: 'Any'}));
+        $scope.editingPattern.push($scope.getSmartSearchResult({search_text: 'comprehension', found_comment: '', tone: 'Any'}));
+        $scope.editingPattern.push($scope.getSmartSearchResult({search_text: 'phonics', found_comment: '', tone: 'Any'}));
+        $scope.editingPattern.push($scope.getSmartSearchResult({search_text: 'writing', found_comment: '', tone: 'Any'}));
+        $scope.editingPattern.push($scope.getSmartSearchResult({search_text: '', found_comment: '', tone: 'Positive'}));
         $scope.buildAllSmartSearchComments();
     };
 
@@ -870,7 +957,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         if (limit != null) {
             $location.search('limit', limit);
         } else {
-            $location.search('limit', $scope.reduceCommentsSize);
+            $location.search('limit', $scope.state.settings.reduceCommentsSize);
         }
         location.reload();
     };
@@ -886,13 +973,19 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
             getResultCount = false;
         }
 
+        //if (getResultCount) {
+        //    console.log('getting count');
+        //} else {
+        //    console.log('not getting count');
+        //}
+
         search.found_comment = '';
 
-        console.log('search text: ' + search.search_text);
+        //console.log('search text: ' + search.search_text);
 
         // we start looking at a random starting point so that we don't end up getting the same comments for every search
         var randomStartingPoint = Math.floor((Math.random() * $scope.comments.length));
-        console.log('Starting at random index ' + randomStartingPoint);
+        //console.log('Starting at random index ' + randomStartingPoint);
 
         var searchResults = 0;
         for (var i = randomStartingPoint; i < $scope.comments.length + randomStartingPoint; ++i) {
@@ -902,33 +995,16 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
                 index -= $scope.comments.length;
             }
 
-            if ($scope.avoidHer && $scope.gender != 'female' && ($scope.comments[index].comment_text.indexOf(' her ') > 0 || $scope.comments[index].comment_text.startsWith('Her') || $scope.comments[index].comment_text.endsWith(' her.'))) {
+            if ($scope.state.settings.avoidHer && $scope.gender != 'female' && ($scope.comments[index].comment_text.indexOf(' her ') > 0 || $scope.comments[index].comment_text.startsWith('Her') || $scope.comments[index].comment_text.endsWith(' her.'))) {
                 continue;
             }
 
-            // yes I know I can make this statement more compact, but then it would be less readable
-            if (search.tone != 'Any') {
-                if (search.tone == 'Positive' && $scope.comments[index].pos_neg != 1) {
-                    continue;
-                } else if (search.tone == 'Neutral' && $scope.comments[index].pos_neg != 0) {
-                    continue;
-                } else if (search.tone == 'Negative' && $scope.comments[index].pos_neg != -1) {
-                    continue;
-                }
+            if ((search.tone == 'Positive' && $scope.comments[index].pos_neg != 1) || (search.tone == 'Neutral' && $scope.comments[index].pos_neg != 0) || (search.tone == 'Negative' && $scope.comments[index].pos_neg != -1)) {
+                continue;
             }
 
-            if (search.tags && search.text) {
-                if ($scope.comments[index].comment_text.toLowerCase().indexOf(search.search_text) < 0 && (!$scope.comments[index].hasOwnProperty('tags') || $scope.comments[index].tags.indexOf(search.search_text) < 0)) {
-                    continue;
-                }
-            } else if (search.tags) {
-                if (!$scope.comments[index].hasOwnProperty('tags') || $scope.comments[index].tags.indexOf(search.search_text) < 0) {
-                    continue;
-                }
-            } else if (search.text) {
-                if ($scope.comments[index].comment_text.toLowerCase().indexOf(search.search_text) < 0) {
-                    continue;
-                }
+            if ($scope.comments[index].comment_text.toLowerCase().indexOf(search.search_text) < 0 && (!$scope.comments[index].hasOwnProperty('tags') || $scope.comments[index].tags.indexOf(search.search_text) < 0)) {
+                continue;
             }
 
             //console.log('Searched ' + i + ' comments');
@@ -936,15 +1012,11 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
 
             ++searchResults;
             if (!getResultCount) {
-                search.found_comment = $scope.comments[index].comment_text;
+                search.found_comment = $scope.capitalizeFirstLetter($scope.comments[index].comment_text).trim();
                 break;
             } else if (search.found_comment == '') {
-                search.found_comment = $scope.comments[index].comment_text;
+                search.found_comment = $scope.capitalizeFirstLetter($scope.comments[index].comment_text).trim();
             }
-        }
-
-        if ($scope.selectedTab == $scope.tabIndexes.smart_search && $scope.smartSearch.length > 0) {
-            $scope.useSmartSearch = true;
         }
 
         if (getResultCount) {
@@ -955,108 +1027,69 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
     };
 
     $scope.resubmitSearch = function(search, getResultCount) {
-        console.log('resubmitting search for ' + search.search_text);
-        console.log('getResultCount ? ' + getResultCount);
+        //console.log('resubmitting search for ' + search.search_text);
+        //console.log('getResultCount ? ' + getResultCount);
         var newSearch = $scope.getSmartSearchResult(search, getResultCount);
         search.found_comment = newSearch.found_comment;
         if (getResultCount) {
-            console.log('result count for new search parameters: ' + newSearch.result_count);
+            //console.log('result count for new search parameters: ' + newSearch.result_count);
             search.result_count = newSearch.result_count;
         }
     };
 
     $scope.shuffleSmartSearch = function() {
-        for(var j, x, i = $scope.smartSearch.length; i; j = Math.floor(Math.random() * i), x = $scope.smartSearch[--i], $scope.smartSearch[i] = $scope.smartSearch[j], $scope.smartSearch[j] = x) {}
+        for(var j, x, i = $scope.editingPattern.length; i; j = Math.floor(Math.random() * i), x = $scope.editingPattern[--i], $scope.editingPattern[i] = $scope.editingPattern[j], $scope.editingPattern[j] = x) {}
         $scope.buildAllSmartSearchComments();
     };
 
     $scope.buildAllSmartSearchComments = function() {
-        //console.log('Building smart search comments');
-        //console.log('Have ' + $scope.smartSearch.length + ' smart search comments');
-        $scope.yourComment = '';
-        for (var i = 0; i < $scope.smartSearch.length; ++i) {
-            $scope.yourComment += $scope.capitalizeFirstLetter($scope.replaceClassName($scope.replaceMultiStudentName($scope.smartSearch[i].found_comment, $scope.studentName, $scope.oldStudentName), true), $scope.gender) + ' ';
+        if ($scope.editingStudent != null) {
+            $scope.editingStudent.comment = '';
+            for (var i = 0; i < $scope.editingPattern.length; ++i) {
+                $scope.editingStudent.comment += $scope.capitalizeFirstLetter($scope.editingPattern[i].found_comment).trim() + ' ';
+            }
+            $scope.editingStudent.comment = $scope.fixGenderPronouns($scope.replaceClassName($scope.replaceStudentName($scope.state.conclusion, $scope.editingStudent.name, $scope.editingStudent.old_name)), $scope.editingStudent.gender).trim();
         }
     };
 
     $scope.justMakeSomethingUpSmartSearch = function() {
-        $scope.smartSearch = [];
-        for (var i = 0; i < $scope.makeSomethingUpSize; ++i) {
-            $scope.smartSearch.push($scope.getSmartSearchResult($scope.newSmartSearch));
+        $scope.state.global_pattern = [];
+        for (var i = 0; i < $scope.state.settings.makeSomethingUpSize; ++i) {
+            $scope.state.global_pattern.push($scope.getSmartSearchResult($scope.newPatternPiece));
         }
         $scope.buildAllSmartSearchComments();
     };
 
     $scope.regenerateAllSmartSearch = function() {
-        console.log('Regenerating ' + $scope.smartSearch.length + ' searches');
-        for (var i = 0; i < $scope.smartSearch.length; ++i) {
-            $scope.smartSearch[i].found_comment = $scope.getSmartSearchResult($scope.smartSearch[i]).found_comment;
+        //console.log('Regenerating ' + $scope.state.global_pattern.length + ' searches');
+        for (var i = 0; i < $scope.state.global_pattern.length; ++i) {
+            $scope.state.global_pattern[i].found_comment = $scope.getSmartSearchResult($scope.state.global_pattern[i]).found_comment;
         }
         $scope.buildAllSmartSearchComments();
     };
 
-    $scope.setSearchTextCheckboxes = function(search) {
-        if (search.search_text != '') {
-            search.tags = true;
-            search.text = true;
-        } else {
-            search.tags = false;
-            search.text = false;
-        }
-    };
-
-    $scope.resetAllSingleStudent = function() {
-        $scope.studentName = '';
-        $scope.oldStudentName = null;
-        $scope.gender = 'male';
-        $scope.className = '';
-        $scope.oldClassName = null;
-        $scope.searchComments = '';
-        $scope.yourCommentIntroduction = '';
-        $scope.yourComment = '';
-        $scope.yourCommentConclusion = '';
-
-        if ($scope.toneFilterSetting != 'Any') {
-
-            // put the comments back in
-            if ($scope.allComments.length > 0) {
-                $scope.comments = $scope.allComments;
-            }
-
-        }
-        $scope.toneFilterSetting = 'Any';
-
-        $scope.illToastToThat('All fields reset')
-    };
-
-    $scope.resetAllMultiStudent = function() {
-        $scope.newMultiStudent = '';
-        $scope.gender = 'male';
-        $scope.className = '';
-        $scope.oldClassName = null;
-        $scope.yourCommentIntroduction = '';
-        $scope.yourComment = '';
-        $scope.yourCommentConclusion = '';
+    $scope.removeAllPatternPieces = function() {
+        $scope.editingPattern = [];
     };
 
     $scope.resetAllSmartSearch = function() {
-        $scope.newSmartSearch = {search_text: '', found_comment: '', tone: 'Any', tags: true, text: true};
+        $scope.newPatternPiece = {search_text: '', found_comment: '', tone: 'Any', tags: true, text: true};
     };
 
     $scope.removeAllMultiStudents = function() {
-        $scope.multiStudent = [];
-        $scope.allMultiStudentComments = '';
+        $scope.state.students = [];
+        $scope.state.all_student_comments = '';
     };
 
     $scope.setMobileSettings = function() {
         if ($mdMedia('xs')) {
             $scope.commentSizeToGet = 2000;
-            $scope.showTooltips = false;
-            //$scope.showTags = false;
+            $scope.state.settings.showTooltips = false;
+            //$scope.showTags = false;\
             //$scope.showHints = true;
-            $scope.showEditButtons = false;
+            $scope.state.settings.showEditButtons = false;
         } else if ($mdMedia('sm')) {
-            $scope.showTooltips = false;
+            $scope.state.settings.showTooltips = false;
             //$scope.showHints = true;
             $scope.commentSizeToGet = 6000;
         }
@@ -1066,51 +1099,47 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
 
         // set the search locations
         if ($scope.selectedTab == $scope.tabIndexes.main_page) {
+            //console.log('tab selected : main_page');
             $location.search('tab', null);
-        } else if ($scope.selectedTab == $scope.tabIndexes.single_student) {
-            $location.search('tab', 'single-student');
-        } else if ($scope.selectedTab == $scope.tabIndexes.multi_student) {
-            $location.search('tab', 'multi-student');
-        } else if ($scope.selectedTab == $scope.tabIndexes.smart_search) {
-            $location.search('tab', 'smart-search');
+        } else if ($scope.selectedTab == $scope.tabIndexes.search) {
+            //console.log('tab selected : single_student');
+            $location.search('tab', 'search');
+        } else if ($scope.selectedTab == $scope.tabIndexes.build) {
+            //console.log('tab selected : multi_student');
+            $location.search('tab', 'build');
+        } else if ($scope.selectedTab == $scope.tabIndexes.patterns) {
+            //console.log('tab selected : smart_search');
+            $location.search('tab', 'patterns');
+
+            if ($scope.editingStudent == null) {
+                $scope.editingPattern = $scope.state.global_pattern;
+            }
+
         } else if ($scope.selectedTab == $scope.tabIndexes.settings) {
+            //console.log('tab selected : settings');
             $location.search('tab', 'settings');
         } else if ($scope.selectedTab == $scope.tabIndexes.donate) {
+            //console.log('tab selected : donate');
             $location.search('tab', 'donate');
         }
 
-        // if we just switched off of smart search we might need to put the global pattern back
-        if ($scope.selectedTab != $scope.tabIndexes.smart_search && $scope.savedSmartSearch != null) {
-            console.log('Resetting global smart search');
-
-            if ($scope.savedSmartSearch.length > 0) {
-                $scope.smartSearch = angular.copy($scope.savedSmartSearch);
-            } else {
-                $scope.smartSearch = [];
-            }
-            $scope.savedSmartSearch = null;
-        } else if ($scope.selectedTab != $scope.tabIndexes.smart_search && $scope.multiStudent.length > 0) {
-            // if we moved off of the smart search tab and the saved smart search is null it means we were editing the global one
-            // we need to re apply the global changes to each
-
-            for (var i = 0; i < $scope.multiStudent.length; ++i) {
-                if ($scope.multiStudent[i].smartSearchType == 'global') {
-                    console.log('Reapplying global pattern for ' + $scope.multiStudent.name);
-                    $scope.multiStudent.smartSearch = angular.copy($scope.smartSearch);
-                }
-            }
+        // maybe save the global pattern when we switch off this tab
+        if ($scope.selectedTab != $scope.tabIndexes.patterns && $scope.editingPattern.length > 0 && !$scope.editingStudent) {
+            $scope.state.settings.newStudentFill = 'default_pattern';
+            $scope.state.global_pattern = angular.copy($scope.editingPattern);
+            //console.log('saving editing pattern to global');
         }
 
     };
 
     $scope.setTab = function() {
         var params = $location.search();
-        if (params.tab == 'single-student') {
-            $scope.selectedTab = $scope.tabIndexes.single_student;
-        } else if (params.tab == 'multi-student') {
-            $scope.selectedTab = $scope.tabIndexes.multi_student;
-        } else if (params.tab == 'smart-search') {
-            $scope.selectedTab = $scope.tabIndexes.smart_search;
+        if (params.tab == 'search') {
+            $scope.selectedTab = $scope.tabIndexes.search;
+        } else if (params.tab == 'build') {
+            $scope.selectedTab = $scope.tabIndexes.build;
+        } else if (params.tab == 'patterns') {
+            $scope.selectedTab = $scope.tabIndexes.patterns;
         } else if (params.tab == 'settings') {
             $scope.selectedTab = $scope.tabIndexes.settings;
         } else if (params.tab == 'donate') {
@@ -1118,11 +1147,111 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         }
     };
 
+    $scope.showConfirm = function(ev) {
+        // Appending dialog to document.body to cover sidenav in docs app
+        var confirm = $mdDialog.confirm()
+            .title('Reset Comment Breeze')
+            .textContent('Resetting the application will erase all work, but will not use data.')
+            .ariaLabel('Reset Comment Breeze')
+            .targetEvent(ev)
+            .ok('Reset')
+            .cancel('Cancel');
+        $mdDialog.show(confirm).then(function() {
+            $scope.state = {
+                class_name: '',
+                old_class_name: '',
+                introduction: '',
+                conclusion: '',
+                students: [],
+                all_student_comments: '',
+                global_pattern: [],
+                settings: {
+                    showTooltips: true,
+                    showHints: false,
+                    showTone: true,
+                    showTags: true,
+                    showEditButtons: true,
+                    makeSomethingUpSize: 10,
+                    getSearchResultCount: false,
+                    avoidHer: true,
+                    enableNeutralGender: false,
+                    reduceCommentsSize: 10000,
+                    showCommonTags: false,
+                    newStudentFill: 'random',
+                    useSmartSearch: false
+                }
+            };
+
+            // single student search and filter
+            $scope.searchComments = '';
+            $scope.toneFilterSetting = 'Any';
+            $scope.toneFilterOptions = ['Any', 'Positive', 'Neutral', 'Negative', 'Unrated', 'Flagged'];
+
+            // adding a student
+            $scope.gender = 'male';
+            $scope.newMultiStudent = '';
+
+            // editing a student
+            $scope.editingStudent = null;
+
+            // patterns
+            $scope.editingPattern = [];
+            $scope.newPatternPiece = {search_text: '', found_comment: '', tone: 'Any', tags: false, text: false};
+            $scope.limitedToneFilterOptions = ['Any', 'Positive', 'Neutral', 'Negative'];
+
+            // pagination
+            $scope.commentViewLimit = 20;
+            $scope.commentViewBegin = 0;
+            $scope.currentCommentsPage = 1;
+            $scope.totalCommentPages = null;
+
+            $scope.illToastToThat('Application reset')
+        }, function() {
+
+        });
+    };
+
     $scope.setPassword = function() {
         var params = $location.search();
         if (params.hasOwnProperty('password')) {
             $scope.editingPasswordTry = params.password;
         }
+    };
+
+    $scope.saveState = function () {
+        $scope.toJSON = '';
+        $scope.toJSON = angular.toJson($scope.state, true);
+        var blob = new Blob([$scope.toJSON], { type:"application/json;charset=utf-8;" });
+        var downloadLink = angular.element('<a></a>');
+        downloadLink.attr('href', window.URL.createObjectURL(blob));
+
+        // all this just to get the date
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth()+1; //January is 0!
+        var yyyy = today.getFullYear();
+        if(dd<10) {
+            dd='0'+dd
+        }
+        if(mm<10) {
+            mm='0'+mm
+        }
+        today = yyyy+'-'+mm+'-'+dd;
+
+        var fileName;
+        if ($scope.state.class_name != '') {
+            fileName = 'Comment Breeze ' + $scope.state.class_name + ' ' + today + '.txt';
+        } else {
+            fileName = 'Comment Breeze ' + today + '.txt';
+        }
+
+        downloadLink.attr('download', fileName);
+        downloadLink[0].click();
+    };
+
+    $scope.loadState = function (state) {
+        //console.log('loading state: ' + state);
+        $scope.state = JSON.parse(state);
     };
 
     $scope.setPassword();

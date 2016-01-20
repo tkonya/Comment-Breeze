@@ -1,0 +1,48 @@
+<md-dialog flex="90">
+    <md-dialog-content style="padding: 2em;">
+        <div class="center-aligned yellow-color">
+            <h2>Patterns</h2>
+        </div>
+
+        <h4 class="yellow-color">Setup:</h4>
+        <p>
+            The default pattern can be created or edited by just selecting the tab, as long as you are not currently editing a student's individual pattern.
+            A student's individual pattern can be added or edited by selecting "Edit w/ Patterns" from their menu.
+        </p>
+
+        <h4 class="yellow-color">Building a pattern:</h4>
+        <p>
+            You can build the comment pattern sentence-by-sentence. So for your first sentence enter text you would like to search for, if any, on the "Search Text" line.
+            Search Text looks in both the comment text and any tags that have been added to the comment for matches.
+            Select if you would like this comment to have a certain tone (positive, neutral or negative).
+            Hit "Add Pattern Piece" and repeat for all other sentences you would like to add.
+            If a search did not return any results or you are unsatisfied with the result, you can modify it below and regenerate.
+        </p>
+
+        <h4 class="yellow-color">Grading Students:</h4>
+        <p>
+            A common use-case is to want all of the contents of your comments to be homogeneous, but to grade students differently on each subject.<br><br>
+
+            To do this follow these steps:
+
+            1. Add a default pattern that contains search text but does not filter on positive or negative.<br><br>
+
+            2. Add all of your students, making sure that "Generate w/ Default Pattern" is selected in the Add Students box.<br><br>
+
+            3. After all of your students are added go to the first one and select "Edit w/ Search" from their menu.<br><br>
+
+            4. Select positive or negative for each pattern piece that you want to rate them on. <br><br>
+
+            5. Repeat steps 3 - 4 all subsequent students.<br><br>
+
+            Tip: You can make your comments appear more unique by shuffling the order for each student.
+        </p>
+
+        <br>
+
+        <div class="center-aligned yellow-color">
+            <md-button ng-click="closeDialog()">OK, I got it</md-button>
+        </div>
+
+    </md-dialog-content>
+</md-dialog>

@@ -67,8 +67,15 @@ td.comment-text:hover {
     transform: translate(-50%, -50%);
 }
 
+.no-padding {
+    padding: 0;
+}
+
 tr:nth-child(odd) {
-    border-radius: 5px;
+    background-color: #383838;
+}
+
+md-list-item:nth-child(odd) {
     background-color: #383838;
 }
 
@@ -466,4 +473,69 @@ md-input-container label {
 
 .align-left {
     text-align: left;
+}
+
+.control-card {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2em;
+    margin-bottom: 1em;
+    border-radius: 5px;
+    max-width: 1200px;
+}
+
+.control-card-toolbar {
+    border-radius: 5px 5px 0 0;
+}
+
+.control-card-content {
+    padding-top: 2em;
+    padding-left: 1em;
+    padding-right: 1em;
+    border-radius: 0 0 5px 5px;
+}
+
+.card-list-content {
+    padding-top: 1em;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.add-pattern-button {
+    margin-top: 0.5em;
+}
+
+.student-list-item {
+    padding-top: 2em;
+}
+
+.tips-section-container {
+    align-content: center;
+}
+
+.tips-section {
+    margin: auto;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.close-modal-elements {
+    margin-top: 2em;
+}
+
+.comment-bank-content {
+    border-radius: 0 0 5px 5px;
+}
+
+.new-pattern-input {
+    width: 80%;
+    top: 1.1em;
+}
+
+.pattern-piece-row {
+    overflow: hidden;
+}
+
+.per-page-select {
+    margin-left: 2em;
 }
