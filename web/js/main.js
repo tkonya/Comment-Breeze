@@ -49,70 +49,72 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
     $scope.commentSizeToGet = 0; // 0 should indicate that we intend to get them all or have gotten them all
     $scope.totalCommentsSize = '20000';
     $scope.commonTags = [];
-    
-    // application state - this is the object that gets saved or loaded
-    $scope.state = {
-        class_name: '',
-        old_class_name: '',
-        introduction: '',
-        conclusion: '',
-        students: [],
-        all_student_comments: '',
-        global_pattern: [],
-        settings: {
-            showTooltips: true,
-            showHints: false,
-            showTone: true,
-            showTags: true,
-            showEditButtons: true,
-            makeSomethingUpSize: 10,
-            getSearchResultCount: false,
-            avoidHer: true,
-            enableNeutralGender: false,
-            reduceCommentsSize: 10000,
-            showCommonTags: false,
-            newStudentFill: 'random',
-            useSmartSearch: false
-        }
+
+    $scope.setInitialApplicationState = function() {
+        // application state - this is the object that gets saved or loaded
+        $scope.state = {
+            class_name: '',
+            old_class_name: '',
+            introduction: '',
+            conclusion: '',
+            students: [],
+            all_student_comments: '',
+            global_pattern: [],
+            settings: {
+                showTooltips: true,
+                showHints: false,
+                showTone: true,
+                showTags: true,
+                showEditButtons: true,
+                makeSomethingUpSize: 10,
+                getSearchResultCount: false,
+                avoidHer: true,
+                enableNeutralGender: false,
+                reduceCommentsSize: 10000,
+                showCommonTags: false,
+                newStudentFill: 'random',
+                useSmartSearch: false
+            }
+        };
+
+        // single student search and filter
+        $scope.searchComments = '';
+        $scope.toneFilterSetting = 'Any';
+        $scope.toneFilterOptions = ['Any', 'Positive', 'Neutral', 'Negative', 'Unrated', 'Flagged'];
+
+        // adding a student
+        $scope.gender = 'male';
+        $scope.newMultiStudent = '';
+
+        // editing a student
+        $scope.editingStudent = null;
+
+        // patterns
+        $scope.editingPattern = [];
+        $scope.newPatternPiece = {search_text: '', found_comment: '', tone: 'Any', tags: false, text: false};
+        $scope.limitedToneFilterOptions = ['Any', 'Positive', 'Neutral', 'Negative'];
+
+        // collapse cards
+        $scope.showGlobalDetails = true;
+        $scope.showAddStudents = true;
+        $scope.showAllStudents = true;
+
+        // pagination
+        $scope.commentViewLimit = 20;
+        $scope.commentViewBegin = 0;
+        $scope.currentCommentsPage = 1;
+        $scope.totalCommentPages = null;
+
+        // navigation
+        $scope.tabIndexes = {
+            main_page: 0,
+            build: 1,
+            search: 2,
+            patterns: 3,
+            donate: 4
+        };
+        $scope.selectedTab = $scope.tabIndexes.main_page;
     };
-
-    // single student search and filter
-    $scope.searchComments = '';
-    $scope.toneFilterSetting = 'Any';
-    $scope.toneFilterOptions = ['Any', 'Positive', 'Neutral', 'Negative', 'Unrated', 'Flagged'];
-
-    // adding a student
-    $scope.gender = 'male';
-    $scope.newMultiStudent = '';
-    
-    // editing a student
-    $scope.editingStudent = null;
-
-    // patterns
-    $scope.editingPattern = [];
-    $scope.newPatternPiece = {search_text: '', found_comment: '', tone: 'Any', tags: false, text: false};
-    $scope.limitedToneFilterOptions = ['Any', 'Positive', 'Neutral', 'Negative'];
-
-    // collapse cards
-    $scope.showGlobalDetails = true;
-    $scope.showAddStudents = true;
-    $scope.showAllStudents = true;
-
-    // pagination
-    $scope.commentViewLimit = 20;
-    $scope.commentViewBegin = 0;
-    $scope.currentCommentsPage = 1;
-    $scope.totalCommentPages = null;
-    
-    // navigation
-    $scope.tabIndexes = {
-        main_page: 0,
-        build: 1,
-        search: 2,
-        patterns: 3,
-        donate: 4
-    };
-    $scope.selectedTab = $scope.tabIndexes.main_page;
 
 
     $scope.getComments = function(showAllLoadedMessage) {
@@ -591,6 +593,20 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
             scope: $scope,        // use parent scope in template
             preserveScope: true,  // do not forget this if use parent scope
             templateUrl: '/patterns-help.html',
+            controller: function DialogController($scope, $mdDialog) {
+                $scope.closeDialog = function () {
+                    $mdDialog.hide();
+                };
+            }
+        });
+    };
+
+    $scope.showPrivacyPolicy = function() {
+        $mdDialog.show({
+            clickOutsideToClose: true,
+            scope: $scope,        // use parent scope in template
+            preserveScope: true,  // do not forget this if use parent scope
+            templateUrl: '/privacy-policy.html',
             controller: function DialogController($scope, $mdDialog) {
                 $scope.closeDialog = function () {
                     $mdDialog.hide();
@@ -1100,6 +1116,24 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         }
     };
 
+    $scope.collapseOrExpandAllStudents = function() {
+        if ($scope.showAllStudents) {
+            for (var i = 0; i < $scope.state.students.length; ++i) {
+
+                // there is a bug where if you hide then show text areas they will not expand to their full size if they were not visible in the viewport at the time of show
+                // this just adds a space and then removes it and it seems to do the trick
+                $scope.state.students[i].comment = $scope.state.students[i].comment + ' ';
+                $scope.state.students[i].comment = $scope.state.students[i].comment.substring(0, $scope.state.students[i].comment.length - 1);
+
+                $scope.state.students[i].collapsed = false;
+            }
+        } else {
+            for (var j = 0; j < $scope.state.students.length; ++j) {
+                $scope.state.students[j].collapsed = true;
+            }
+        }
+    };
+
     $scope.selectTab = function() {
 
         // set the search locations
@@ -1162,54 +1196,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
             .ok('Reset')
             .cancel('Cancel');
         $mdDialog.show(confirm).then(function() {
-            $scope.state = {
-                class_name: '',
-                old_class_name: '',
-                introduction: '',
-                conclusion: '',
-                students: [],
-                all_student_comments: '',
-                global_pattern: [],
-                settings: {
-                    showTooltips: true,
-                    showHints: false,
-                    showTone: true,
-                    showTags: true,
-                    showEditButtons: true,
-                    makeSomethingUpSize: 10,
-                    getSearchResultCount: false,
-                    avoidHer: true,
-                    enableNeutralGender: false,
-                    reduceCommentsSize: 10000,
-                    showCommonTags: false,
-                    newStudentFill: 'random',
-                    useSmartSearch: false
-                }
-            };
-
-            // single student search and filter
-            $scope.searchComments = '';
-            $scope.toneFilterSetting = 'Any';
-            $scope.toneFilterOptions = ['Any', 'Positive', 'Neutral', 'Negative', 'Unrated', 'Flagged'];
-
-            // adding a student
-            $scope.gender = 'male';
-            $scope.newMultiStudent = '';
-
-            // editing a student
-            $scope.editingStudent = null;
-
-            // patterns
-            $scope.editingPattern = [];
-            $scope.newPatternPiece = {search_text: '', found_comment: '', tone: 'Any', tags: false, text: false};
-            $scope.limitedToneFilterOptions = ['Any', 'Positive', 'Neutral', 'Negative'];
-
-            // pagination
-            $scope.commentViewLimit = 20;
-            $scope.commentViewBegin = 0;
-            $scope.currentCommentsPage = 1;
-            $scope.totalCommentPages = null;
-
+            $scope.setInitialApplicationState();
             $scope.illToastToThat('Application reset')
         }, function() {
 
@@ -1233,7 +1220,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         // all this just to get the date
         var today = new Date();
         var dd = today.getDate();
-        var mm = today.getMonth()+1; //January is 0!
+        var mm = today.getMonth()+1; //January is 0
         var yyyy = today.getFullYear();
         if(dd<10) {
             dd='0'+dd
@@ -1254,11 +1241,43 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         downloadLink[0].click();
     };
 
+    //$scope.saveComments = function () {
+    //    $scope.toJSON = '';
+    //    $scope.toJSON = angular.toJson($scope.comments, false);
+    //    var blob = new Blob([$scope.toJSON], { type:"application/json;charset=utf-8;" });
+    //    var downloadLink = angular.element('<a></a>');
+    //    downloadLink.attr('href', window.URL.createObjectURL(blob));
+    //
+    //    // all this just to get the date
+    //    var today = new Date();
+    //    var dd = today.getDate();
+    //    var mm = today.getMonth()+1; //January is 0
+    //    var yyyy = today.getFullYear();
+    //    if(dd<10) {
+    //        dd='0'+dd
+    //    }
+    //    if(mm<10) {
+    //        mm='0'+mm
+    //    }
+    //    today = yyyy+'-'+mm+'-'+dd;
+    //
+    //    var fileName;
+    //    if ($scope.state.class_name != '') {
+    //        fileName = 'Comment Breeze ' + $scope.state.class_name + ' ' + today + '.txt';
+    //    } else {
+    //        fileName = 'Comment Breeze ' + today + '.txt';
+    //    }
+    //
+    //    downloadLink.attr('download', fileName);
+    //    downloadLink[0].click();
+    //};
+
     $scope.loadState = function (state) {
         //console.log('loading state: ' + state);
         $scope.state = JSON.parse(state);
     };
 
+    $scope.setInitialApplicationState();
     $scope.setPassword();
     $scope.setTab();
     $scope.setMobileSettings();

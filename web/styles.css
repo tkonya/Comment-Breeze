@@ -21,6 +21,11 @@ td.comment-text:hover {
     color: #FFC107;
 }
 
+.privacy-policy {
+    color: #FFC107;
+    cursor: pointer;
+}
+
 .button-hover-accent:hover {
     color: #673AB7;
 }
@@ -546,4 +551,19 @@ md-input-container label {
 
 .per-page-select {
     margin-left: 2em;
+}
+
+.stuff-to-show {
+    position: relative;
+    height: 100px;
+    -webkit-transition: top linear 0.2s;
+    transition: top linear 0.2s;
+    top: 0;
+}
+.stuff-to-show.ng-hide {
+    top: -100px;
+}
+.stuff-to-show.ng-hide-add,
+.stuff-to-show.ng-hide-remove {
+    display: block!important;
 }

@@ -8,22 +8,29 @@
 
     <link rel="stylesheet" type="text/css" href="styles.css">
 
-    <script src="angular/angular.min.js"></script>
+    <!--<script src="angular/angular.min.js"></script>-->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+
     <script type="text/javascript" src="js/main.js"></script>
     <script src="angular-clipboard/angular-clipboard.js"></script>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <!--Angular Material Stuff-->
-    <link rel="stylesheet" href="angular-material/angular-material.css">
-    <script src="angular-aria/angular-aria.js"></script>
-    <script src="angular-animate/angular-animate.js"></script>
-    <script src="angular-material/angular-material.js"></script>
+    <!--<link rel="stylesheet" href="angular-material/angular-material.css">-->
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
+    <!--<script src="angular-aria/angular-aria.js"></script>-->
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
+    <!--<script src="angular-animate/angular-animate.js"></script>-->
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
+
+    <!--<script src="angular-material/angular-material.js"></script>-->
+    <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
 
     <!--meta tags-->
     <meta name="title" content="Comment Breeze | ESL / TESOL Report Card Comment Generator">
-    <meta name="description" content="A web-app to help ESL and TESOL teachers build report card comments. 20,000+ usable comments, blazing fast multi-student comment generation, powerful live search capability.">
-    <meta name="keywords" content="esl comments, tesol comments, report card comments, esl reports, esl report cards, tesol reports, tesol report cards">
+    <meta name="description" content="A web-app to help ESL and TESOL teachers build report card comments. 20,000+ usable comments, blazing fast multi-student comment generator, powerful live search capability.">
+    <meta name="keywords" content="esl comments, tesol comments, report card comments, esl reports, esl report cards, tesol reports, tesol report cards, comment generator, report card generator">
 
     <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
@@ -83,9 +90,10 @@
 
                                 <p class="paragraphs">
                                     <span ng-bind="formatNumber(totalCommentsSize);"></span> unique comments<span ng-show="commentSizeToGet != 0">*</span><br>
-                                    Blazing fast multi-student comment generation<br>
-                                    Powerful live search capability<br>
-                                    Servers in Seoul
+                                    Powerful live search<br>
+                                    Blazing fast multi-student comment building<br>
+                                    Customizable pattern-based generation<br>
+                                    Save your class, load it up next semester
                                 </p>
 
                                 <h2 class="yellow-color">OK, how do I use it?</h2>
@@ -142,6 +150,9 @@
                                 <br><br><br>
                                 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/4.0/80x15.png" /></a>
 
+
+                                <h3 class="privacy-policy" ng-click="showPrivacyPolicy();">Privacy Policy</h3>
+
                                 <!--<img src="images/Logo-Black-128px-TM.png" height="40px">-->
 
                                 <!--</p>-->
@@ -164,8 +175,8 @@
                 <section class="control-card md-whiteframe-5dp">
                     <md-toolbar class="md-toolbar-tools control-card-toolbar" layout-xs="column" layout-sm="column" layout-gt-sm="row">
                         <md-button ng-click="showGlobalDetails = !showGlobalDetails">
-                            <i class="material-icons inline-icon" ng-show="showGlobalDetails">arrow_drop_up</i>
-                            <i class="material-icons inline-icon" ng-show="!showGlobalDetails">arrow_drop_down</i>
+                            <i class="material-icons inline-icon" ng-show="showGlobalDetails">keyboard_arrow_up</i>
+                            <i class="material-icons inline-icon" ng-show="!showGlobalDetails">keyboard_arrow_down</i>
                             <span class="md-title">Global Details</span>
                         </md-button>
 
@@ -306,8 +317,8 @@
                 <section class="control-card md-whiteframe-5dp">
                     <md-toolbar class="md-toolbar-tools control-card-toolbar">
                         <md-button ng-click="showAddStudents = !showAddStudents">
-                            <i class="material-icons inline-icon" ng-show="showAddStudents">arrow_drop_up</i>
-                            <i class="material-icons inline-icon" ng-show="!showAddStudents">arrow_drop_down</i>
+                            <i class="material-icons inline-icon" ng-show="showAddStudents">keyboard_arrow_up</i>
+                            <i class="material-icons inline-icon" ng-show="!showAddStudents">keyboard_arrow_down</i>
                             <span class="md-title">Add Students</span>
                         </md-button>
                         <!--<h1>-->
@@ -443,9 +454,9 @@
                 <section ng-show="state.students.length > 0" class="control-card md-whiteframe-5dp">
                     <md-toolbar class="md-toolbar-tools control-card-toolbar">
 
-                        <md-button ng-click="showAllStudents = !showAllStudents">
-                            <i class="material-icons inline-icon" ng-show="showAllStudents">arrow_drop_up</i>
-                            <i class="material-icons inline-icon" ng-show="!showAllStudents">arrow_drop_down</i>
+                        <md-button ng-click="showAllStudents = !showAllStudents; collapseOrExpandAllStudents();">
+                            <i class="material-icons inline-icon" ng-show="showAllStudents">keyboard_arrow_up</i>
+                            <i class="material-icons inline-icon" ng-show="!showAllStudents">keyboard_arrow_down</i>
                             <span class="md-title">All Students ({{state.students.length}})</span>
                         </md-button>
 
@@ -583,10 +594,13 @@
                                             <md-menu-item>
                                                 <md-button class="button-hover full-width" flex ng-click="editMultiStudentAsSmartSearch(student)">
                                                     <i class="material-icons inline-icon">extension</i>
-                                                    <!--<span ng-show="!student.pattern && student.comment.length > 0">Edit w/ Patterns</span>-->
-                                                    <!--<span ng-show="!student.pattern && student.comment.length < 1">Add Pattern</span>-->
-                                                    <!--<span ng-show="student.pattern">Edit w/ Patterns</span>-->
                                                     <span>Edit w/ Patterns</span>
+                                                </md-button>
+                                            </md-menu-item>
+                                            <md-menu-item ng-show="student.pattern_type != 'global' && state.global_pattern.length > 0">
+                                                <md-button class="button-hover full-width" flex ng-click="applyGlobalPatternToStudent(student);">
+                                                    <i class="material-icons inline-icon">extension</i>
+                                                    <span>Apply Default Pattern</span>
                                                 </md-button>
                                             </md-menu-item>
                                             <md-divider></md-divider>
@@ -601,36 +615,34 @@
                                                 <md-button md-prevent-menu-close class="button-hover full-width" flex ng-click="regenerateMultiStudentComment(student, true)">
                                                     <i class="material-icons inline-icon">autorenew</i>
                                                     <span>Regenerate Random</span>
-                                                    <!--<md-tooltip ng-show="state.settings.showTooltips" class="tooltip" md-direction="below">-->
-                                                    <!--Get a new set of random comments for this student-->
-                                                    <!--</md-tooltip>-->
                                                 </md-button>
                                             </md-menu-item>
                                             <md-menu-item ng-hide="!student.pattern">
                                                 <md-button md-prevent-menu-close class="button-hover full-width" flex ng-click="regenerateMultiStudentComment(student, false)">
                                                     <i class="material-icons inline-icon">autorenew</i>
                                                     <span>Regenerate w/ Pattern</span>
-                                                    <!--<md-tooltip ng-show="state.settings.showTooltips" class="tooltip" md-direction="below">-->
-                                                    <!--Get a new set of random comments for this student-->
-                                                    <!--</md-tooltip>-->
                                                 </md-button>
                                             </md-menu-item>
                                             <md-menu-item>
                                                 <md-button md-prevent-menu-close class="button-hover" ng-disabled="student.comment == ''" ng-click="shuffleMultiStudentComment(student)">
                                                     <i class="material-icons inline-icon">shuffle</i>
                                                     <span>Shuffle Comments</span>
-                                                    <!--<md-tooltip ng-show="state.settings.showTooltips" class="tooltip" md-direction="below">-->
-                                                    <!--Shuffle the current comments for this student-->
-                                                    <!--</md-tooltip>-->
                                                 </md-button>
                                             </md-menu-item>
                                             <md-divider></md-divider>
-                                            <md-menu-item ng-show="student.pattern_type != 'global' && state.global_pattern.length > 0">
-                                                <md-button class="button-hover full-width" flex ng-click="applyGlobalPatternToStudent(student);">
-                                                    <i class="material-icons inline-icon">extension</i>
-                                                    <span>Apply Default Pattern</span>
+                                            <md-menu-item ng-hide="student.collapsed">
+                                                <md-button class="button-hover full-width" flex ng-click="student.collapsed = true">
+                                                    <i class="material-icons inline-icon">keyboard_arrow_up</i>
+                                                    <span>Collapse Student</span>
                                                 </md-button>
                                             </md-menu-item>
+                                            <md-menu-item ng-show="student.collapsed">
+                                                <md-button class="button-hover" ng-disabled="student.comment == ''" ng-click="student.collapsed = false">
+                                                    <i class="material-icons inline-icon">keyboard_arrow_down</i>
+                                                    <span>Expand Student</span>
+                                                </md-button>
+                                            </md-menu-item>
+                                            <md-divider></md-divider>
                                             <md-menu-item>
                                                 <md-button class="button-hover full-width" flex ng-click="removeMultiStudent(student)">
                                                     <i class="material-icons inline-icon">delete</i>
@@ -648,7 +660,7 @@
 
                                 </div>
 
-                                <div flex class="full-width" ng-show="showAllStudents">
+                                <div flex class="full-width" ng-hide="student.collapsed">
 
                                     <br hide-gt-xs>
                                     <md-input-container class="full-width">
