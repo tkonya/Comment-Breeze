@@ -208,7 +208,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         var girlBoyChild;
         var manLadyAdult;
 
-        //console.log('Changing gender to ' + gender + ' for the text:\n' + text);
+        console.log('Changing gender to ' + gender + ' for the text:\n' + text);
         if (gender == 'male') {
             subject = 'he';
             object = 'him';
@@ -239,7 +239,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         text = text.replace(/\bman\b|\blady\b|\badult\b/g,girlBoyChild).replace(/\bMan\b|\bLady\b|\bAdult\b/g,$scope.capitalizeFirstLetter(manLadyAdult));
         text = text.replace(/\bhe\b|\bshe\b|\bthey\b/g,subject).replace(/\bhis\b|\bhers\b|\btheirs\b/g,possessivePronouns).replace(/\bhim\b|\bher\b|\bthem\b/g,object).replace(/\bhis\b|\bher\b|\btheir\b/g,possessiveAdjectives).replace(/\bhimself\b|\bherself\b|\btheirself\b/g,reflexivePronouns);
         text = text.replace(/\bHe\b|\bShe\b|\bThey\b/g,$scope.capitalizeFirstLetter(subject)).replace(/\bHim\b|\bHer\b|\bThem\b/g,$scope.capitalizeFirstLetter(object)).replace(/\bHis\b|\bHers\b|\bTheirs\b/g,$scope.capitalizeFirstLetter(possessivePronouns)).replace(/\bHis\b|\bHer\b|\bTheir\b/g,$scope.capitalizeFirstLetter(possessiveAdjectives)).replace(/\bHimself\b|\bHerself\b|\bTheirself\b/g,$scope.capitalizeFirstLetter(reflexivePronouns));
-        //console.log('Gender Fixed text length: ' + text.length);
+        console.log('Gender Fixed text length: ' + text.length);
         return text;
     };
 
@@ -267,13 +267,13 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
     };
 
     $scope.replaceStudentName = function(text, studentName, oldStudentName) {
-        //console.log('replacing ' + oldStudentName + ' with ' + studentName + ' for the text ' + text);
+        console.log('replacing ' + oldStudentName + ' with ' + studentName + ' for the text ' + text);
         if (studentName != null && studentName != '') {
             if (oldStudentName != null && oldStudentName != '' && studentName != oldStudentName) {
                 text = text.replace(new RegExp($scope.oldStudentName, 'g'), studentName);
             }
             text = text.replace(/STUDENT_NAME/g, studentName);
-            //console.log('Fixed text: ' + text);
+            console.log('replace Student Name Fixed text: ' + text);
             return text;
         }
         return text;
@@ -291,7 +291,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
     };
     
     $scope.replaceClassName = function(text) {
-        //console.log('Changing class name for ' + text);
+        console.log('Changing class name for ' + text);
         var className;
         if ($scope.state.class_name == null || $scope.state.class_name == '') {
             className = 'CLASS_NAME';
@@ -302,6 +302,8 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         if ($scope.state.old_class_name != null && $scope.state.old_class_name.length > 0) {
             text = text.replace(new RegExp($scope.state.old_class_name, 'g'), className);
         }
+
+        console.log('replace class name fixed text: ' + text);
         
         return text.replace(/CLASS_NAME/g, className);
     };
@@ -930,12 +932,15 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
 
     $scope.editMultiStudentAsSmartSearch = function(student) {
 
+        //console.log('Student comment length: ' + student.comment.length);
+
         $scope.editingStudent = angular.copy(student);
 
         if ($scope.editingStudent.pattern) {
+            console.log('student already has pattern');
             $scope.editingPattern = angular.copy($scope.editingStudent.pattern);
         } else if ($scope.editingStudent.comment.length > 0) {
-
+            //console.log('student does not have pattern, but does have comment');
             //console.log('Creating Multi Student Smart Search profile');
             // import the existing multi student sentence into smart search
 
@@ -948,8 +953,11 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
             }
 
         } else if ($scope.editingStudent.comment.length == 0) {
+            //console.log('student does not have pattern or comment');
             $scope.editingPattern = [];
         }
+        //console.log('Editing student comment length: ' + $scope.editingStudent.comment.length);
+        //$scope.buildAllSmartSearchComments();
 
         $scope.editingStudent.pattern_type = 'individual';
 
@@ -1064,13 +1072,20 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
     };
 
     $scope.buildAllSmartSearchComments = function() {
+        //console.log('building smart search comments start length ' + $scope.editingStudent.comment.length);
         if ($scope.editingStudent != null) {
             $scope.editingStudent.comment = '';
             for (var i = 0; i < $scope.editingPattern.length; ++i) {
+                //var foundComment = $scope.editingPattern[i].found_comment;
+                //console.log('Pattern piece ' + i + ' match: ' + foundComment);
+
+                //$scope.editingStudent.comment += $scope.capitalizeFirstLetter(foundComment).trim() + ' ';
+                //console.log('Editing student comment length: ' + $scope.editingStudent.comment.length);
                 $scope.editingStudent.comment += $scope.capitalizeFirstLetter($scope.editingPattern[i].found_comment).trim() + ' ';
             }
-            $scope.editingStudent.comment = $scope.fixGenderPronouns($scope.replaceClassName($scope.replaceStudentName($scope.state.conclusion, $scope.editingStudent.name, $scope.editingStudent.old_name)), $scope.editingStudent.gender).trim();
+            $scope.editingStudent.comment = $scope.fixGenderPronouns($scope.replaceClassName($scope.replaceStudentName($scope.editingStudent.comment, $scope.editingStudent.name, $scope.editingStudent.old_name)), $scope.editingStudent.gender).trim();
         }
+        //console.log('building smart search comments end length ' + $scope.editingStudent.comment.length);
     };
 
     $scope.justMakeSomethingUpSmartSearch = function() {
