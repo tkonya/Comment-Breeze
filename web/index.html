@@ -90,24 +90,9 @@
 
                                 <h2 class="yellow-color">OK, how do I use it?</h2>
 
-                                <!--<p class="paragraphs">-->
-                                    <!--Go to the Single Student, Multi Student or Smart Search tab.<br>-->
-                                    <!--Click the help button in the upper right hand corner for instructions and tips.<br>-->
-                                    <!--Reading the help for each page first is strongly suggested.-->
-                                <!--</p>-->
-
                                 <p class="paragraphs">
-                                    There are help buttons on each page at the top or upper right. These have detailed instructions about how each tab works.<br>
-
-                                    <!--New users should use the walkthrough to get familiar with it:<br>-->
-                                    <!--<br>-->
-                                    <!--<md-button class="md-button md-raised md-primary" ng-click="walkthrough = {}; showWalkthrough();">-->
-                                        <!--<i class="material-icons inline-icon">star</i>-->
-                                        <!--<span>Start Walkthough</span>-->
-                                        <!--<md-tooltip ng-show="state.settings.showTooltips" class="tooltip" md-direction="left">-->
-                                            <!--Guides users through Comment Breeze, step by step-->
-                                        <!--</md-tooltip>-->
-                                    <!--</md-button>-->
+                                    Start on the Build tab, is a help button at the upper right with more detailed instructions (this may be moved inside the drop down menu on smaller screens).<br>
+                                    These have detailed instructions about how each tab works.<br>
                                 </p>
 
                                 <div ng-show="commentSizeToGet != 0">
@@ -177,12 +162,18 @@
             <md-tab-body class="center-aligned">
 
                 <section class="control-card md-whiteframe-5dp">
-                    <md-toolbar class="md-toolbar-tools control-card-toolbar">
-                        <h1>
-                            <i class="material-icons inline-icon">comment</i> <span>Global Details</span>
-                        </h1>
+                    <md-toolbar class="md-toolbar-tools control-card-toolbar" layout-xs="column" layout-sm="column" layout-gt-sm="row">
+                        <md-button ng-click="showGlobalDetails = !showGlobalDetails">
+                            <i class="material-icons inline-icon" ng-show="showGlobalDetails">arrow_drop_up</i>
+                            <i class="material-icons inline-icon" ng-show="!showGlobalDetails">arrow_drop_down</i>
+                            <span class="md-title">Global Details</span>
+                        </md-button>
 
-                        <span flex></span>
+                        <!--<h1>-->
+                            <!--&lt;!&ndash;<span>Global Details</span>&ndash;&gt;-->
+                        <!--</h1>-->
+
+                        <span flex hide-xs hide-sm></span>
 
                         <md-menu class="menu">
                             <md-button ng-click="$mdOpenMenu($event);" class="full-width">
@@ -203,6 +194,25 @@
                                     </md-button>
                                 </md-menu-item>
                                 <md-divider></md-divider>
+                                <md-menu-item hide-gt-sm>
+                                    <md-button ng-click="showSettings();">
+                                        <i class="material-icons inline-icon">settings</i>
+                                        <span>Settings</span>
+                                        <md-tooltip ng-show="state.settings.showTooltips" class="tooltip" md-direction="bottom">
+                                            Show application settings
+                                        </md-tooltip>
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item hide-gt-sm>
+                                    <md-button ng-click="showBuildHelp();">
+                                        <i class="material-icons inline-icon">help</i>
+                                        <span>Help</span>
+                                        <md-tooltip ng-show="state.settings.showTooltips" class="tooltip" md-direction="left">
+                                            Show the help document for this tab
+                                        </md-tooltip>
+                                    </md-button>
+                                </md-menu-item>
+                                <md-divider hide-gt-sm></md-divider>
                                 <md-menu-item>
                                     <md-button class="button-hover full-width" flex ng-click="showConfirm($event)">
                                         <i class="material-icons inline-icon">refresh</i>
@@ -218,9 +228,7 @@
                             </md-menu-content>
                         </md-menu>
 
-                        <input id="file-upload-input" type="file" on-read-file="loadState($fileContent);" ng-hide="true">
-
-                        <md-button ng-click="showSettings();">
+                        <md-button hide-xs hide-sm ng-click="showSettings();">
                             <i class="material-icons inline-icon">settings</i>
                             <span hide-xs>Settings</span>
                             <md-tooltip ng-show="state.settings.showTooltips" class="tooltip" md-direction="bottom">
@@ -228,9 +236,9 @@
                             </md-tooltip>
                         </md-button>
 
-                        <md-button ng-click="showBuildHelp();">
+                        <md-button hide-xs hide-sm ng-click="showBuildHelp();">
                             <i class="material-icons inline-icon">help</i>
-                            <span>Help</span>
+                            <span hide-xs>Help</span>
                             <md-tooltip ng-show="state.settings.showTooltips" class="tooltip" md-direction="left">
                                 Show the help document for this tab
                             </md-tooltip>
@@ -238,44 +246,48 @@
 
                     </md-toolbar>
 
-                    <md-content class="control-card-content" layout-xs="column" layout-sm="column" layout-gt-sm="row" layout-fill>
+                    <md-content class="control-card-content">
 
-                        <div layout="column" flex-xs="100" flex-gt-xs="50">
-                            <form ng-submit="changeClassName()" flex-gt-sm="20" flex-order="1">
-                                <md-input-container class="input-container full-width" flex="100">
-                                    <label>Class Name</label>
-                                    <input type="text" ng-model="state.class_name" ng-blur="changeClassName()">
+                        <div ng-show="showGlobalDetails" layout-xs="column" layout-sm="column" layout-gt-sm="row" layout-fill>
+                            <div layout="column" flex-xs="100" flex-gt-xs="50">
+                                <form ng-submit="changeClassName()" flex-gt-sm="20" flex-order="1">
+                                    <md-input-container class="input-container full-width" flex="100">
+                                        <label>Class Name</label>
+                                        <input type="text" ng-model="state.class_name" ng-blur="changeClassName()">
+                                    </md-input-container>
+                                    <div class="hint" ng-show="state.showHints">Will replace instances of CLASS_NAME in comments</div>
+                                    <md-tooltip ng-show="state.settings.showTooltips" class="tooltip">
+                                        Will replace instances of CLASS_NAME in comments
+                                    </md-tooltip>
+                                </form>
+
+                                <md-input-container flex-gt-sm="35" flex-order="2" class="intro-conclusion-multi no-bottom-margin">
+                                    <label>Introduction</label>
+                                    <textarea ng-model="state.introduction"></textarea>
+                                    <div class="hint" ng-show="state.showHints">The custom introduction to appear at the beginning of every comment (optional)</div>
+                                    <md-tooltip ng-show="state.settings.showTooltips" class="tooltip">
+                                        The custom introduction to appear at the beginning of every comment (optional)
+                                    </md-tooltip>
                                 </md-input-container>
-                                <div class="hint" ng-show="state.showHints">Will replace instances of CLASS_NAME in comments</div>
-                                <md-tooltip ng-show="state.settings.showTooltips" class="tooltip">
-                                    Will replace instances of CLASS_NAME in comments
-                                </md-tooltip>
-                            </form>
 
-                            <md-input-container flex-gt-sm="35" flex-order="2" class="intro-conclusion-multi no-bottom-margin">
-                                <label>Introduction</label>
-                                <textarea ng-model="state.introduction"></textarea>
-                                <div class="hint" ng-show="state.showHints">The custom introduction to appear at the beginning of every comment (optional)</div>
-                                <md-tooltip ng-show="state.settings.showTooltips" class="tooltip">
-                                    The custom introduction to appear at the beginning of every comment (optional)
-                                </md-tooltip>
-                            </md-input-container>
+                                <md-input-container flex-gt-sm="35" flex-order="3" class="intro-conclusion-multi">
+                                    <label>Conclusion</label>
+                                    <textarea ng-model="state.conclusion"></textarea>
+                                    <div class="hint" ng-show="state.showHints">The custom conclusion to appear at the end of every comment (optional)</div>
+                                    <md-tooltip ng-show="state.settings.showTooltips" class="tooltip">
+                                        The custom conclusion to appear at the end of every comment (optional)
+                                    </md-tooltip>
+                                </md-input-container>
 
-                            <md-input-container flex-gt-sm="35" flex-order="3" class="intro-conclusion-multi">
-                                <label>Conclusion</label>
-                                <textarea ng-model="state.conclusion"></textarea>
-                                <div class="hint" ng-show="state.showHints">The custom conclusion to appear at the end of every comment (optional)</div>
-                                <md-tooltip ng-show="state.settings.showTooltips" class="tooltip">
-                                    The custom conclusion to appear at the end of every comment (optional)
-                                </md-tooltip>
-                            </md-input-container>
+                                <input id="file-upload-input" type="file" on-read-file="loadState($fileContent);" ng-hide="true">
 
-                        </div>
+                            </div>
 
-                        <div layout="column" hide-xs flex="50" class="center-aligned">
+                            <div layout="column" hide-xs flex="50" class="center-aligned">
 
 
 
+                            </div>
                         </div>
 
                     </md-content>
@@ -293,97 +305,136 @@
 
                 <section class="control-card md-whiteframe-5dp">
                     <md-toolbar class="md-toolbar-tools control-card-toolbar">
-                        <h1>
-                            <i class="material-icons inline-icon">person_add</i>
-                            <span>Add Students</span>
-                        </h1>
+                        <md-button ng-click="showAddStudents = !showAddStudents">
+                            <i class="material-icons inline-icon" ng-show="showAddStudents">arrow_drop_up</i>
+                            <i class="material-icons inline-icon" ng-show="!showAddStudents">arrow_drop_down</i>
+                            <span class="md-title">Add Students</span>
+                        </md-button>
+                        <!--<h1>-->
+                            <!--&lt;!&ndash;<i class="material-icons inline-icon">person_add</i>&ndash;&gt;-->
+                            <!--<span>Add Students</span>-->
+                            <!---->
+                        <!--</h1>-->
 
                         <span flex></span>
 
 
                     </md-toolbar>
 
-                    <md-content class="control-card-content center-aligned"  layout-xs="column" layout-sm="column" layout-gt-sm="row" layout-fill>
+                    <md-content class="control-card-content center-aligned">
 
-                        <div flex layout="column" class="add-student-divs">
-                            <form ng-submit="addMultiStudent()" autocomplete="off" flex>
-                                <md-input-container class="input-container full-width">
-                                    <label>New Student Name</label>
-                                    <input type="text" ng-model="newMultiStudent">
-                                </md-input-container>
-                                <div class="hint" ng-show="showHints">Add all the students that you would like to make comments for today</div>
-                                <md-tooltip ng-show="showTooltips" class="tooltip">
-                                    Add all the students that you would like to make comments for today
-                                </md-tooltip>
-                            </form>
-
-                            <md-button aria-label="Add" md-ink-ripple flex ng-disabled="newMultiStudent == ''" class="help-button md-button md-raised md-primary button-min-size" ng-click="addMultiStudent()" md-ripple-size="auto">
-                                <i class="material-icons inline-icon">person_add</i>
-                                <span>Add</span>
-                                <md-tooltip ng-show="showTooltips" class="tooltip">
-                                    Adds <span ng-bind="newMultiStudent" ng-hide="newMultiStudent == ''"></span><span ng-show="newMultiStudent == ''">student</span> to the list
-                                </md-tooltip>
-                            </md-button>
-                        </div>
-
-                        <div flex class="radio-button-container add-student-divs" layout="column">
-
-                            <md-radio-group ng-model="gender" class="md-primary radio-button-group" layout-xs="row" layout-gt-xs="column" aria-label="Default Gender">
-                                <md-radio-button ng-model="gender" value="male" selected>
-                                    Male
-                                    <md-tooltip ng-show="state.settings.showTooltips && gender != 'male'" class="tooltip">
-                                        Set default gender to male
+                        <div ng-show="showAddStudents" layout-xs="column" layout-sm="column" layout-gt-sm="row" layout-fill>
+                            <div flex layout="column" class="add-student-divs">
+                                <form ng-submit="addMultiStudent()" autocomplete="off" flex>
+                                    <md-input-container class="input-container full-width">
+                                        <label>New Student Name</label>
+                                        <input type="text" ng-model="newMultiStudent">
+                                    </md-input-container>
+                                    <div class="hint" ng-show="showHints">Add all the students that you would like to make comments for today</div>
+                                    <md-tooltip ng-show="showTooltips" class="tooltip">
+                                        Add all the students that you would like to make comments for today
                                     </md-tooltip>
-                                </md-radio-button>
-                                <md-radio-button ng-model="gender" value="female">
-                                    Female
-                                    <md-tooltip ng-show="state.settings.showTooltips && gender != 'female'" class="tooltip">
-                                        Set default gender to female
-                                    </md-tooltip>
-                                </md-radio-button>
-                                <md-radio-button ng-disabled="!state.settings.enableNeutralGender" ng-model="gender" value="neutral">
-                                    Neutral
-                                    <md-tooltip ng-show="state.settings.showTooltips && !state.enableNeutralGender" class="tooltip">
-                                        Neutral gender can be enabled on the settings page
-                                    </md-tooltip>
-                                    <md-tooltip ng-show="state.settings.showTooltips && state.enableNeutralGender" class="tooltip">
-                                        Set default gender to neutral
-                                    </md-tooltip>
-                                </md-radio-button>
-                            </md-radio-group>
+                                </form>
 
-                        </div>
-
-                        <div class="radio-button-container add-student-divs" flex>
-                            <md-radio-group flex ng-model="state.settings.newStudentFill" class="md-primary radio-button-group" layout="column" aria-label="New student fill">
-                                <md-radio-button ng-model="newStudentFill" value="blank">
-                                    Start Blank
-                                    <md-tooltip ng-show="state.settings.showTooltips" class="tooltip">
-                                        Start with nothing
+                                <md-button aria-label="Add" md-ink-ripple flex ng-disabled="newMultiStudent == ''" class="help-button md-button md-raised md-primary button-min-size" ng-click="addMultiStudent()" md-ripple-size="auto">
+                                    <i class="material-icons inline-icon">person_add</i>
+                                    <span>Add</span>
+                                    <md-tooltip ng-show="showTooltips" class="tooltip">
+                                        Adds <span ng-bind="newMultiStudent" ng-hide="newMultiStudent == ''"></span><span ng-show="newMultiStudent == ''">student</span> to the list
                                     </md-tooltip>
-                                </md-radio-button>
-                                <md-radio-button ng-model="state.settings.newStudentFill" value="random">
-                                    Generate Random Comment
-                                    <md-tooltip ng-show="state.settings.showTooltips" class="tooltip">
-                                        Start with a random comment {{makeSomethingUpSize}} sentences long
-                                    </md-tooltip>
-                                </md-radio-button>
-                                <md-radio-button ng-show="state.global_pattern.length > 0" ng-disabled="state.global_pattern.length < 1" ng-model="state.settings.newStudentFill" value="default_pattern">
-                                    <span>Generate w/ Default Pattern</span>
-                                    <md-tooltip ng-show="state.settings.showTooltips" class="tooltip">
-                                        Start with a comment generated conforming to the default pattern
-                                    </md-tooltip>
-                                </md-radio-button>
-                            </md-radio-group>
+                                </md-button>
+                            </div>
 
-                            <md-button aria-label="Add" md-ink-ripple flex ng-show="state.global_pattern.length < 1" class="md-button md-raised md-primary button-min-size add-pattern-button" ng-click="editingPattern = []; selectedTab = tabIndexes.patterns" md-ripple-size="auto">
-                                <i class="material-icons inline-icon">extension</i>
-                                <span>Add Default Pattern</span>
-                                <md-tooltip ng-show="showTooltips" class="tooltip">
-                                    Create a default pattern that you can apply to new students by default, or existing students retroactively
-                                </md-tooltip>
-                            </md-button>
+                            <div flex class="radio-button-container add-student-divs center-aligned" layout="column">
 
+                                <md-radio-group ng-model="gender" hide-xs hide-sm class="md-primary radio-button-group" layout="column" aria-label="Default Gender">
+
+                                    <md-radio-button ng-model="gender" value="male" class="gender-radio">
+                                        M<span hide-xs>ale</span>
+                                        <md-tooltip ng-show="state.settings.showTooltips && gender != 'male'" class="tooltip">
+                                            Set default gender to male
+                                        </md-tooltip>
+                                    </md-radio-button>
+                                    <md-radio-button ng-model="gender" value="female" class="gender-radio">
+                                        F<span hide-xs>emale</span>
+                                        <md-tooltip ng-show="state.settings.showTooltips && gender != 'female'" class="tooltip">
+                                            Set default gender to female
+                                        </md-tooltip>
+                                    </md-radio-button>
+                                    <md-radio-button ng-disabled="!state.settings.enableNeutralGender" ng-model="gender" value="neutral" class="gender-radio">
+                                        N<span hide-xs>eutral</span>
+                                        <md-tooltip ng-show="state.settings.showTooltips && !state.enableNeutralGender" class="tooltip">
+                                            Neutral gender can be enabled on the settings page
+                                        </md-tooltip>
+                                        <md-tooltip ng-show="state.settings.showTooltips && state.enableNeutralGender" class="tooltip">
+                                            Set default gender to neutral
+                                        </md-tooltip>
+                                    </md-radio-button>
+                                </md-radio-group>
+
+                                <md-radio-group ng-model="gender" hide-gt-sm class="md-primary" layout="row" aria-label="Default Gender">
+
+                                    <md-radio-button flex ng-model="gender" value="male" class="gender-radio">
+                                        Male
+                                        <md-tooltip ng-show="state.settings.showTooltips && gender != 'male'" class="tooltip">
+                                            Set default gender to male
+                                        </md-tooltip>
+                                    </md-radio-button>
+                                    <md-radio-button flex ng-model="gender" value="female" class="gender-radio">
+                                        Female
+                                        <md-tooltip ng-show="state.settings.showTooltips && gender != 'female'" class="tooltip">
+                                            Set default gender to female
+                                        </md-tooltip>
+                                    </md-radio-button>
+                                    <md-radio-button flex ng-disabled="!state.settings.enableNeutralGender" ng-model="gender" value="neutral" class="gender-radio">
+                                        Neutral
+                                        <md-tooltip ng-show="state.settings.showTooltips && !state.enableNeutralGender" class="tooltip">
+                                            Neutral gender can be enabled on the settings page
+                                        </md-tooltip>
+                                        <md-tooltip ng-show="state.settings.showTooltips && state.enableNeutralGender" class="tooltip">
+                                            Set default gender to neutral
+                                        </md-tooltip>
+                                    </md-radio-button>
+                                </md-radio-group>
+
+                            </div>
+
+                            <br hide-gt-sm>
+                            <br hide-gt-sm>
+                            <md-divider hide-gt-sm></md-divider>
+                            <br hide-gt-sm>
+
+                            <div class="radio-button-container add-student-divs" flex>
+                                <md-radio-group flex ng-model="state.settings.newStudentFill" class="md-primary radio-button-group" layout="column" aria-label="New student fill">
+                                    <md-radio-button ng-model="newStudentFill" value="blank">
+                                        Start Blank
+                                        <md-tooltip ng-show="state.settings.showTooltips" class="tooltip">
+                                            Start with nothing
+                                        </md-tooltip>
+                                    </md-radio-button>
+                                    <md-radio-button ng-model="state.settings.newStudentFill" value="random">
+                                        Generate Random Comment
+                                        <md-tooltip ng-show="state.settings.showTooltips" class="tooltip">
+                                            Start with a random comment {{makeSomethingUpSize}} sentences long
+                                        </md-tooltip>
+                                    </md-radio-button>
+                                    <md-radio-button ng-show="state.global_pattern.length > 0" ng-disabled="state.global_pattern.length < 1" ng-model="state.settings.newStudentFill" value="default_pattern">
+                                        <span>Generate w/ Default Pattern</span>
+                                        <md-tooltip ng-show="state.settings.showTooltips" class="tooltip">
+                                            Start with a comment generated conforming to the default pattern
+                                        </md-tooltip>
+                                    </md-radio-button>
+                                </md-radio-group>
+
+                                <md-button aria-label="Add" md-ink-ripple flex ng-show="state.global_pattern.length < 1" class="md-button md-raised md-primary button-min-size add-pattern-button" ng-click="editingPattern = []; selectedTab = tabIndexes.patterns" md-ripple-size="auto">
+                                    <i class="material-icons inline-icon">extension</i>
+                                    <span>Add Default Pattern</span>
+                                    <md-tooltip ng-show="showTooltips" class="tooltip">
+                                        Create a default pattern that you can apply to new students by default, or existing students retroactively
+                                    </md-tooltip>
+                                </md-button>
+
+                            </div>
                         </div>
 
                     </md-content>
@@ -391,14 +442,21 @@
 
                 <section ng-show="state.students.length > 0" class="control-card md-whiteframe-5dp">
                     <md-toolbar class="md-toolbar-tools control-card-toolbar">
-                        <h2>
-                            <i class="material-icons inline-icon">group</i>
-                            <span>All Students ({{state.students.length}})</span>
-                        </h2>
+
+                        <md-button ng-click="showAllStudents = !showAllStudents">
+                            <i class="material-icons inline-icon" ng-show="showAllStudents">arrow_drop_up</i>
+                            <i class="material-icons inline-icon" ng-show="!showAllStudents">arrow_drop_down</i>
+                            <span class="md-title">All Students ({{state.students.length}})</span>
+                        </md-button>
+
+                        <!--<h2>-->
+                            <!--&lt;!&ndash;<i class="material-icons inline-icon">group</i>&ndash;&gt;-->
+                            <!--<span>All Students ({{state.students.length}})</span>-->
+                        <!--</h2>-->
 
                         <span flex></span>
 
-                        <md-menu class="menu" flex="20">
+                        <md-menu class="menu">
                             <md-button ng-click="$mdOpenMenu($event)" class="full-width">
                                 <i class="material-icons inline-icon">menu</i>
                                 <span hide-xs>Menu</span>
@@ -453,18 +511,21 @@
 
                     </md-toolbar>
 
-                    <md-content class="center-aligned"  layout-xs="column" layout-sm="column" layout-gt-sm="row" layout-fill>
+                    <md-content class="center-aligned all-students-content"  layout-xs="column" layout-sm="column" layout-gt-sm="row" layout-fill>
 
-                        <md-list class="full-width">
+                        <md-list class="full-width all-students-content">
                             <md-list-item class="repeated-item card-list-content student-list-item" layout-fill layout="column" ng-repeat="student in state.students">
 
                                 <div layout-xs="column" layout-gt-xs="row" class="full-width">
-                                    <form ng-submit="changeStudentName(student);">
-                                        <md-input-container class="input-container full-width" flex="100">
-                                            <label>Student Name</label>
-                                            <input type="text" ng-model="student.name" ng-blur="changeStudentName(student);">
-                                        </md-input-container>
-                                    </form>
+                                    <div layout="row">
+                                        <span class="student-index yellow-color">{{$index + 1}}.</span>
+                                        <form ng-submit="changeStudentName(student);">
+                                            <md-input-container class="input-container full-width" flex="100">
+                                                <label>Student Name</label>
+                                                <input type="text" ng-model="student.name" ng-blur="changeStudentName(student);">
+                                            </md-input-container>
+                                        </form>
+                                    </div>
 
                                     <md-radio-group ng-model="student.gender" class="md-primary radio-button-group" layout="row" aria-label="Default Gender" ng-change="changeStudentGender(student);">
                                         <md-radio-button ng-model="student.gender" value="male" selected>
@@ -587,7 +648,9 @@
 
                                 </div>
 
-                                <div flex class="full-width">
+                                <div flex class="full-width" ng-show="showAllStudents">
+
+                                    <br hide-gt-xs>
                                     <md-input-container class="full-width">
                                         <label>
                                             Comment Text
@@ -602,7 +665,6 @@
                                 <!--<md-divider></md-divider>-->
                             </md-list-item>
                         </md-list>
-
 
                     </md-content>
                 </section>
@@ -624,7 +686,7 @@
                             <span>Editing Comment For {{editingStudent.name}}</span>
                         </h1>
 
-                        <span flex></span>
+                        <span hide-xs hide-sm flex></span>
 
                         <md-button aria-label="Done Editing" md-ink-ripple md-ripple-size="auto" ng-click="doneEditingStudentSearch();">
                             <i class="material-icons inline-icon">done</i>
@@ -661,12 +723,33 @@
                 <section class="control-card md-whiteframe-5dp">
                     <md-toolbar class="md-toolbar-tools control-card-toolbar">
                         <h1>
-                            <span>Search Comments</span>
+                            <span>Search<span hide-xs> Comments</span></span>
                         </h1>
 
                         <span flex></span>
 
-                        <md-button ng-click="showSearchSettings();">
+                        <md-menu hide-gt-sm class="menu">
+                            <md-button ng-click="$mdOpenMenu($event);" class="full-width">
+                                <i class="material-icons inline-icon">menu</i>
+                                <span hide-xs>Menu</span>
+                            </md-button>
+                            <md-menu-content class="menu-content">
+                                <md-menu-item>
+                                    <md-button ng-click="showSearchSettings();">
+                                        <i class="material-icons inline-icon">settings</i>
+                                        <span>Settings</span>
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item>
+                                    <md-button ng-click="showSearchHelp();">
+                                        <i class="material-icons inline-icon">help</i>
+                                        <span>Help</span>
+                                    </md-button>
+                                </md-menu-item>
+                            </md-menu-content>
+                        </md-menu>
+
+                        <md-button hide-xs hide-sm ng-click="showSearchSettings();">
                             <i class="material-icons inline-icon">settings</i>
                             <span hide-xs>Settings</span>
                             <md-tooltip ng-show="state.settings.showTooltips" class="tooltip" md-direction="bottom">
@@ -674,9 +757,9 @@
                             </md-tooltip>
                         </md-button>
 
-                        <md-button ng-click="showSearchHelp();">
+                        <md-button hide-xs hide-sm ng-click="showSearchHelp();">
                             <i class="material-icons inline-icon">help</i>
-                            <span>Help</span>
+                            <span hide-xs>Help</span>
                             <md-tooltip ng-show="state.settings.showTooltips" class="tooltip" md-direction="left">
                                 Show the help document for this tab
                             </md-tooltip>
@@ -685,6 +768,11 @@
                     </md-toolbar>
 
                     <md-content class="comment-bank-content" layout="column" layout-fill>
+
+                        <md-subheader class="md-primary">
+                            <span ng-show="editingStudent == null">Select a student from the Build tab to edit their comments here</span>
+                            <span ng-show="editingStudent != null">Search for comments and click to add to your comment for {{editingStudent.name}}</span>
+                        </md-subheader>
 
                         <div layout-xs="column" layout-sm="column" layout-gt-sm="row" layout-fill>
 
@@ -817,7 +905,7 @@
 
                         <md-button aria-label="Done Editing" md-ink-ripple md-ripple-size="auto" ng-click="doneEditingStudentPattern();">
                             <i class="material-icons inline-icon">done</i>
-                            <span>Done Editing</span>
+                            <span>Done<span hide-xs> Editing</span></span>
                             <md-tooltip ng-show="state.settings.showTooltips" class="tooltip">
                                 Saves the changes you've made and goes back to the Multi Student tab
                             </md-tooltip>
@@ -825,7 +913,7 @@
 
                         <md-button aria-label="Cancel Editing" md-ink-ripple ng-click="selectedTab = tabIndexes.build; editingStudent = null;" md-ripple-size="auto">
                             <i class="material-icons inline-icon">cancel</i>
-                            <span>Cancel Editing</span>
+                            <span>Cancel<span hide-xs> Editing</span></span>
                             <md-tooltip ng-show="state.settings.showTooltips" class="tooltip">
                                 Goes back to the Multi Student tab without saving anything
                             </md-tooltip>
@@ -852,8 +940,7 @@
 
                     <md-toolbar class="md-toolbar-tools control-card-toolbar">
                         <h2>
-                            <span ng-show="editingStudent == null">Default Comment Pattern</span>
-                            <span ng-hide="editingStudent == null">Individual Pattern for {{editingStudent.name}}</span>
+                            Patterns
                         </h2>
 
                         <span flex></span>
@@ -891,6 +978,19 @@
                                 </md-menu-item>
                                 <md-divider></md-divider>
                                 <md-menu-item>
+                                    <md-button ng-click="showPatternSettings();">
+                                        <i class="material-icons inline-icon">settings</i>
+                                        <span>Settings</span>
+                                    </md-button>
+                                </md-menu-item>
+                                <md-menu-item hide-gt-sm>
+                                    <md-button ng-click="showPatternsHelp();">
+                                        <i class="material-icons inline-icon">help</i>
+                                        <span>Help</span>
+                                    </md-button>
+                                </md-menu-item>
+                                <md-divider></md-divider>
+                                <md-menu-item>
                                     <md-button aria-label="Remove All Searches" ng-disabled="editingPattern.length < 1" md-ink-ripple flex md-ripple-size="auto" ng-click="removeAllPatternPieces();">
                                         <i class="material-icons inline-icon">clear_all</i>
                                         <span>Remove All Searches</span>
@@ -905,17 +1005,9 @@
                             </md-menu-content>
                         </md-menu>
 
-                        <md-button ng-click="showPatternSettings();">
-                            <i class="material-icons inline-icon">settings</i>
-                            <span hide-xs>Settings</span>
-                            <md-tooltip ng-show="state.settings.showTooltips" class="tooltip" md-direction="bottom">
-                                Show application settings
-                            </md-tooltip>
-                        </md-button>
-
-                        <md-button ng-click="showPatternsHelp();">
+                        <md-button hide-xs ng-click="showPatternsHelp();">
                             <i class="material-icons inline-icon">help</i>
-                            <span>Help</span>
+                            <span hide-xs>Help</span>
                             <md-tooltip ng-show="state.settings.showTooltips" class="tooltip" md-direction="left">
                                 Show the help document for this tab
                             </md-tooltip>
@@ -924,6 +1016,11 @@
                     </md-toolbar>
 
                     <md-content class="comment-bank-content" layout="column" layout-fill>
+
+                        <md-subheader class="md-primary">
+                            <span ng-show="editingStudent == null">Now Editing Default Pattern</span>
+                            <span ng-hide="editingStudent == null">Now Editing Individual Pattern for {{editingStudent.name}}</span>
+                        </md-subheader>
 
                         <div layout-xs="column" layout-sm="column" layout-md="row" layout-gt-md="row" layout-fill>
 
@@ -945,7 +1042,7 @@
                             </md-input-container>
 
                             <div flex layout="column">
-                                <md-button aria-label="Add new smart search" md-ink-ripple class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="editingPattern.push(getSmartSearchResult(newPatternPiece, state.settings.getSearchResultCount)); newPatternPiece.search_text = ''; buildAllSmartSearchComments(); state.settings.useSmartSearch = true;">
+                                <md-button aria-label="Add new smart search" md-ink-ripple class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="editingPattern.push(getSmartSearchResult(newPatternPiece, state.settings.getSearchResultCount)); newPatternPiece.search_text = ''; buildAllSmartSearchComments(); illToastToThat('Pattern piece added');">
                                     <i class="material-icons inline-icon">extension</i>
                                     <span>Add Pattern Piece</span>
                                     <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">

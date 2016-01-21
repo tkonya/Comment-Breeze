@@ -93,6 +93,11 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
     $scope.newPatternPiece = {search_text: '', found_comment: '', tone: 'Any', tags: false, text: false};
     $scope.limitedToneFilterOptions = ['Any', 'Positive', 'Neutral', 'Negative'];
 
+    // collapse cards
+    $scope.showGlobalDetails = true;
+    $scope.showAddStudents = true;
+    $scope.showAllStudents = true;
+
     // pagination
     $scope.commentViewLimit = 20;
     $scope.commentViewBegin = 0;
@@ -1151,7 +1156,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         // Appending dialog to document.body to cover sidenav in docs app
         var confirm = $mdDialog.confirm()
             .title('Reset Comment Breeze')
-            .textContent('Resetting the application will erase all work, but will not use data.')
+            .textContent('Resetting the application will erase all work, but does not require network connectivity and will not use data.')
             .ariaLabel('Reset Comment Breeze')
             .targetEvent(ev)
             .ok('Reset')

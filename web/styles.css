@@ -317,7 +317,7 @@ md-list-item:nth-child(odd) {
 }
 
 .gender-radio {
-    margin-left: 0;
+    /*margin-right: 2em;*/
 }
 
 .setting-control-container {
@@ -493,6 +493,14 @@ md-input-container label {
     padding-left: 1em;
     padding-right: 1em;
     border-radius: 0 0 5px 5px;
+}
+
+.all-students-content {
+    border-radius: 0 0 5px 5px;
+}
+
+.student-index {
+    margin-right: 1.4em;
 }
 
 .card-list-content {
