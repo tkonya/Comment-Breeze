@@ -1,104 +1,119 @@
-<md-dialog flex="90">
-    <md-dialog-content style="padding: 2em;">
-        <div class="center-aligned yellow-color">
-            <h2>Search Settings</h2>
-        </div>
+<md-dialog flex="90" md-theme="{{ state.theme.colorTheme }}">
+    <md-dialog-content class="dialog-modal">
+        <md-content>
+            <div class="center-aligned ">
+                <h2 ng-style="state.theme.highlightColor">Search Settings</h2>
+            </div>
 
-        <md-divider></md-divider>
+            <md-divider></md-divider>
 
-        <h3 class="settings-header yellow-color">Visibility</h3>
-        <!--<div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>-->
+            <h3 ng-style="state.theme.highlightColor" class="settings-header">Visibility</h3>
+
+            <!--<div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>-->
             <!--<div flex-gt-xs="25" class="setting-control-container">-->
-                <!--<md-checkbox ng-model="state.settings.showTooltips" aria-label="Hide or show the tooltips" class="setting-control">-->
-                    <!--Tooltips-->
-                <!--</md-checkbox>-->
+            <!--<md-checkbox ng-model="showHints" aria-label="Hide or show the tooltips" class="setting-control">-->
+            <!--Hints-->
+            <!--</md-checkbox>-->
             <!--</div>-->
-            <!--<p flex-gt-xs="75" class="settings-text">Turn pop up tooltips on or off. Recommended off for mobile or touchscreen-only users; on for users with a mouse or other pointing device.</p>-->
-        <!--</div>-->
+            <!--<p flex-gt-xs="75" class="settings-text">Turn input hints on or off. This usually displays the same information as tooltips. Recommended on for mobile or touchscreen-only users; off if tooltips is on.</p>-->
+            <!--</div>-->
 
-        <!--<div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>-->
-        <!--<div flex-gt-xs="25" class="setting-control-container">-->
-        <!--<md-checkbox ng-model="showHints" aria-label="Hide or show the tooltips" class="setting-control">-->
-        <!--Hints-->
-        <!--</md-checkbox>-->
-        <!--</div>-->
-        <!--<p flex-gt-xs="75" class="settings-text">Turn input hints on or off. This usually displays the same information as tooltips. Recommended on for mobile or touchscreen-only users; off if tooltips is on.</p>-->
-        <!--</div>-->
-
-        <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
-            <div flex-gt-xs="25" class="setting-control-container">
-                <md-checkbox ng-model="state.settings.showTone" class="setting-control" aria-label="Hide or show the tone button and indicator">
-                    Tone Buttons
-                </md-checkbox>
-            </div>
-            <p flex-gt-xs="75" class="settings-text">Show or hide the tone buttons and indicators on the comments list. Gives a little extra space to those who are on small screens or do not need to see or edit tone.</p>
-        </div>
-
-        <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
-            <div flex-gt-xs="25" class="setting-control-container">
-                <md-checkbox ng-model="state.settings.showEditButtons" class="setting-control" aria-label="Hide or show the edit buttons">
-                    Edit Buttons
-                </md-checkbox>
-            </div>
-            <p flex-gt-xs="75" class="settings-text">Show or hide the edit button on the comments list. Gives a little extra space to those who are on small screens or are not going to edit the comment text.</p>
-        </div>
-
-        <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
-            <div flex-gt-xs="25" class="setting-control-container">
-                <md-checkbox ng-model="state.settings.showTags" class="setting-control" aria-label="Hide or show the tags">
-                    Tags
-                </md-checkbox>
-            </div>
-            <p flex-gt-xs="75" class="settings-text">Show or hide the tags button and indicator on the comments list. Gives a little extra space to those who are on small screens or are not going to look at or edit tags.</p>
-        </div>
-
-        <br>
-        <md-divider></md-divider>
-
-        <div>
-            <h3 class="settings-header yellow-color">Resize Comments</h3>
-            <div layout-xs="column" layout-sm="row"  layout-gt-sm="row" layout-fill>
-                <div flex-gt-xs="25" class="setting-control-container" class="setting-control-container">
-                    <md-input-container class="settings-number-input setting-control">
-                        <label>Target Size</label>
-                        <input type="number" ng-model="state.settings.reduceCommentsSize" min="1" max="{{totalCommentsSize}}">
-                    </md-input-container>
-
+            <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
+                <div flex-gt-xs="25" class="setting-control-container">
+                    <md-checkbox ng-model="state.settings.showTone" class="setting-control"
+                                 aria-label="Hide or show the tone button and indicator">
+                        Tone Buttons
+                    </md-checkbox>
                 </div>
-                <p flex-gt-xs="75" class="settings-text">If searching is slow, generally for mobile users with limited computing power, you can load the page with only some of the comments to improve performance. This is done by default for users on mobile devices. You may reload with any number of comments from 1 to <span ng-bind="formatNumber(totalCommentsSize)"></span>.<br><br>
-                    Current size: <span ng-bind="formatNumber(comments.length);"></span> / <span ng-bind="formatNumber(totalCommentsSize);"></span> (<span ng-bind="(comments.length / totalCommentsSize * 100).toFixed(0);"></span>%)
-                </p>
+                <p flex-gt-xs="75" class="settings-text">Show or hide the tone buttons and indicators on the comments
+                    list. Gives a little extra space to those who are on small screens or do not need to see or edit
+                    tone.</p>
             </div>
-            <div layout-xs="column" layout-sm="row"  layout-gt-sm="row" layout-fill>
-                <md-button aria-label="Reduce to Set Size" md-ink-ripple flex class="md-button md-raised md-accent" md-ripple-size="auto" ng-click="reloadWithLimit()" ng-disabled="state.reduceCommentsSize == comments.length">
-                    <i class="material-icons inline-icon">cached</i>
-                    Reload With <span ng-bind="formatNumber(state.settings.reduceCommentsSize);"></span>
-                </md-button>
-                <md-button aria-label="Reload All" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="reloadWithLimit(0)" ng-disabled="comments.length == totalCommentsSize">
-                    <i class="material-icons inline-icon">cached</i>
-                    Reload All <span ng-bind="formatNumber(totalCommentsSize);"></span>
-                </md-button>
+
+            <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
+                <div flex-gt-xs="25" class="setting-control-container">
+                    <md-checkbox ng-model="state.settings.showEditButtons" class="setting-control"
+                                 aria-label="Hide or show the edit buttons">
+                        Edit Buttons
+                    </md-checkbox>
+                </div>
+                <p flex-gt-xs="75" class="settings-text">Show or hide the edit button on the comments list. Gives a
+                    little extra space to those who are on small screens or are not going to edit the comment text.</p>
             </div>
-        </div>
 
-        <br>
-        <md-divider></md-divider>
-
-        <h3 class="settings-header yellow-color">Shuffle Comment Bank</h3>
-        <div layout-xs="column" layout-sm="row"  layout-gt-sm="row" layout-fill>
-            <div flex-gt-sm="25" class="setting-control-container">
-                <md-button aria-label="Reload All" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="shuffleCommentBank();">
-                    <i class="material-icons inline-icon">shuffle</i>
-                    Shuffle All
-                </md-button>
+            <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
+                <div flex-gt-xs="25" class="setting-control-container">
+                    <md-checkbox ng-model="state.settings.showTags" class="setting-control"
+                                 aria-label="Hide or show the tags">
+                        Tags
+                    </md-checkbox>
+                </div>
+                <p flex-gt-xs="75" class="settings-text">Show or hide the tags button and indicator on the comments
+                    list. Gives a little extra space to those who are on small screens or are not going to look at or
+                    edit tags.</p>
             </div>
-        <p flex-gt-sm="75" class="settings-text">If you don't like the order of the comments for some reason you can shuffle them all here. I'm not really sure why you would need to do this. Maybe you want to see different comments on the first page of Single Student? But why wouldn't you just change the page if you wanted to see different comments, that seems easier.</p>
-        </div>
 
-        <md-divider></md-divider>
-        <div class="center-aligned yellow-color close-modal-elements">
-            <md-button ng-click="closeDialog()">Close Settings</md-button>
-        </div>
+            <br>
+            <md-divider></md-divider>
 
+            <div>
+                <h3 class="settings-header" ng-style="state.theme.highlightColor">Resize Comments</h3>
+                <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
+                    <div flex-gt-xs="25" class="setting-control-container" class="setting-control-container">
+                        <md-input-container class="settings-number-input setting-control">
+                            <label>Target Size</label>
+                            <input type="number" ng-model="state.settings.reduceCommentsSize" min="1"
+                                   max="{{totalCommentsSize}}">
+                        </md-input-container>
+
+                    </div>
+                    <p flex-gt-xs="75" class="settings-text">If searching is slow, generally for mobile users with
+                        limited computing power, you can load the page with only some of the comments to improve
+                        performance. This is done by default for users on mobile devices. You may reload with any number
+                        of comments from 1 to <span ng-bind="formatNumber(totalCommentsSize)"></span>.<br><br>
+                        Current size: <span ng-bind="formatNumber(comments.length);"></span> / <span
+                                ng-bind="formatNumber(totalCommentsSize);"></span> (<span
+                                ng-bind="(comments.length / totalCommentsSize * 100).toFixed(0);"></span>%)
+                    </p>
+                </div>
+                <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
+                    <md-button aria-label="Reduce to Set Size" md-ink-ripple flex class="md-button md-raised md-accent"
+                               md-ripple-size="auto" ng-click="reloadWithLimit()"
+                               ng-disabled="state.reduceCommentsSize == comments.length">
+                        <i class="material-icons inline-icon">cached</i>
+                        Reload With <span ng-bind="formatNumber(state.settings.reduceCommentsSize);"></span>
+                    </md-button>
+                    <md-button aria-label="Reload All" md-ink-ripple flex class="md-button md-raised md-primary"
+                               md-ripple-size="auto" ng-click="reloadWithLimit(0)"
+                               ng-disabled="comments.length == totalCommentsSize">
+                        <i class="material-icons inline-icon">cached</i>
+                        Reload All <span ng-bind="formatNumber(totalCommentsSize);"></span>
+                    </md-button>
+                </div>
+            </div>
+
+            <br>
+            <md-divider></md-divider>
+
+            <h3 class="settings-header" ng-style="state.theme.highlightColor">Shuffle Comment Bank</h3>
+            <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
+                <div flex-gt-sm="25" class="setting-control-container">
+                    <md-button aria-label="Reload All" md-ink-ripple flex class="md-button md-raised md-primary"
+                               md-ripple-size="auto" ng-click="shuffleCommentBank();">
+                        <i class="material-icons inline-icon">shuffle</i>
+                        Shuffle All
+                    </md-button>
+                </div>
+                <p flex-gt-sm="75" class="settings-text">If you don't like the order of the comments for some reason you
+                    can shuffle them all here. I'm not really sure why you would need to do this. Maybe you want to see
+                    different comments on the first page of Single Student? But why wouldn't you just change the page if
+                    you wanted to see different comments, that seems easier.</p>
+            </div>
+
+            <md-divider></md-divider>
+            <div class="center-aligned  close-modal-elements">
+                <md-button ng-click="closeDialog()" class="md-primary">Close Settings</md-button>
+            </div>
+        </md-content>
     </md-dialog-content>
 </md-dialog>

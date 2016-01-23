@@ -524,20 +524,6 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         });
     };
 
-    $scope.showWalkthrough = function() {
-        $mdDialog.show({
-            clickOutsideToClose: true,
-            scope: $scope,        // use parent scope in template
-            preserveScope: true,  // do not forget this if use parent scope
-            templateUrl: '/walkthrough.html',
-            controller: function DialogController($scope, $mdDialog) {
-                $scope.closeDialog = function () {
-                    $mdDialog.hide();
-                };
-            }
-        });
-    };
-
     $scope.changeFilter = function() {
         console.log('changing the filter to ' + $scope.toneFilterSetting);
         //$scope.commentsLoaded = false;

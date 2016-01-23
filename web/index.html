@@ -95,7 +95,7 @@
                                         Powerful live search<br>
                                         Blazing fast multi-student comment building<br>
                                         Customizable pattern-based generation<br>
-                                        Designed for both smartphones and desktops
+                                        Designed for both smartphones and desktops<br>
                                         Save and load<br>
                                     </p>
 
@@ -157,27 +157,27 @@
 
                                     <br><br>
 
-                                    <a href="https://github.com/tkonya/Comment-Breeze" target="_blank">
-                                        <img src="images/OctoMark.png">
-                                    </a>
-
-                                    <br><br><br>
-                                    <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"
-                                       target="_blank"><img alt="Creative Commons License" style="border-width:0"
-                                                            src="https://i.creativecommons.org/l/by-nc/4.0/80x15.png"/></a>
+                                    <!--<a href="https://github.com/tkonya/Comment-Breeze" target="_blank">-->
+                                    <!--<img src="images/OctoMark.png">-->
+                                    <!--</a>-->
 
 
                                     <h3>
                                         <span ng-style="state.theme.highlightColor" class="cursor-pointer"
                                               ng-click="showDialog('/privacy-policy.html')">Privacy Policy</span> -
+
                                         <a ng-style="state.theme.highlightColor" ng-href="/classic.html" target="_blank"
-                                           class="cursor-pointer">Old Site</a> -
-                                        <span ng-style="state.theme.highlightColor" class="cursor-pointer" ng-click="">FAQ</span>
+                                           class="cursor-pointer">Classic Version</a> -
+
+                                        <a ng-style="state.theme.highlightColor" class="cursor-pointer"
+                                           ng-href="https://github.com/tkonya/Comment-Breeze" target="_blank">GitHub</a>
+                                        -
+
+                                        <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"
+                                           target="_blank"><img alt="Creative Commons License" style="border-width:0"
+                                                                src="https://i.creativecommons.org/l/by-nc/4.0/80x15.png"/></a>
                                     </h3>
 
-                                    <!--<img src="images/Logo-Black-128px-TM.png" height="40px">-->
-
-                                    <!--</p>-->
 
                                     <br><br>
                                 </md-content>
@@ -200,16 +200,17 @@
                                 <span>Color Themes</span>
                                 <span flex></span>
                                 <md-button ng-click="showColorThemes = false;">
+                                    <i class="material-icons inline-icon">done</i>
                                     Done
                                 </md-button>
                             </md-toolbar>
                             <md-content
                                     class="control-card-content md-background md-background md-hue-3 center-aligned">
-                                <md-button ng-click="setTheme('ness-bee')">Default</md-button>
-                                <md-button ng-click="setTheme('default-light')">Default Light</md-button>
-                                <md-button ng-click="setTheme('white')">White</md-button>
-                                <md-button ng-click="setTheme('matrix')">Matrix</md-button>
-                                <md-button ng-click="setTheme('blue-pink')">Blue Pink</md-button>
+                                <md-button class="md-primary" ng-click="setTheme('darkula')">Darkula</md-button>
+                                <md-button class="md-primary" ng-click="setTheme('breezy')">Breezy</md-button>
+                                <md-button class="md-primary" ng-click="setTheme('grass')">Grass</md-button>
+                                <md-button class="md-primary" ng-click="setTheme('prince')">Prince</md-button>
+                                <md-button class="md-primary" ng-click="setTheme('matrix')">Matrix</md-button>
                             </md-content>
                         </section>
 
@@ -222,10 +223,6 @@
                                     <i class="material-icons inline-icon" ng-show="!showGlobalDetails">keyboard_arrow_down</i>
                                     <span class="md-title">Global Details</span>
                                 </md-button>
-
-                                <!--<h1>-->
-                                <!--&lt;!&ndash;<span>Global Details</span>&ndash;&gt;-->
-                                <!--</h1>-->
 
                                 <span flex hide-xs hide-sm></span>
 
@@ -257,7 +254,7 @@
                                             </md-button>
                                         </md-menu-item>
                                         <md-menu-item>
-                                            <md-button ng-click="colorThemesVisibility(true)"
+                                            <md-button ng-click="toggleColorThemesVisibility()"
                                                        class="md-primary md-hue-1">
                                                 <i class="material-icons inline-icon">color_lens</i>
                                                 <span>Themes</span>
@@ -657,42 +654,44 @@
                                                 </form>
                                             </div>
 
-                                            <md-radio-group ng-model="student.gender"
-                                                            class="md-primary radio-button-group all-students-gender-radios"
-                                                            layout="row"
-                                                            aria-label="Student Gender"
-                                                            ng-change="changeStudentGender(student);">
-                                                <md-radio-button ng-model="student.gender" value="male" selected>
-                                                    M
-                                                    <md-tooltip
-                                                            ng-show="state.settings.showTooltips && student.gender != 'male'"
-                                                            class="tooltip">
-                                                        Set default gender to male
-                                                    </md-tooltip>
-                                                </md-radio-button>
-                                                <md-radio-button ng-model="student.gender" value="female">
-                                                    F
-                                                    <md-tooltip
-                                                            ng-show="state.settings.showTooltips && student.gender != 'female'"
-                                                            class="tooltip">
-                                                        Set default gender to female
-                                                    </md-tooltip>
-                                                </md-radio-button>
-                                                <md-radio-button ng-disabled="!state.settings.enableNeutralGender"
-                                                                 ng-model="student.gender" value="neutral">
-                                                    N
-                                                    <md-tooltip
-                                                            ng-show="state.settings.showTooltips && !state.enableNeutralGender"
-                                                            class="tooltip">
-                                                        Neutral gender can be enabled on the settings page
-                                                    </md-tooltip>
-                                                    <md-tooltip
-                                                            ng-show="state.settings.showTooltips && state.enableNeutralGender"
-                                                            class="tooltip">
-                                                        Set default gender to neutral
-                                                    </md-tooltip>
-                                                </md-radio-button>
-                                            </md-radio-group>
+                                            <div class="all-students-gender-radios">
+                                                <md-radio-group ng-model="student.gender"
+                                                                class="md-primary radio-button-group"
+                                                                layout="row"
+                                                                aria-label="Student Gender"
+                                                                ng-change="changeStudentGender(student);">
+                                                    <md-radio-button ng-model="student.gender" value="male" selected>
+                                                        M
+                                                        <md-tooltip
+                                                                ng-show="state.settings.showTooltips && student.gender != 'male'"
+                                                                class="tooltip">
+                                                            Set default gender to male
+                                                        </md-tooltip>
+                                                    </md-radio-button>
+                                                    <md-radio-button ng-model="student.gender" value="female">
+                                                        F
+                                                        <md-tooltip
+                                                                ng-show="state.settings.showTooltips && student.gender != 'female'"
+                                                                class="tooltip">
+                                                            Set default gender to female
+                                                        </md-tooltip>
+                                                    </md-radio-button>
+                                                    <md-radio-button ng-disabled="!state.settings.enableNeutralGender"
+                                                                     ng-model="student.gender" value="neutral">
+                                                        N
+                                                        <md-tooltip
+                                                                ng-show="state.settings.showTooltips && !state.enableNeutralGender"
+                                                                class="tooltip">
+                                                            Neutral gender can be enabled on the settings page
+                                                        </md-tooltip>
+                                                        <md-tooltip
+                                                                ng-show="state.settings.showTooltips && state.enableNeutralGender"
+                                                                class="tooltip">
+                                                            Set default gender to neutral
+                                                        </md-tooltip>
+                                                    </md-radio-button>
+                                                </md-radio-group>
+                                            </div>
 
                                             <div flex>
                                                 <div ng-show="student.pattern && student.pattern_type == 'global'"
@@ -717,7 +716,7 @@
                                             <md-menu class="menu" flex-order-xs="-1">
                                                 <md-button
                                                         ng-click="$mdOpenMenu($event); buildWholeStudentComment(student);"
-                                                        class="full-width">
+                                                        class="full-width md-primary md-hue-1">
                                                     <i class="material-icons inline-icon">menu</i>
                                                     <span>Menu</span>
                                                 </md-button>
@@ -992,21 +991,24 @@
                                             ng-repeat="comment in comments | filter:searchComments | limitTo : commentViewLimit : commentViewBegin">
                                             <td ng-click="showEditToneDialog(comment)"
                                                 ng-show="state.settings.showTone">
-                                                <span ng-show="comment.pos_neg == -1" class="negative edit-tone">
+                                                <span ng-show="comment.pos_neg == -1"
+                                                      ng-style="state.theme.negativeColor" class="edit-tone">
                                                     <i class="material-icons">thumb_down</i>
                                                     <md-tooltip ng-show="state.settings.showTooltips" class="tooltip"
                                                                 md-direction="right">
                                                         This comment has been rated as negative, click to edit
                                                     </md-tooltip>
                                                 </span>
-                                                <span ng-show="comment.pos_neg == 0" class="neutral edit-tone">
+                                                <span ng-show="comment.pos_neg == 0" ng-style="state.theme.neutralColor"
+                                                      class="edit-tone">
                                                     <i class="material-icons">thumbs_up_down</i>
                                                     <md-tooltip ng-show="state.settings.showTooltips" class="tooltip"
                                                                 md-direction="right">
                                                         This comment has been rated as neutral, click to edit
                                                     </md-tooltip>
                                                 </span>
-                                                <span ng-show="comment.pos_neg == 1" class="positive edit-tone">
+                                                <span ng-show="comment.pos_neg == 1"
+                                                      ng-style="state.theme.positiveColor" class="edit-tone">
                                                     <i class="material-icons">thumb_up</i>
                                                     <md-tooltip ng-show="state.settings.showTooltips" class="tooltip"
                                                                 md-direction="right">
@@ -1014,7 +1016,7 @@
                                                     </md-tooltip>
                                                 </span>
                                                 <span ng-show="!comment.pos_neg && comment.pos_neg != 0"
-                                                      class="unrated edit-tone">
+                                                      ng-style="state.theme.unratedColor" class="edit-tone">
                                                     <i class="material-icons">rate_review</i>
                                                     <md-tooltip ng-show="state.settings.showTooltips" class="tooltip"
                                                                 md-direction="right">
@@ -1023,14 +1025,15 @@
                                                 </span>
                                             </td>
                                             <td ng-click="showTagEditDialog(comment)" ng-show="state.settings.showTags">
-                                                <span ng-show="comment.hasOwnProperty('tags')" class="edit-tone">
+                                                <span ng-show="comment.hasOwnProperty('tags')" class="cursor-pointer">
                                                 <i class="material-icons">label</i>
                                                 <md-tooltip ng-show="state.settings.showTooltips" class="tooltip"
                                                             md-direction="right">
                                                     This comment has tags, click to add or remove
                                                 </md-tooltip>
                                                 </span>
-                                                <span ng-hide="comment.hasOwnProperty('tags')" class="empty-tag">
+                                                <span ng-hide="comment.hasOwnProperty('tags')" class="cursor-pointer"
+                                                      ng-style="state.theme.unratedColor">
                                                 <i class="material-icons">label_outline</i>
                                                 <md-tooltip ng-show="state.settings.showTooltips" class="tooltip"
                                                             md-direction="right">
@@ -1073,16 +1076,18 @@
                                         <div>
                                             <div align="right">
                                                 <button class="md-button page-buttons" md-ink-ripple
-                                                        ng-show="totalCommentPages > 1 && currentCommentsPage > 1"
+                                                        ng-disabled="currentCommentsPage < 2 || currentCommentsPage == totalCommentPages"
                                                         ng-click="changeCommentsPage(currentCommentsPage - 1)">
-                                                    &#9664;</button>
+                                                    <i class="material-icons inline-icon">keyboard_arrow_left</i>
+                                                </button>
                                                 <span style="font-size: smaller;">Page <span
                                                         ng-bind="currentCommentsPage"></span> of <span
                                                         ng-bind="totalCommentPages"></span></span>
                                                 <button class="md-button page-buttons" md-ink-ripple
-                                                        ng-show="totalCommentPages > 1 && currentCommentsPage < totalCommentPages"
+                                                        ng-disabled="totalCommentPages < 2 || currentCommentsPage >= totalCommentPages"
                                                         ng-click="changeCommentsPage(currentCommentsPage + 1)">
-                                                    &#9654;</button>
+                                                    <i class="material-icons inline-icon">keyboard_arrow_right</i>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -1243,9 +1248,9 @@
 
                             <md-content class="comment-bank-content md-background md-hue-3" layout="column" layout-fill>
 
-                                <md-subheader class="md-background md-hue-3">
-                                    <span ng-show="editingStudent == null">Now Editing Default Pattern</span>
-                                    <span ng-hide="editingStudent == null">Now Editing Individual Pattern for {{editingStudent.name}}</span>
+                                <md-subheader class="md-primary md-background md-hue-3">
+                                    <span ng-show="editingStudent == null">Now editing default pattern</span>
+                                    <span ng-hide="editingStudent == null">Now editing individual pattern for {{editingStudent.name}}</span>
                                 </md-subheader>
 
                                 <div layout-xs="column" layout-sm="column" layout-md="row" layout-gt-md="row"

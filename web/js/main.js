@@ -1,10 +1,87 @@
 var commentApp = angular.module('commentApp', ['angular-clipboard', 'ngMaterial'])
     .config(function($mdThemingProvider) {
-        $mdThemingProvider.theme('default')
-            .primaryPalette('amber')
+
+        $mdThemingProvider.theme('darkula')
+            .primaryPalette('amber', {
+                'default': '700', // toolbars / card headers
+                'hue-1': '500', // non-disabled menu items, menu button on individual students
+                'hue-2': '400',
+                'hue-3': '600'
+            })
             .accentPalette('deep-purple')
-            .backgroundPalette('grey').dark();
+            .backgroundPalette('grey', {
+                'default': '800', // default, menu box
+                'hue-1': '900', // background background
+                'hue-2': '700', // no idea what is wrong with this hue
+                'hue-3': '800' // cards background
+            }).dark();
+
+
+        $mdThemingProvider.theme('breezy')
+            .primaryPalette('blue', {
+                'default': '500', // toolbars / card headers
+                'hue-1': '700', // non-disabled menu items, menu button on individual students
+                'hue-2': '400',
+                'hue-3': '600'
+            })
+            .accentPalette('green')
+            .backgroundPalette('blue-grey', {
+                'default': '100', // default, menu box
+                'hue-1': '50', // background background
+                'hue-2': '800', // no idea what is wrong with this hue
+                'hue-3': '200' // cards background
+            });
+
+
+        $mdThemingProvider.theme('prince')
+            .primaryPalette('deep-purple', {
+                'default': '500', // toolbars / card headers
+                'hue-1': '700', // non-disabled menu items, menu button on individual students
+                'hue-2': '400',
+                'hue-3': '600'
+            })
+            .accentPalette('indigo')
+            .backgroundPalette('purple', {
+                'default': '100', // default, menu box
+                'hue-1': '200', // background background
+                'hue-2': '800', // no idea what is wrong with this hue
+                'hue-3': '100' // cards background
+            });
+
+        $mdThemingProvider.theme('matrix')
+            .primaryPalette('green', {
+                'default': '900', // toolbars / card headers
+                'hue-1': '700', // non-disabled menu items, menu button on individual students
+                'hue-2': '400',
+                'hue-3': '600'
+            })
+            .accentPalette('green')
+            .backgroundPalette('grey', {
+                'default': '900', // default, menu box
+                'hue-1': '900', // background background
+                'hue-2': '900', // no idea what is wrong with this hue
+                'hue-3': '900' // cards background
+            }).dark();
+
+        $mdThemingProvider.theme('grass')
+            .primaryPalette('green', {
+                'default': 'A700', // toolbars / card headers
+                'hue-1': '800', // non-disabled menu items, menu button on individual students
+                'hue-2': '400',
+                'hue-3': '600'
+            })
+            .accentPalette('blue')
+            .backgroundPalette('green', {
+                'default': '50', // default, menu box
+                'hue-1': '50', // background background
+                'hue-2': '50', // no idea what is wrong with this hue
+                'hue-3': '100' // cards background
+            });
+
+
+        $mdThemingProvider.alwaysWatchTheme(true);
     });
+
 
 commentApp.directive('onReadFile', function ($parse) {
     return {
@@ -39,7 +116,7 @@ commentApp.directive('chooseFileButton', function() {
     };
 });
 
-commentApp.controller('CommentController', function($scope, $http, $mdToast, $mdDialog, $mdMedia, $document, $location, $timeout) {
+commentApp.controller('CommentController', function ($scope, $http, $mdToast, $mdDialog, $mdMedia, $document, $location) {
 
     // comments
     $scope.comments = [];
@@ -74,8 +151,17 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
                 showCommonTags: false,
                 newStudentFill: 'random',
                 useSmartSearch: false
+            },
+            theme: {
+                colorTheme: 'darkula'
             }
         };
+
+        // mobile
+        $scope.isMobile = false;
+
+        // themes
+        $scope.showColorThemes = false;
 
         // single student search and filter
         $scope.searchComments = '';
@@ -117,7 +203,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
     };
 
 
-    $scope.getComments = function(showAllLoadedMessage) {
+    $scope.getComments = function (showLoadedMessage) {
 
         var commentsToGet = $scope.commentSizeToGet;
 
@@ -134,22 +220,16 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
 
         $http.get('/rest/comments?size=' + commentsToGet).
             success(function (data) {
-                //console.log('returned success');
-                //console.log(data.comments.length + ' comments received');
 
                 $scope.comments = data.comments;
                 $scope.totalCommentsSize = data.total_size;
                 $scope.commonTags = data.common_tags;
 
-                if ($scope.selectedTab == $scope.tabIndexes.settings && $scope.comments.length < $scope.totalCommentsSize) {
-                    $scope.illToastToThat('Reloaded with ' + $scope.formatNumber($scope.comments.length) + ' comments');
+            if (showLoadedMessage) {
+                if ($scope.comments.length == $scope.totalCommentsSize) {
+                    $scope.illToastToThat('Loaded full comment set');
                 } else {
-                    if (!data.all_comments_loaded) {
-                        $timeout(function() {
-                            $scope.illToastToThat($scope.formatNumber($scope.comments.length) + ' comments loaded - see settings tab to change');
-                        }, 150);
-                    } else if (showAllLoadedMessage) {
-                        $scope.illToastToThat('Full comment set loaded');
+                    $scope.illToastToThat('Loaded ' + $scope.formatNumber($scope.comments.length) + ' comments');
                     }
                 }
 
@@ -159,6 +239,10 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
             error(function () {
                 $scope.illToastToThat('Error loading comments');
             });
+    };
+
+    $scope.toggleColorThemesVisibility = function () {
+        $scope.showColorThemes = !$scope.showColorThemes;
     };
 
     $scope.addComment = function(comment, showToast) {
@@ -457,9 +541,7 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
                 $scope.closeDialog = function () {
                     $mdDialog.hide();
                 };
-                $scope.saveDialog = function(tone) {
-
-                    $scope.editingComment.pos_neg = tone;
+                $scope.saveDialog = function () {
 
                     //console.log('in saveDialog');
                     $mdDialog.hide();
@@ -491,124 +573,12 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         });
     };
 
-    $scope.showFinishedComments = function() {
+    $scope.showDialog = function (location) {
         $mdDialog.show({
             clickOutsideToClose: true,
             scope: $scope,        // use parent scope in template
             preserveScope: true,  // do not forget this if use parent scope
-            templateUrl: '/finished-comments.html',
-            controller: function DialogController($scope, $mdDialog) {
-                $scope.closeDialog = function () {
-                    $mdDialog.hide();
-                };
-            }
-        });
-    };
-
-    $scope.showSettings = function() {
-        $mdDialog.show({
-            clickOutsideToClose: true,
-            scope: $scope,        // use parent scope in template
-            preserveScope: true,  // do not forget this if use parent scope
-            templateUrl: '/settings.html',
-            controller: function DialogController($scope, $mdDialog) {
-                $scope.closeDialog = function () {
-                    $mdDialog.hide();
-                };
-            }
-        });
-    };
-
-    $scope.showSearchSettings = function() {
-        $mdDialog.show({
-            clickOutsideToClose: true,
-            scope: $scope,        // use parent scope in template
-            preserveScope: true,  // do not forget this if use parent scope
-            templateUrl: '/search-settings.html',
-            controller: function DialogController($scope, $mdDialog) {
-                $scope.closeDialog = function () {
-                    $mdDialog.hide();
-                };
-            }
-        });
-    };
-
-    $scope.showPatternSettings = function() {
-        $mdDialog.show({
-            clickOutsideToClose: true,
-            scope: $scope,        // use parent scope in template
-            preserveScope: true,  // do not forget this if use parent scope
-            templateUrl: '/pattern-settings.html',
-            controller: function DialogController($scope, $mdDialog) {
-                $scope.closeDialog = function () {
-                    $mdDialog.hide();
-                };
-            }
-        });
-    };
-
-    $scope.showWalkthrough = function() {
-        $mdDialog.show({
-            clickOutsideToClose: true,
-            scope: $scope,        // use parent scope in template
-            preserveScope: true,  // do not forget this if use parent scope
-            templateUrl: '/walkthrough.html',
-            controller: function DialogController($scope, $mdDialog) {
-                $scope.closeDialog = function () {
-                    $mdDialog.hide();
-                };
-            }
-        });
-    };
-
-    $scope.showBuildHelp = function() {
-        $mdDialog.show({
-            clickOutsideToClose: true,
-            scope: $scope,        // use parent scope in template
-            preserveScope: true,  // do not forget this if use parent scope
-            templateUrl: '/build-help.html',
-            controller: function DialogController($scope, $mdDialog) {
-                $scope.closeDialog = function () {
-                    $mdDialog.hide();
-                };
-            }
-        });
-    };
-
-    $scope.showSearchHelp = function() {
-        $mdDialog.show({
-            clickOutsideToClose: true,
-            scope: $scope,        // use parent scope in template
-            preserveScope: true,  // do not forget this if use parent scope
-            templateUrl: '/search-help.html',
-            controller: function DialogController($scope, $mdDialog) {
-                $scope.closeDialog = function () {
-                    $mdDialog.hide();
-                };
-            }
-        });
-    };
-
-    $scope.showPatternsHelp = function() {
-        $mdDialog.show({
-            clickOutsideToClose: true,
-            scope: $scope,        // use parent scope in template
-            preserveScope: true,  // do not forget this if use parent scope
-            templateUrl: '/patterns-help.html',
-            controller: function DialogController($scope, $mdDialog) {
-                $scope.closeDialog = function () {
-                    $mdDialog.hide();
-                };
-            }
-        });
-    };
-
-    $scope.showPrivacyPolicy = function() {
-        $mdDialog.show({
-            clickOutsideToClose: true,
-            scope: $scope,        // use parent scope in template
-            preserveScope: true,  // do not forget this if use parent scope
-            templateUrl: '/privacy-policy.html',
+            templateUrl: location,
             controller: function DialogController($scope, $mdDialog) {
                 $scope.closeDialog = function () {
                     $mdDialog.hide();
@@ -984,11 +954,11 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
 
     $scope.reloadWithLimit = function(limit) {
         if (limit != null) {
-            $location.search('limit', limit);
+            $scope.commentSizeToGet = 0;
         } else {
-            $location.search('limit', $scope.state.settings.reduceCommentsSize);
+            $scope.commentSizeToGet = $scope.state.settings.reduceCommentsSize;
         }
-        location.reload();
+        $scope.getComments(true);
     };
 
     $scope.formatNumber = function(number) {
@@ -1098,8 +1068,8 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
 
     $scope.regenerateAllSmartSearch = function() {
         //console.log('Regenerating ' + $scope.state.global_pattern.length + ' searches');
-        for (var i = 0; i < $scope.state.global_pattern.length; ++i) {
-            $scope.state.global_pattern[i].found_comment = $scope.getSmartSearchResult($scope.state.global_pattern[i]).found_comment;
+        for (var i = 0; i < $scope.state.editingPattern.length; ++i) {
+            $scope.state.editingPattern[i].found_comment = $scope.getSmartSearchResult($scope.state.global_pattern[i]).found_comment;
         }
         $scope.buildAllSmartSearchComments();
     };
@@ -1121,13 +1091,17 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         if ($mdMedia('xs')) {
             $scope.commentSizeToGet = 2000;
             $scope.state.settings.showTooltips = false;
-            //$scope.showTags = false;\
-            //$scope.showHints = true;
+            $scope.state.settings.showTags = false;
             $scope.state.settings.showEditButtons = false;
+            $scope.state.settings.showTone = false;
+            $scope.isMobile = true;
         } else if ($mdMedia('sm')) {
             $scope.state.settings.showTooltips = false;
+            $scope.state.settings.showEditButtons = false;
             //$scope.showHints = true;
             $scope.commentSizeToGet = 6000;
+            //$scope.showHints = true;
+            $scope.isMobile = true;
         }
     };
 
@@ -1212,7 +1186,8 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
             .cancel('Cancel');
         $mdDialog.show(confirm).then(function() {
             $scope.setInitialApplicationState();
-            $scope.illToastToThat('Application reset')
+            $scope.setMobileSettings();
+            $scope.illToastToThat('Application reset');
         }, function() {
 
         });
@@ -1256,40 +1231,106 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         downloadLink[0].click();
     };
 
-    //$scope.saveComments = function () {
-    //    $scope.toJSON = '';
-    //    $scope.toJSON = angular.toJson($scope.comments, false);
-    //    var blob = new Blob([$scope.toJSON], { type:"application/json;charset=utf-8;" });
-    //    var downloadLink = angular.element('<a></a>');
-    //    downloadLink.attr('href', window.URL.createObjectURL(blob));
-    //
-    //    // all this just to get the date
-    //    var today = new Date();
-    //    var dd = today.getDate();
-    //    var mm = today.getMonth()+1; //January is 0
-    //    var yyyy = today.getFullYear();
-    //    if(dd<10) {
-    //        dd='0'+dd
-    //    }
-    //    if(mm<10) {
-    //        mm='0'+mm
-    //    }
-    //    today = yyyy+'-'+mm+'-'+dd;
-    //
-    //    var fileName;
-    //    if ($scope.state.class_name != '') {
-    //        fileName = 'Comment Breeze ' + $scope.state.class_name + ' ' + today + '.txt';
-    //    } else {
-    //        fileName = 'Comment Breeze ' + today + '.txt';
-    //    }
-    //
-    //    downloadLink.attr('download', fileName);
-    //    downloadLink[0].click();
-    //};
-
     $scope.loadState = function (state) {
-        //console.log('loading state: ' + state);
         $scope.state = JSON.parse(state);
+    };
+
+    $scope.getTheme = function () {
+        var params = $location.search();
+        if (params.theme) {
+            $scope.setTheme(params.theme);
+        } else {
+            $scope.setTheme('darkula');
+        }
+    };
+
+    $scope.setTheme = function (theme) {
+
+        if (!theme) {
+            theme = 'darkula';
+        }
+
+        $scope.state.theme.colorTheme = theme;
+
+        // only store the theme in the url if it's not the default
+        if (theme == 'darkula') {
+            $location.search('theme', null);
+        } else {
+            $location.search('theme', theme.toString());
+        }
+
+        var primaryColor; // used for highlighting text, usually should be just the md-primary color
+        var altBackgroundColor; // used on alternating rows, slightly darker or lighter than background hue-3
+        var positiveColor; // color for positive comments icon
+        var negativeColor; // color for negative comments icon
+        var neutralColor; // color for neutral comments icon
+        var unratedColor; // color for unrated comments
+
+        // still have to set some colors that we want in ways angular material palettes don't support
+        if (theme == 'darkula') {
+            primaryColor = '#FFA000';
+            altBackgroundColor = '#393939';
+            positiveColor = '#FFA000';
+            negativeColor = '#673AB7';
+            neutralColor = '#A9B7C6';
+            unratedColor = 'black';
+        } else if (theme == 'breezy') {
+            primaryColor = '#1976D2';
+            altBackgroundColor = '#9eabb1';
+            positiveColor = '#1976D2';
+            negativeColor = '#F44336';
+            neutralColor = '#9E9E9E';
+            unratedColor = '#212121';
+        } else if (theme == 'prince') {
+            primaryColor = '#673AB7';
+            altBackgroundColor = '#B39DDB';
+            positiveColor = '#7B1FA2';
+            negativeColor = '#EC407A';
+            neutralColor = '#9575CD';
+            unratedColor = '#78909C';
+        } else if (theme == 'matrix') {
+            primaryColor = '#4CAF50';
+            altBackgroundColor = '#212121';
+            positiveColor = '#4CAF50';
+            negativeColor = '#4CAF50';
+            neutralColor = '#4CAF50';
+            unratedColor = '#4CAF50';
+        } else if (theme == 'grass') {
+            primaryColor = '#2E7D32';
+            altBackgroundColor = '#A5D6A7';
+            positiveColor = '#42A5F5';
+            negativeColor = '#0D47A1';
+            neutralColor = '#78909C';
+            unratedColor = '#455A64';
+        }
+
+        $scope.state.theme.highlightColor = {
+            'color': primaryColor
+        };
+        $scope.state.theme.altBackgroundColor = {
+            'background-color': altBackgroundColor
+        };
+        $scope.state.theme.positiveColor = {
+            'color': positiveColor
+        };
+        $scope.state.theme.negativeColor = {
+            'color': negativeColor
+        };
+        $scope.state.theme.neutralColor = {
+            'color': neutralColor
+        };
+        $scope.state.theme.unratedColor = {
+            'color': unratedColor
+        };
+
+    };
+
+    $scope.getAltBackgroundColor = function (even) {
+        if (even) {
+            return $scope.state.theme.altBackgroundColor;
+        } else {
+            return {};
+        }
     };
 
     $scope.setInitialApplicationState();
@@ -1297,5 +1338,6 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
     $scope.setTab();
     $scope.setMobileSettings();
     $scope.getComments();
+    $scope.getTheme();
 
 });

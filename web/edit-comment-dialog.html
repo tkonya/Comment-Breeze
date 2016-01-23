@@ -1,6 +1,6 @@
-<md-dialog flex="80">
+<md-dialog flex="80" md-theme="{{ state.theme.colorTheme }}">
     <md-dialog-content style="padding: 2em;">
-        <h2 class="yellow-color">
+        <h2 ng-style="state.theme.highlightColor">
             <span>Edit Comment
                 <md-tooltip class="tooltip" ng-show="showTooltips">
                     Comment ID <span ng-bind="editingComment.comment_id"></span>

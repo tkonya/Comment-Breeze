@@ -1,44 +1,55 @@
-<md-dialog flex="90">
-    <md-dialog-content style="padding: 2em;">
-        <div class="center-aligned yellow-color">
-            <h2>Search</h2>
-        </div>
+<md-dialog flex="90" md-theme="{{ state.theme.colorTheme }}">
+    <md-dialog-content class="dialog-modal">
+        <md-content>
+            <div class="center-aligned ">
+                <h2 ng-style="state.theme.highlightColor">Search</h2>
+            </div>
 
-        <h4 class="yellow-color">Prerequisites:</h4>
-        <p>
-            Without any students added the search will only allow you to view, rate and tag comments.
-            If you want to build report card comments you need to start on the Build tab.
-            Add at least one student there and then click their menu and go to "Edit w/ Search".
-        </p>
+            <h4 ng-style="state.theme.highlightColor">Prerequisites:</h4>
+            <p>
+                Without any students added the search will only allow you to view, rate and tag comments.
+                If you want to build report card comments you need to start on the Build tab.
+                Add at least one student there and then click their menu and go to "Edit w/ Search".
+            </p>
 
-        <h4 class="yellow-color">Finding a Comment:</h4>
-        <p>
-            Search for a comment you would like to add by typing a word or short phrase on the "Search Comments" line above the list of comments.
-            The search targets both the comment text and the tags, so if you want to find comments tagged with "writing", you can just search for that and comments tagged with "writing" will be returned, even if "writing" is not in the comment text.
-            Click the comment text in the list to add it to your comments.
-            If you are looking for a comment with a certain tone you can select that in the box to the right of the search.
-            Searching may be slow for mobile users or users with limited processing power (you have a crappy computer).
-            Setting comments per page at the minimum value can help.
-        </p>
+            <h4 ng-style="state.theme.highlightColor">Finding a Comment:</h4>
+            <p>
+                Search for a comment you would like to add by typing a word or short phrase on the "Search Comments"
+                line above the list of comments.
+                The search targets both the comment text and the tags, so if you want to find comments tagged with
+                "writing", you can just search for that and comments tagged with "writing" will be returned, even if
+                "writing" is not in the comment text.
+                Click the comment text in the list to add it to your comments.
+                If you are looking for a comment with a certain tone you can select that in the box to the right of the
+                search.
+                Searching may be slow for mobile users or users with limited processing power (you have a crappy
+                computer).
+                Setting comments per page at the minimum value can help.
+            </p>
 
-        <h4 class="yellow-color">Editing Your Comment:</h4>
-        <p>
-            Edit comment manually as needed or use the shuffle button to scramble the order of the sentences in it.<br><br>
-            Please remember that the gendered pronoun fixing is not perfect due to the male equivalent of "her" being either "him" or "his" and the site just guessing which one it is supposed to be. Proofreading is strongly advised.</p>
+            <h4 ng-style="state.theme.highlightColor">Editing Your Comment:</h4>
+            <p>
+                Edit comment manually as needed or use the shuffle button to scramble the order of the sentences in
+                it.<br><br>
+                Please remember that the gendered pronoun fixing is not perfect due to the male equivalent of "her"
+                being either "him" or "his" and the site just guessing which one it is supposed to be. Proofreading is
+                strongly advised.</p>
             When you're done adding comments here press the "Done Editing" button at the upper right. If you don't like the changes you made you can press "Cancel Editing" and your changes will not be saved to your student.
 
-        <h4 class="yellow-color">Rating and Editing Comments:</h4>
-        <p>
-            Anybody can set the tone of a comment in the list by clicking the icon to the left of it.
-            This can help you and other users organize this list better.
-            Anybody may also add or remove tags.
-            If you have the editing password (basically if I know you in real life) then you can click the icon to the right to edit the text.
-            If you don't have the editing password you can still flag a comment for attention if there is something wrong with it.
-        </p>
+            <h4 ng-style="state.theme.highlightColor">Rating and Editing Comments:</h4>
+            <p>
+                Anybody can set the tone of a comment in the list by clicking the icon to the left of it.
+                This can help you and other users organize this list better.
+                Anybody may also add or remove tags.
+                If you have the editing password (basically if I know you in real life) then you can click the icon to
+                the right to edit the text.
+                If you don't have the editing password you can still flag a comment for attention if there is something
+                wrong with it.
+            </p>
 
-        <div class="center-aligned yellow-color">
-            <md-button ng-click="closeDialog()">OK, I got it</md-button>
-        </div>
-
+            <div class="center-aligned ">
+                <md-button ng-click="closeDialog()" class="md-primary">OK, I got it</md-button>
+            </div>
+        </md-content>
     </md-dialog-content>
 </md-dialog>

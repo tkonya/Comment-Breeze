@@ -1,6 +1,6 @@
-<md-dialog flex="90">
-    <md-dialog-content style="padding: 2em;">
-        <div class="center-aligned yellow-color">
+<md-dialog flex="90" md-theme="{{ state.theme.colorTheme }}">
+    <md-dialog-content class="dialog-modal">
+        <div class="center-aligned ">
             <h2>
                 <span ng-show="state.class_name">All Comments for {{state.class_name}}</span>
                 <span ng-show="!state.class_name">All Comments</span>
@@ -11,10 +11,11 @@
             <label>
                 All Comments
             </label>
-            <textarea ng-model="state.all_student_comments" placeholder="There's nothing here!" class="comment-text-box full-width"></textarea>
+            <textarea ng-model="state.all_student_comments" placeholder="There's nothing here!"
+                      class="almost-full-width"></textarea>
         </md-input-container>
 
-        <div class="center-aligned yellow-color close-modal-elements">
+        <div class="center-aligned  close-modal-elements">
             <md-button aria-label="Copy All Comments" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="illToastToThat('All comments copied to clipboard');" clipboard text="state.all_student_comments">
                 <i class="material-icons inline-icon">content_copy</i>
                 <span>Copy All Comments</span>
