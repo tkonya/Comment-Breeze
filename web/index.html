@@ -82,7 +82,7 @@
 
                                     <p class="paragraphs">
                                         I made this site to help my girlfriend, friends and other ESL teachers build
-                                        report card comments.<br><br>
+                                        report card comments.<br>
                                         If you're an ESL teacher, I hope this makes your life easier!
                                     </p>
 
@@ -119,10 +119,10 @@
                                     <h2 ng-style="state.theme.highlightColor">OK, how do I use it?</h2>
 
                                     <p class="paragraphs">
-                                        Start on the Build tab, is a help button at the upper right with more detailed
-                                        instructions.<br>
+                                        Start on the Build tab, there is a help button at the upper right with detailed
+                                        instructions and tips.<br>
                                         <span ng-show="isMobile">(this may be moved inside the drop down menu on smaller screens)<br></span>
-                                        These have detailed instructions about how each tab works.<br><br>
+                                        <br>
 
                                         <md-button class="md-primary" ng-click="selectedTab = tabIndexes.build">
                                             <i class="material-icons inline-icon">build</i>
@@ -167,8 +167,13 @@
                                               ng-click="showDialog('/privacy-policy.html')">Privacy Policy</span> -
 
                                         <a ng-style="state.theme.highlightColor" ng-href="/classic.html" target="_blank"
-                                           class="cursor-pointer">Classic Version</a> -
-
+                                           class="cursor-pointer">Classic Version</a>
+                                        -
+                                        <span ng-style="state.theme.highlightColor" class="cursor-pointer"
+                                              ng-click="showContactForm()">
+                                            Contact
+                                        </span>
+                                        -
                                         <a ng-style="state.theme.highlightColor" class="cursor-pointer"
                                            ng-href="https://github.com/tkonya/Comment-Breeze" target="_blank">GitHub</a>
                                         -
@@ -176,6 +181,7 @@
                                         <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"
                                            target="_blank"><img alt="Creative Commons License" style="border-width:0"
                                                                 src="https://i.creativecommons.org/l/by-nc/4.0/80x15.png"/></a>
+
                                     </h3>
 
 
@@ -204,14 +210,27 @@
                                     Done
                                 </md-button>
                             </md-toolbar>
-                            <md-content
-                                    class="control-card-content md-background md-background md-hue-3 center-aligned">
-                                <md-button class="md-primary" ng-click="setTheme('darkula')">Darkula</md-button>
-                                <md-button class="md-primary" ng-click="setTheme('breezy')">Breezy</md-button>
-                                <md-button class="md-primary" ng-click="setTheme('grass')">Grass</md-button>
-                                <md-button class="md-primary" ng-click="setTheme('prince')">Prince</md-button>
-                                <md-button class="md-primary" ng-click="setTheme('matrix')">Matrix</md-button>
-                            </md-content>
+                            <div class="center-aligned">
+                                <md-content
+                                        class="control-card-content md-background md-background md-hue-3 center-aligned colors-buttons"
+                                        layout-xs="column" layout-gt-xs="row">
+                                    <md-button class="md-primary" ng-click="setTheme('darkula')"
+                                               ng-disabled="state.theme.colorTheme == 'darkula'">Darkula
+                                    </md-button>
+                                    <md-button class="md-primary" ng-click="setTheme('breezy')"
+                                               ng-disabled="state.theme.colorTheme == 'breezy'">Breezy
+                                    </md-button>
+                                    <md-button class="md-primary" ng-click="setTheme('grass')"
+                                               ng-disabled="state.theme.colorTheme == 'grass'">Grass
+                                    </md-button>
+                                    <md-button class="md-primary" ng-click="setTheme('prince')"
+                                               ng-disabled="state.theme.colorTheme == 'prince'">Prince
+                                    </md-button>
+                                    <md-button class="md-primary" ng-click="setTheme('matrix')"
+                                               ng-disabled="state.theme.colorTheme == 'matrix'">Matrix
+                                    </md-button>
+                                </md-content>
+                            </div>
                         </section>
 
                         <section class="control-card md-whiteframe-5dp md-background md-hue-3">
@@ -221,7 +240,7 @@
                                     <i class="material-icons inline-icon"
                                        ng-show="showGlobalDetails">keyboard_arrow_up</i>
                                     <i class="material-icons inline-icon" ng-show="!showGlobalDetails">keyboard_arrow_down</i>
-                                    <span class="md-title">Global Details</span>
+                                    <span class="md-title">Global <span hide-xs>Details</span></span>
                                 </md-button>
 
                                 <span flex hide-xs hide-sm></span>
@@ -286,7 +305,8 @@
                                 <md-button hide-xs hide-sm ng-click="showDialog('/settings.html');">
                                     <i class="material-icons inline-icon">settings</i>
                                     <span hide-xs>Settings</span>
-                                    <md-tooltip ng-show="state.settings.showTooltips" class="tooltip"
+                                    <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips"
+                                                class="tooltip"
                                                 md-direction="bottom">
                                         Show application settings
                                     </md-tooltip>
@@ -295,7 +315,8 @@
                                 <md-button hide-xs hide-sm ng-click="showDialog('/build-help.html');">
                                     <i class="material-icons inline-icon">help</i>
                                     <span hide-xs>Help</span>
-                                    <md-tooltip ng-show="state.settings.showTooltips" class="tooltip"
+                                    <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips"
+                                                class="tooltip"
                                                 md-direction="left">
                                         Show the help document for this tab
                                     </md-tooltip>
@@ -317,7 +338,8 @@
                                             <div class="hint" ng-show="state.showHints">Will replace instances of
                                                 CLASS_NAME in comments
                                             </div>
-                                            <md-tooltip ng-show="state.settings.showTooltips" class="tooltip">
+                                            <md-tooltip ng-style="state.theme.tooltips"
+                                                        ng-show="state.settings.showTooltips" class="tooltip">
                                                 Will replace instances of CLASS_NAME in comments
                                             </md-tooltip>
                                         </form>
@@ -330,8 +352,7 @@
                                                 appear at the beginning of every comment (optional)
                                             </div>
                                             <md-tooltip ng-show="state.settings.showTooltips" class="tooltip">
-                                                The custom introduction to appear at the beginning of every comment
-                                                (optional)
+                                                <span ng-style="state.theme.tooltips">The custom introduction to appear at the beginning of every comment (optional)</span>
                                             </md-tooltip>
                                         </md-input-container>
 
@@ -342,7 +363,8 @@
                                             <div class="hint" ng-show="state.showHints">The custom conclusion to appear
                                                 at the end of every comment (optional)
                                             </div>
-                                            <md-tooltip ng-show="state.settings.showTooltips" class="tooltip">
+                                            <md-tooltip ng-style="state.theme.tooltips"
+                                                        ng-show="state.settings.showTooltips" class="tooltip">
                                                 The custom conclusion to appear at the end of every comment (optional)
                                             </md-tooltip>
                                         </md-input-container>
@@ -405,7 +427,8 @@
                                             <div class="hint" ng-show="showHints">Add all the students that you would
                                                 like to make comments for today
                                             </div>
-                                            <md-tooltip ng-show="showTooltips" class="tooltip">
+                                            <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips"
+                                                        class="tooltip">
                                                 Add all the students that you would like to make comments for today
                                             </md-tooltip>
                                         </form>
@@ -416,7 +439,8 @@
                                                    ng-click="addMultiStudent()" md-ripple-size="auto">
                                             <i class="material-icons inline-icon">person_add</i>
                                             <span>Add</span>
-                                            <md-tooltip ng-show="showTooltips" class="tooltip">
+                                            <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips"
+                                                        class="tooltip">
                                                 Adds <span ng-bind="newMultiStudent"
                                                            ng-hide="newMultiStudent == ''"></span><span
                                                     ng-show="newMultiStudent == ''">student</span> to the list
@@ -433,14 +457,16 @@
 
                                             <md-radio-button ng-model="gender" value="male" class="gender-radio">
                                                 M<span hide-xs>ale</span>
-                                                <md-tooltip ng-show="state.settings.showTooltips && gender != 'male'"
+                                                <md-tooltip ng-style="state.theme.tooltips"
+                                                            ng-show="state.settings.showTooltips && gender != 'male'"
                                                             class="tooltip">
                                                     Set default gender to male
                                                 </md-tooltip>
                                             </md-radio-button>
                                             <md-radio-button ng-model="gender" value="female" class="gender-radio">
                                                 F<span hide-xs>emale</span>
-                                                <md-tooltip ng-show="state.settings.showTooltips && gender != 'female'"
+                                                <md-tooltip ng-style="state.theme.tooltips"
+                                                            ng-show="state.settings.showTooltips && gender != 'female'"
                                                             class="tooltip">
                                                     Set default gender to female
                                                 </md-tooltip>
@@ -466,14 +492,16 @@
 
                                             <md-radio-button flex ng-model="gender" value="male" class="gender-radio">
                                                 Male
-                                                <md-tooltip ng-show="state.settings.showTooltips && gender != 'male'"
+                                                <md-tooltip ng-style="state.theme.tooltips"
+                                                            ng-show="state.settings.showTooltips && gender != 'male'"
                                                             class="tooltip">
                                                     Set default gender to male
                                                 </md-tooltip>
                                             </md-radio-button>
                                             <md-radio-button flex ng-model="gender" value="female" class="gender-radio">
                                                 Female
-                                                <md-tooltip ng-show="state.settings.showTooltips && gender != 'female'"
+                                                <md-tooltip ng-style="state.theme.tooltips"
+                                                            ng-show="state.settings.showTooltips && gender != 'female'"
                                                             class="tooltip">
                                                     Set default gender to female
                                                 </md-tooltip>
@@ -507,13 +535,15 @@
                                                         aria-label="New student fill">
                                             <md-radio-button ng-model="newStudentFill" value="blank">
                                                 Start Blank
-                                                <md-tooltip ng-show="state.settings.showTooltips" class="tooltip">
+                                                <md-tooltip ng-style="state.theme.tooltips"
+                                                            ng-show="state.settings.showTooltips" class="tooltip">
                                                     Start with nothing
                                                 </md-tooltip>
                                             </md-radio-button>
                                             <md-radio-button ng-model="state.settings.newStudentFill" value="random">
                                                 Generate Random Comment
-                                                <md-tooltip ng-show="state.settings.showTooltips" class="tooltip">
+                                                <md-tooltip ng-style="state.theme.tooltips"
+                                                            ng-show="state.settings.showTooltips" class="tooltip">
                                                     Start with a random comment {{makeSomethingUpSize}} sentences long
                                                 </md-tooltip>
                                             </md-radio-button>
@@ -522,7 +552,8 @@
                                                              ng-model="state.settings.newStudentFill"
                                                              value="default_pattern">
                                                 <span>Generate w/ Default Pattern</span>
-                                                <md-tooltip ng-show="state.settings.showTooltips" class="tooltip">
+                                                <md-tooltip ng-style="state.theme.tooltips"
+                                                            ng-show="state.settings.showTooltips" class="tooltip">
                                                     Start with a comment generated conforming to the default pattern
                                                 </md-tooltip>
                                             </md-radio-button>
@@ -535,7 +566,8 @@
                                                    md-ripple-size="auto">
                                             <i class="material-icons inline-icon">extension</i>
                                             <span>Add Default Pattern</span>
-                                            <md-tooltip ng-show="showTooltips" class="tooltip">
+                                            <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips"
+                                                        class="tooltip">
                                                 Create a default pattern that you can apply to new students by default,
                                                 or existing students retroactively
                                             </md-tooltip>
@@ -557,7 +589,7 @@
                                        ng-show="showAllStudents">keyboard_arrow_up</i>
                                     <i class="material-icons inline-icon"
                                        ng-show="!showAllStudents">keyboard_arrow_down</i>
-                                    <span class="md-title">All Students ({{state.students.length}})</span>
+                                    <span class="md-title"><span hide-xs>All </span>Students ({{state.students.length}})</span>
                                 </md-button>
 
                                 <!--<h2>-->
@@ -643,6 +675,8 @@
                                                   layout="column" ng-repeat="student in state.students">
 
                                         <div layout-xs="column" layout-gt-xs="row" class="full-width">
+
+                                            <br hide-gt-xs>
                                             <div layout="row">
                                                 <span ng-style="state.theme.highlightColor" class="student-index">{{$index + 1}}.</span>
                                                 <form ng-submit="changeStudentName(student);">
@@ -693,11 +727,14 @@
                                                 </md-radio-group>
                                             </div>
 
+                                            <br hide-gt-xs>
+
                                             <div flex>
                                                 <div ng-show="student.pattern && student.pattern_type == 'global'"
                                                      class="center-aligned">
                                                     <i class="material-icons inline-icon">extension</i> Default Pattern
-                                                    <md-tooltip ng-show="state.settings.showTooltips" class="tooltip">
+                                                    <md-tooltip ng-style="state.theme.tooltips"
+                                                                ng-show="state.settings.showTooltips" class="tooltip">
                                                         This student is using the default Smart Search pattern
                                                     </md-tooltip>
                                                 </div>
@@ -706,7 +743,8 @@
                                                      class="center-aligned">
                                                     <i class="material-icons inline-icon">extension</i> Individual
                                                     Pattern
-                                                    <md-tooltip ng-show="state.settings.showTooltips" class="tooltip">
+                                                    <md-tooltip ng-style="state.theme.tooltips"
+                                                                ng-show="state.settings.showTooltips" class="tooltip">
                                                         This student is using a Smart Search pattern distinct to them
                                                     </md-tooltip>
                                                 </div>
@@ -858,7 +896,8 @@
                                            ng-click="doneEditingStudentSearch();">
                                     <i class="material-icons inline-icon">done</i>
                                     <span>Done Editing</span>
-                                    <md-tooltip ng-show="state.settings.showTooltips" class="tooltip">
+                                    <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips"
+                                                class="tooltip">
                                         Saves the changes you've made and goes back to the Multi Student tab
                                     </md-tooltip>
                                 </md-button>
@@ -868,7 +907,8 @@
                                            md-ripple-size="auto">
                                     <i class="material-icons inline-icon">cancel</i>
                                     <span>Cancel Editing</span>
-                                    <md-tooltip ng-show="state.settings.showTooltips" class="tooltip">
+                                    <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips"
+                                                class="tooltip">
                                         Goes back to the Multi Student tab without saving anything
                                     </md-tooltip>
                                 </md-button>
@@ -883,7 +923,8 @@
                                     <div class="hint" ng-show="showHints">Add comments by clicking below and edit them
                                         as needed
                                     </div>
-                                    <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="right">
+                                    <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip"
+                                                md-direction="right">
                                         Add comments by clicking below and edit them as needed
                                     </md-tooltip>
                                 </md-input-container>
@@ -925,7 +966,8 @@
                                 <md-button hide-xs hide-sm ng-click="showDialog('/search-settings.html');">
                                     <i class="material-icons inline-icon">settings</i>
                                     <span hide-xs>Settings</span>
-                                    <md-tooltip ng-show="state.settings.showTooltips" class="tooltip"
+                                    <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips"
+                                                class="tooltip"
                                                 md-direction="bottom">
                                         Show application settings
                                     </md-tooltip>
@@ -934,7 +976,8 @@
                                 <md-button hide-xs hide-sm ng-click="showDialog('/search-help.html');">
                                     <i class="material-icons inline-icon">help</i>
                                     <span hide-xs>Help</span>
-                                    <md-tooltip ng-show="state.settings.showTooltips" class="tooltip"
+                                    <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips"
+                                                class="tooltip"
                                                 md-direction="left">
                                         Show the help document for this tab
                                     </md-tooltip>
@@ -951,19 +994,20 @@
 
                                 <div layout-xs="column" layout-sm="column" layout-gt-sm="row" layout-fill>
 
-                                    <md-input-container flex-gt-sm="75" class="search-and-filter">
+                                    <md-input-container flex-gt-sm="75" class="search-and-filter side-margins">
                                         <label>Search Comments</label>
                                         <input type="text" ng-model="searchComments" ng-change="changeCommentsPage(1);">
                                         <div class="hint" ng-show="state.showHints">Instant search on comments. This is
                                             the best way to find comments if you have an idea of what you want to say.
                                         </div>
-                                        <md-tooltip ng-show="state.settings.showTooltips" class="tooltip">
+                                        <md-tooltip ng-style="state.theme.tooltips"
+                                                    ng-show="state.settings.showTooltips" class="tooltip">
                                             Instant search on comments. This is the best way to find comments if you
                                             have an idea of what you want to say.
                                         </md-tooltip>
                                     </md-input-container>
 
-                                    <md-input-container flex-gt-sm="25" class="search-and-filter">
+                                    <md-input-container flex-gt-sm="25" class="search-and-filter side-margins">
                                         <label>Filter on Tone</label>
                                         <md-select ng-model="toneFilterSetting" md-on-close="changeFilter()">
                                             <md-option ng-value="option" ng-repeat="option in toneFilterOptions">
@@ -973,6 +1017,8 @@
                                     </md-input-container>
 
                                 </div>
+
+                                <br hide-gt-sm>
 
                                 <md-progress-circular md-mode="indeterminate"
                                                       ng-show="comments.length == 0 && toneFilterSetting == 'Any'"
@@ -994,7 +1040,8 @@
                                                 <span ng-show="comment.pos_neg == -1"
                                                       ng-style="state.theme.negativeColor" class="edit-tone">
                                                     <i class="material-icons">thumb_down</i>
-                                                    <md-tooltip ng-show="state.settings.showTooltips" class="tooltip"
+                                                    <md-tooltip ng-style="state.theme.tooltips"
+                                                                ng-show="state.settings.showTooltips" class="tooltip"
                                                                 md-direction="right">
                                                         This comment has been rated as negative, click to edit
                                                     </md-tooltip>
@@ -1002,7 +1049,8 @@
                                                 <span ng-show="comment.pos_neg == 0" ng-style="state.theme.neutralColor"
                                                       class="edit-tone">
                                                     <i class="material-icons">thumbs_up_down</i>
-                                                    <md-tooltip ng-show="state.settings.showTooltips" class="tooltip"
+                                                    <md-tooltip ng-style="state.theme.tooltips"
+                                                                ng-show="state.settings.showTooltips" class="tooltip"
                                                                 md-direction="right">
                                                         This comment has been rated as neutral, click to edit
                                                     </md-tooltip>
@@ -1010,7 +1058,8 @@
                                                 <span ng-show="comment.pos_neg == 1"
                                                       ng-style="state.theme.positiveColor" class="edit-tone">
                                                     <i class="material-icons">thumb_up</i>
-                                                    <md-tooltip ng-show="state.settings.showTooltips" class="tooltip"
+                                                    <md-tooltip ng-style="state.theme.tooltips"
+                                                                ng-show="state.settings.showTooltips" class="tooltip"
                                                                 md-direction="right">
                                                         This comment has been rated as positive, click to edit
                                                     </md-tooltip>
@@ -1018,7 +1067,8 @@
                                                 <span ng-show="!comment.pos_neg && comment.pos_neg != 0"
                                                       ng-style="state.theme.unratedColor" class="edit-tone">
                                                     <i class="material-icons">rate_review</i>
-                                                    <md-tooltip ng-show="state.settings.showTooltips" class="tooltip"
+                                                    <md-tooltip ng-style="state.theme.tooltips"
+                                                                ng-show="state.settings.showTooltips" class="tooltip"
                                                                 md-direction="right">
                                                         This comment has not yet been rated, click to edit
                                                     </md-tooltip>
@@ -1027,7 +1077,8 @@
                                             <td ng-click="showTagEditDialog(comment)" ng-show="state.settings.showTags">
                                                 <span ng-show="comment.hasOwnProperty('tags')" class="cursor-pointer">
                                                 <i class="material-icons">label</i>
-                                                <md-tooltip ng-show="state.settings.showTooltips" class="tooltip"
+                                                <md-tooltip ng-style="state.theme.tooltips"
+                                                            ng-show="state.settings.showTooltips" class="tooltip"
                                                             md-direction="right">
                                                     This comment has tags, click to add or remove
                                                 </md-tooltip>
@@ -1035,7 +1086,8 @@
                                                 <span ng-hide="comment.hasOwnProperty('tags')" class="cursor-pointer"
                                                       ng-style="state.theme.unratedColor">
                                                 <i class="material-icons">label_outline</i>
-                                                <md-tooltip ng-show="state.settings.showTooltips" class="tooltip"
+                                                <md-tooltip ng-style="state.theme.tooltips"
+                                                            ng-show="state.settings.showTooltips" class="tooltip"
                                                             md-direction="right">
                                                     This comment does not have tags, click to add
                                                 </md-tooltip>
@@ -1047,7 +1099,8 @@
                                                 ng-click="showEditCommentDialog(comment, false)"
                                                 ng-show="state.settings.showEditButtons">
                                                 <i title="Edit this comment" class="material-icons">mode_edit</i>
-                                                <md-tooltip ng-show="state.settings.showTooltips" class="tooltip"
+                                                <md-tooltip ng-style="state.theme.tooltips"
+                                                            ng-show="state.settings.showTooltips" class="tooltip"
                                                             md-direction="left">
                                                     Edit this comment
                                                 </md-tooltip>
@@ -1064,7 +1117,8 @@
                                                 <md-option ng-value="20">20</md-option>
                                                 <md-option ng-value="35">35</md-option>
                                                 <!--<md-option ng-value="50">50</md-option>-->
-                                                <md-tooltip ng-show="state.settings.showTooltips" class="tooltip"
+                                                <md-tooltip ng-style="state.theme.tooltips"
+                                                            ng-show="state.settings.showTooltips" class="tooltip"
                                                             md-direction="bottom">
                                                     Change the number of comments per page
                                                 </md-tooltip>
@@ -1119,7 +1173,8 @@
                                            ng-click="doneEditingStudentPattern();">
                                     <i class="material-icons inline-icon">done</i>
                                     <span>Done<span hide-xs> Editing</span></span>
-                                    <md-tooltip ng-show="state.settings.showTooltips" class="tooltip">
+                                    <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips"
+                                                class="tooltip">
                                         Saves the changes you've made and goes back to the Multi Student tab
                                     </md-tooltip>
                                 </md-button>
@@ -1129,7 +1184,8 @@
                                            md-ripple-size="auto">
                                     <i class="material-icons inline-icon">cancel</i>
                                     <span>Cancel<span hide-xs> Editing</span></span>
-                                    <md-tooltip ng-show="state.settings.showTooltips" class="tooltip">
+                                    <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips"
+                                                class="tooltip">
                                         Goes back to the Multi Student tab without saving anything
                                     </md-tooltip>
                                 </md-button>
@@ -1144,7 +1200,8 @@
                                     <div class="hint" ng-show="showHints">Add comments by clicking below and edit them
                                         as needed
                                     </div>
-                                    <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="right">
+                                    <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip"
+                                                md-direction="right">
                                         Add comments by clicking below and edit them as needed
                                     </md-tooltip>
                                 </md-input-container>
@@ -1238,7 +1295,8 @@
                                 <md-button hide-xs ng-click="showDialog('/patterns-help.html');">
                                     <i class="material-icons inline-icon">help</i>
                                     <span hide-xs>Help</span>
-                                    <md-tooltip ng-show="state.settings.showTooltips" class="tooltip"
+                                    <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips"
+                                                class="tooltip"
                                                 md-direction="left">
                                         Show the help document for this tab\
                                     </md-tooltip>
@@ -1256,21 +1314,24 @@
                                 <div layout-xs="column" layout-sm="column" layout-md="row" layout-gt-md="row"
                                      layout-fill>
 
-                                    <form ng-submit="editingPattern.push(getSmartSearchResult(newPatternPiece, state.settings.getSearchResultCount)); newPatternPiece.search_text = ''; buildAllSmartSearchComments();"
+                                    <form class="pattern-search-text-input side-margins"
+                                          ng-submit="editingPattern.push(getSmartSearchResult(newPatternPiece, state.settings.getSearchResultCount)); newPatternPiece.search_text = ''; buildAllSmartSearchComments();"
                                           flex>
-                                        <md-input-container class="input-container full-width new-pattern-input">
+                                        <md-input-container
+                                                class="input-container pattern-search-text-input full-width">
                                             <label>Search Text</label>
                                             <input type="text" ng-change="setSearchTextCheckboxes(newPatternPiece);"
                                                    autocomplete="off" ng-model="newPatternPiece.search_text">
                                         </md-input-container>
-                                        <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
+                                        <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips"
+                                                    class="tooltip" md-direction="below">
                                             Search for this value in comment text and tags
                                         </md-tooltip>
                                     </form>
 
-                                    <md-input-container flex class="search-and-filter">
+                                    <md-input-container flex class="search-and-filter side-margins">
                                         <label>Filter on Tone</label>
-                                        <md-select ng-model="newPatternPiece.tone">
+                                        <md-select ng-model="newPatternPiece.tone" flex-gt-xs="30">
                                             <md-option ng-value="option" ng-repeat="option in limitedToneFilterOptions">
                                                 {{option}}
                                             </md-option>
@@ -1283,7 +1344,8 @@
                                                    ng-click="editingPattern.push(getSmartSearchResult(newPatternPiece, state.settings.getSearchResultCount)); newPatternPiece.search_text = ''; buildAllSmartSearchComments(); illToastToThat('Pattern piece added');">
                                             <i class="material-icons inline-icon">extension</i>
                                             <span>Add Pattern Piece</span>
-                                            <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
+                                            <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips"
+                                                        class="tooltip" md-direction="below">
                                                 Adds a new smart search, which will try to find 1 matching sentence
                                             </md-tooltip>
                                         </md-button>
@@ -1339,7 +1401,8 @@
                                                        ng-click="resubmitSearch(search, false);  buildAllSmartSearchComments();">
                                                 <i class="material-icons inline-icon">autorenew</i>
                                                 <span>Regenerate</span>
-                                                <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
+                                                <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips"
+                                                            class="tooltip" md-direction="below">
                                                     Regenerate this search result
                                                 </md-tooltip>
                                             </md-button>
@@ -1348,7 +1411,8 @@
                                                        ng-click="editingPattern.splice($index, 1);  buildAllSmartSearchComments();">
                                                 <i class="material-icons inline-icon">delete</i>
                                                 <span>Remove Pattern Piece</span>
-                                                <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
+                                                <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips"
+                                                            class="tooltip" md-direction="below">
                                                     Clear this search
                                                 </md-tooltip>
                                             </md-button>

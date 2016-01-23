@@ -1,30 +1,35 @@
 <md-dialog flex="90" md-theme="{{ state.theme.colorTheme }}">
     <md-dialog-content class="dialog-modal">
-        <div class="center-aligned ">
-            <h2>
-                <span ng-show="state.class_name">All Comments for {{state.class_name}}</span>
-                <span ng-show="!state.class_name">All Comments</span>
-            </h2>
-        </div>
+        <md-content>
+            <div class="center-aligned ">
+                <h2 ng-style="state.theme.highlightColor">
+                    <span ng-show="state.class_name">All Comments for {{state.class_name}}</span>
+                    <span ng-show="!state.class_name">All Comments</span>
+                </h2>
+            </div>
 
-        <md-input-container class="full-width">
-            <label>
-                All Comments
-            </label>
+            <md-input-container class="almost-full-width">
+                <label>
+                    All Comments
+                </label>
             <textarea ng-model="state.all_student_comments" placeholder="There's nothing here!"
                       class="almost-full-width"></textarea>
-        </md-input-container>
+            </md-input-container>
 
-        <div class="center-aligned  close-modal-elements">
-            <md-button aria-label="Copy All Comments" md-ink-ripple flex class="md-button md-raised md-primary" md-ripple-size="auto" ng-click="illToastToThat('All comments copied to clipboard');" clipboard text="state.all_student_comments">
-                <i class="material-icons inline-icon">content_copy</i>
-                <span>Copy All Comments</span>
-                <md-tooltip ng-show="showTooltips" class="tooltip" md-direction="below">
-                    Copy comments for all students including introduction and conclusion if applicable
-                </md-tooltip>
-            </md-button>
-            <md-button ng-click="closeDialog()">Close All Comments</md-button>
-        </div>
+            <div class="center-aligned  close-modal-elements">
+                <md-button aria-label="Copy All Comments" md-ink-ripple flex class="md-button md-raised md-primary"
+                           md-ripple-size="auto" ng-click="illToastToThat('All comments copied to clipboard');"
+                           clipboard text="state.all_student_comments">
+                    <i class="material-icons inline-icon">content_copy</i>
+                    <span>Copy All Comments</span>
+                    <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip"
+                                md-direction="below">
+                        Copy comments for all students including introduction and conclusion if applicable
+                    </md-tooltip>
+                </md-button>
+                <md-button ng-click="closeDialog()">Close All Comments</md-button>
+            </div>
+        </md-content>
 
     </md-dialog-content>
 </md-dialog>

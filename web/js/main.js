@@ -200,6 +200,9 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             donate: 4
         };
         $scope.selectedTab = $scope.tabIndexes.main_page;
+
+        // contact form
+        $scope.contact = {};
     };
 
 
@@ -342,7 +345,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             for (var i = 0; i < $scope.state.students.length; ++i) {
                 $scope.state.students[i].comment = $scope.replaceClassName($scope.state.students[i].comment, true);
             }
-            $scope.state.all_student_comments();
+            $scope.buildAllStudentComments();
         }
         
         $scope.state.old_class_name = $scope.state.class_name;
@@ -460,6 +463,46 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
 
                     }).error(function () {
                         $scope.illToastToThat('Error updating comment');
+                    });
+                };
+            }
+        });
+    };
+
+    $scope.showContactForm = function () {
+
+        $scope.contact = {
+            name: '',
+            email: '',
+            message: ''
+        };
+
+        $mdDialog.show({
+            clickOutsideToClose: true,
+            scope: $scope,        // use parent scope in template
+            preserveScope: true,  // do not forget this if use parent scope
+            templateUrl: '/contact-form.html',
+            controller: function DialogController($scope, $mdDialog) {
+                $scope.closeDialog = function () {
+                    $mdDialog.hide();
+                };
+                $scope.saveDialog = function () {
+
+                    //console.log('in saveDialog');
+                    $mdDialog.hide();
+                    $http({
+                        url: "/rest/comments/contact",
+                        method: "POST",
+                        params: {contact: $scope.contact},
+                        headers: {'Content-Type': 'application/json'}
+                    }).success(function (data) {
+
+                        if (data.message) {
+                            $scope.illToastToThat(data.message);
+                        }
+
+                    }).error(function () {
+                        $scope.illToastToThat('Error submitting contact');
                     });
                 };
             }
@@ -736,12 +779,6 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         $scope.illToastToThat('Default pattern applied to all students');
     };
 
-    $scope.makeSomethingUp = function() {
-        $scope.yourComment = '';
-        $scope.addComment($scope.getRandomComments(), false);
-        $scope.illToastToThat('Random comment generated');
-    };
-
     $scope.getRandomComments = function(size) {
         var fullRandomComment = '';
 
@@ -776,7 +813,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             $scope.state.students.splice(index, 1);
         }
 
-        $scope.state.all_student_comments();
+        $scope.buildAllStudentComments();
     };
 
     $scope.shuffleAllStudentComments = function() {
@@ -935,10 +972,6 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         $scope.illToastToThat('Editing '+ $scope.editingStudent.name + ' pattern.')
     };
 
-    $scope.removeAllSmartSearch = function() {
-        $scope.editingPattern = [];
-    };
-
     $scope.loadSampleSmartSearch = function() {
         $scope.editingPattern = [];
         $scope.editingPattern.push($scope.getSmartSearchResult({search_text: '', found_comment: '', tone: 'Positive'}));
@@ -1058,13 +1091,13 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         //console.log('building smart search comments end length ' + $scope.editingStudent.comment.length);
     };
 
-    $scope.justMakeSomethingUpSmartSearch = function() {
-        $scope.state.global_pattern = [];
-        for (var i = 0; i < $scope.state.settings.makeSomethingUpSize; ++i) {
-            $scope.state.global_pattern.push($scope.getSmartSearchResult($scope.newPatternPiece));
-        }
-        $scope.buildAllSmartSearchComments();
-    };
+    //$scope.justMakeSomethingUpSmartSearch = function() {
+    //    $scope.state.global_pattern = [];
+    //    for (var i = 0; i < $scope.state.settings.makeSomethingUpSize; ++i) {
+    //        $scope.state.global_pattern.push($scope.getSmartSearchResult($scope.newPatternPiece));
+    //    }
+    //    $scope.buildAllSmartSearchComments();
+    //};
 
     $scope.regenerateAllSmartSearch = function() {
         //console.log('Regenerating ' + $scope.state.global_pattern.length + ' searches');
@@ -1076,10 +1109,6 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
 
     $scope.removeAllPatternPieces = function() {
         $scope.editingPattern = [];
-    };
-
-    $scope.resetAllSmartSearch = function() {
-        $scope.newPatternPiece = {search_text: '', found_comment: '', tone: 'Any', tags: true, text: true};
     };
 
     $scope.removeAllMultiStudents = function() {
@@ -1185,9 +1214,14 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             .ok('Reset')
             .cancel('Cancel');
         $mdDialog.show(confirm).then(function() {
+            $location.search('theme', null);
+            $location.search('tab', null);
+            $location.search('password', null);
+            $location.search('limit', null);
             $scope.setInitialApplicationState();
             $scope.setMobileSettings();
             $scope.illToastToThat('Application reset');
+            $scope.setTheme();
         }, function() {
 
         });
@@ -1265,6 +1299,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         var negativeColor; // color for negative comments icon
         var neutralColor; // color for neutral comments icon
         var unratedColor; // color for unrated comments
+        var tooltipsFontColor;
 
         // still have to set some colors that we want in ways angular material palettes don't support
         if (theme == 'darkula') {
@@ -1274,6 +1309,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             negativeColor = '#673AB7';
             neutralColor = '#A9B7C6';
             unratedColor = 'black';
+            tooltipsFontColor = 'black';
         } else if (theme == 'breezy') {
             primaryColor = '#1976D2';
             altBackgroundColor = '#9eabb1';
@@ -1295,6 +1331,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             negativeColor = '#4CAF50';
             neutralColor = '#4CAF50';
             unratedColor = '#4CAF50';
+            tooltipsFontColor = 'black';
         } else if (theme == 'grass') {
             primaryColor = '#2E7D32';
             altBackgroundColor = '#A5D6A7';
@@ -1322,6 +1359,16 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         $scope.state.theme.unratedColor = {
             'color': unratedColor
         };
+        if (tooltipsFontColor) {
+            $scope.state.theme.tooltips = {
+                'color': tooltipsFontColor,
+                'font=weight': 'bold'
+            };
+        } else {
+            $scope.state.theme.tooltips = {
+                'font=weight': 'bold'
+            };
+        }
 
     };
 

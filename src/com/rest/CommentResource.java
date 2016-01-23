@@ -321,6 +321,62 @@ public class CommentResource {
         }
     }
 
+    @POST
+    @Path("/contact")
+    @Produces("application/json")
+    public Response submitContactForm(@Context HttpServletRequest request, @QueryParam("contact") JSONObject contact) throws JSONException {
+
+        JSONObject jsonObject = new JSONObject();
+
+        if (contact.has("message") && contact.getString("message").length() > 0) {
+            DatabaseHandler databaseHandler = null;
+            PreparedStatement preparedStatement = null;
+            try {
+
+                databaseHandler = new DatabaseHandler();
+                preparedStatement = databaseHandler.getConnection().prepareStatement(
+                        "INSERT INTO contact (name, email, message, submitted_time) VALUES (?, ?, ?, CURRENT_TIMESTAMP)"
+                );
+
+                if (contact.has("name") && contact.getString("name").length() > 0) {
+                    preparedStatement.setString(1, contact.getString("name"));
+                } else {
+                    preparedStatement.setNull(1, Types.VARCHAR);
+                }
+                if (contact.has("email") && contact.getString("email").length() > 0) {
+                    preparedStatement.setString(2, contact.getString("email"));
+                } else {
+                    preparedStatement.setNull(2, Types.VARCHAR);
+                }
+                preparedStatement.setString(3, contact.getString("message"));
+                int result = preparedStatement.executeUpdate();
+
+
+                if (result > 0) {
+                    jsonObject.put("message", "Message received, thanks for the feedback!");
+                } else {
+                    jsonObject.put("message", "There was an error entering the message");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    assert preparedStatement != null;
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                if (databaseHandler != null) {
+                    databaseHandler.closeConnection();
+                }
+            }
+        } else {
+            jsonObject.put("message", "You have to at least enter a message");
+        }
+
+        return Response.ok(jsonObject.toString()).build();
+    }
+
     @GET
     @Path("/stats")
     @Produces("application/json")
@@ -332,8 +388,6 @@ public class CommentResource {
         JSONObject jsonObject = new JSONObject();
 
         jsonObject.put("password_fails", databaseHandler.getJSONArrayFor("SELECT COUNT(*) FROM password_fails WHERE time > CURRENT_DATE - INTERVAL 1 WEEK"));
-
-        jsonObject.put("unique_hits", databaseHandler.getJSONArrayFor("SELECT DATE(`time`), COUNT(DISTINCT ip_address, user_agent) FROM page_hits GROUP BY DATE(`time`) ORDER BY `time` DESC LIMIT 7"));
 
         jsonObject.put("tone_rated", "");
 

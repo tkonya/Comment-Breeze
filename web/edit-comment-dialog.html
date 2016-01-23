@@ -2,7 +2,7 @@
     <md-dialog-content style="padding: 2em;">
         <h2 ng-style="state.theme.highlightColor">
             <span>Edit Comment
-                <md-tooltip class="tooltip" ng-show="showTooltips">
+                <md-tooltip ng-style="state.theme.tooltips" class="tooltip" ng-show="showTooltips">
                     Comment ID <span ng-bind="editingComment.comment_id"></span>
                 </md-tooltip>
             </span>
@@ -15,7 +15,7 @@
         <md-input-container class="full-width">
             <label>Editing Password</label>
             <input type="text" ng-model="editingPasswordTry" flex-gt-sm="50">
-            <md-tooltip class="tooltip" ng-show="showTooltips">
+            <md-tooltip ng-style="state.theme.tooltips" class="tooltip" ng-show="showTooltips">
                 Enter the password to edit comment text
             </md-tooltip>
         </md-input-container><br>
@@ -24,7 +24,7 @@
             <label>Comment Text</label>
             <textarea required md-maxlength="255" ng-disabled="editingPasswordTry < 1" ng-model="editingComment.comment_text"></textarea>
             <div class="hint" ng-show="editingPasswordTry != ''">Available variables are CLASS_NAME and STUDENT_NAME</div>
-            <md-tooltip class="tooltip" ng-show="showTooltips">
+            <md-tooltip ng-style="state.theme.tooltips" class="tooltip" ng-show="showTooltips">
                 <span ng-show="editingPasswordTry == ''">A password is required to edit comment text</span>
                 <span ng-show="editingPasswordTry != ''">Edit comment text</span>
             </md-tooltip>
@@ -39,7 +39,7 @@
                 <div class="spacer-div" hide-lg-xs></div>
                 <md-radio-button ng-model="gender" value="-1">Negative</md-radio-button>
             </md-radio-group>
-            <md-tooltip ng-show="showTooltips" class="tooltip">
+            <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip">
                 <span ng-show="editingPasswordTry == ''">Edit comment tone</span>
                 <span ng-show="editingPasswordTry != ''">Edit verified comment tone</span>
             </md-tooltip>
@@ -54,7 +54,7 @@
             <md-checkbox ng-model="editingComment.flagged" ng-false-value="'0'" ng-true-value="'1'" class="setting-control" aria-label="Flag this comment">
                 Flag comment for admin attention
             </md-checkbox>
-            <md-tooltip ng-show="showTooltips" class="tooltip">
+            <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip">
                 Flag a comment for admin attention
             </md-tooltip>
         </div><br><br>
@@ -63,7 +63,7 @@
             <md-checkbox ng-model="editingComment.deleted" ng-false-value="0" ng-true-value="1" class="setting-control" ng-disabled="editingPasswordTry == ''" aria-label="Delete this comment">
                 Delete comment
             </md-checkbox>
-            <md-tooltip ng-hide="showTooltips" class="tooltip">
+            <md-tooltip ng-style="state.theme.tooltips" ng-hide="showTooltips" class="tooltip">
                 <span ng-show="editingPasswordTry == ''">A password is required to delete comments</span>
                 <span ng-show="editingPasswordTry != ''">Delete this comment</span>
             </md-tooltip>
