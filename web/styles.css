@@ -331,6 +331,13 @@ td.comment-text:hover {
     border-radius: 0 0 5px 5px;
 }
 
+.theme-card-content {
+    padding-top: 0.5em;
+    padding-left: 1em;
+    padding-right: 1em;
+    border-radius: 0 0 5px 5px;
+}
+
 .colors-buttons {
     margin: auto;
 }

@@ -29,7 +29,7 @@ var commentApp = angular.module('commentApp', ['angular-clipboard', 'ngMaterial'
                 'default': '100', // default, menu box
                 'hue-1': '50', // background background
                 'hue-2': '800', // no idea what is wrong with this hue
-                'hue-3': '200' // cards background
+                'hue-3': '100' // cards background
             });
 
 
@@ -162,6 +162,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
 
         // themes
         $scope.showColorThemes = false;
+        $scope.defaultColorTheme = 'breezy';
 
         // single student search and filter
         $scope.searchComments = '';
@@ -202,7 +203,11 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         $scope.selectedTab = $scope.tabIndexes.main_page;
 
         // contact form
-        $scope.contact = {};
+        $scope.contact = {
+            name: '',
+            email: '',
+            message: ''
+        };
     };
 
 
@@ -471,12 +476,6 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
 
     $scope.showContactForm = function () {
 
-        $scope.contact = {
-            name: '',
-            email: '',
-            message: ''
-        };
-
         $mdDialog.show({
             clickOutsideToClose: true,
             scope: $scope,        // use parent scope in template
@@ -485,6 +484,11 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             controller: function DialogController($scope, $mdDialog) {
                 $scope.closeDialog = function () {
                     $mdDialog.hide();
+                    $scope.contact = {
+                        name: '',
+                        email: '',
+                        message: ''
+                    };
                 };
                 $scope.saveDialog = function () {
 
@@ -1274,20 +1278,20 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         if (params.theme) {
             $scope.setTheme(params.theme);
         } else {
-            $scope.setTheme('darkula');
+            $scope.setTheme($scope.defaultColorTheme);
         }
     };
 
     $scope.setTheme = function (theme) {
 
         if (!theme) {
-            theme = 'darkula';
+            theme = $scope.defaultColorTheme;
         }
 
         $scope.state.theme.colorTheme = theme;
 
         // only store the theme in the url if it's not the default
-        if (theme == 'darkula') {
+        if (theme == $scope.defaultColorTheme) {
             $location.search('theme', null);
         } else {
             $location.search('theme', theme.toString());
@@ -1312,7 +1316,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             tooltipsFontColor = 'black';
         } else if (theme == 'breezy') {
             primaryColor = '#1976D2';
-            altBackgroundColor = '#9eabb1';
+            altBackgroundColor = '#B0BEC5';
             positiveColor = '#1976D2';
             negativeColor = '#F44336';
             neutralColor = '#9E9E9E';

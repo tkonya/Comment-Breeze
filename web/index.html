@@ -210,9 +210,13 @@
                                     Done
                                 </md-button>
                             </md-toolbar>
+                            <md-subheader class="md-primary md-background md-hue-3">
+                                Set the color theme below. Bookmarks will save your theme, so you can always come back
+                                to it.
+                            </md-subheader>
                             <div class="center-aligned">
                                 <md-content
-                                        class="control-card-content md-background md-background md-hue-3 center-aligned colors-buttons"
+                                        class="theme-card-content md-background md-background md-hue-3 center-aligned colors-buttons"
                                         layout-xs="column" layout-gt-xs="row">
                                     <md-button class="md-primary" ng-click="setTheme('darkula')"
                                                ng-disabled="state.theme.colorTheme == 'darkula'">Darkula
