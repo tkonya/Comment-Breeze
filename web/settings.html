@@ -16,7 +16,8 @@
                         Tooltips
                     </md-checkbox>
                 </div>
-                <p flex-gt-xs="75" class="settings-text">Turn pop up tooltips on or off. Recommended off for mobile or
+                <p ng-style="state.theme.textColor" flex-gt-xs="75" class="settings-text">Turn pop up tooltips on or
+                    off. Recommended off for mobile or
                     touchscreen-only users; on for users with a mouse or other pointing device.</p>
             </div>
 
@@ -31,7 +32,8 @@
                         <input type="number" ng-model="state.settings.makeSomethingUpSize" min="1" max="100">
                     </md-input-container>
                 </div>
-                <p flex-gt-xs="75" class="settings-text">Adjust the number of sentences generated automatically when
+                <p ng-style="state.theme.textColor" flex-gt-xs="75" class="settings-text">Adjust the number of sentences
+                    generated automatically when
                     adding new students. Can be any number from 1 - 100.</p>
             </div>
 
@@ -46,7 +48,8 @@
                         Avoid "her"
                     </md-checkbox>
                 </div>
-                <p flex-gt-sm="75" class="settings-text">When auto-generating comments for non-female genders the system
+                <p ng-style="state.theme.textColor" flex-gt-sm="75" class="settings-text">When auto-generating comments
+                    for non-female genders the system
                     cannot know for sure which pronoun to replace "her" with, therefore often times it gets it wrong.
                     Checking this will attempt to avoid comments with "her" when auto-generating comments if the gender
                     is not female. This will reduce the number of available comments for non-females, but also reduce
@@ -60,7 +63,8 @@
                         Enable Neutral
                     </md-checkbox>
                 </div>
-                <p flex-gt-sm="75" class="settings-text">The gender neutral pronouns are also plural (they, them,
+                <p ng-style="state.theme.textColor" flex-gt-sm="75" class="settings-text">The gender neutral pronouns
+                    are also plural (they, them,
                     etc...) and therefor switching to them from the singular male or female pronouns will often make the
                     sentence grammatically incorrect because verbs will remain singular. You can turn on the ability to
                     use gendered pronouns but more proofreading and correction will be required.</p>

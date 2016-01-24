@@ -80,7 +80,7 @@
                                     <br>
                                     <h2 ng-style="state.theme.highlightColor">Welcome to Comment Breeze!</h2>
 
-                                    <p class="paragraphs">
+                                    <p ng-style="state.theme.textColor" class="paragraphs">
                                         I made this site to help my girlfriend, friends and other ESL teachers build
                                         report card comments.<br>
                                         If you're an ESL teacher, I hope this makes your life easier!
@@ -89,7 +89,7 @@
                                     <h2 ng-style="state.theme.highlightColor">What's different about Comment
                                         Breeze?</h2>
 
-                                    <p class="paragraphs">
+                                    <p ng-style="state.theme.textColor" class="paragraphs">
                                         <span ng-bind="formatNumber(totalCommentsSize);"></span> unique comments<span
                                             ng-show="isMobile" ng-style="state.theme.highlightColor">*</span><br>
                                         Powerful live search<br>
@@ -102,7 +102,7 @@
                                     <div ng-show="isMobile">
                                         <h2 ng-style="state.theme.highlightColor">Mobile Users</h2>
 
-                                        <p class="paragraphs">
+                                        <p ng-style="state.theme.textColor" class="paragraphs">
                                             Comment Breeze is javascript heavy and may suffer from slow performance on
                                             mobile devices with limited computing power.<br><br>
 
@@ -118,7 +118,7 @@
 
                                     <h2 ng-style="state.theme.highlightColor">OK, how do I use it?</h2>
 
-                                    <p class="paragraphs">
+                                    <p ng-style="state.theme.textColor" class="paragraphs">
                                         Start on the Build tab, there is a help button at the upper right with detailed
                                         instructions and tips.<br>
                                         <span ng-show="isMobile">(this may be moved inside the drop down menu on smaller screens)<br></span>
@@ -135,7 +135,7 @@
                                         Donate
                                     </h2>
 
-                                    <p class="paragraphs">
+                                    <p ng-style="state.theme.textColor" class="paragraphs">
                                         This site is free to use, but it's not free to run, plus it took a lot of time
                                         to code.<br>
                                         Donations will help me pay for the server costs, and if there's enough maybe
@@ -338,7 +338,8 @@
                                         <form ng-submit="changeClassName()" flex-gt-sm="20" flex-order="1">
                                             <md-input-container class="input-container full-width" flex="100">
                                                 <label>Class Name</label>
-                                                <input type="text" ng-model="state.class_name"
+                                                <input ng-style="state.theme.textColor" type="text"
+                                                       ng-model="state.class_name"
                                                        ng-blur="changeClassName()">
                                             </md-input-container>
                                             <div class="hint" ng-show="state.showHints">Will replace instances of
@@ -353,7 +354,8 @@
                                         <md-input-container flex-gt-sm="35" flex-order="2"
                                                             class="intro-conclusion-multi no-bottom-margin">
                                             <label>Introduction</label>
-                                            <textarea ng-model="state.introduction"></textarea>
+                                            <textarea ng-style="state.theme.textColor"
+                                                      ng-model="state.introduction"></textarea>
                                             <div class="hint" ng-show="state.showHints">The custom introduction to
                                                 appear at the beginning of every comment (optional)
                                             </div>
@@ -366,7 +368,8 @@
                                         <md-input-container flex-gt-sm="35" flex-order="3"
                                                             class="intro-conclusion-multi">
                                             <label>Conclusion</label>
-                                            <textarea ng-model="state.conclusion"></textarea>
+                                            <textarea ng-style="state.theme.textColor"
+                                                      ng-model="state.conclusion"></textarea>
                                             <div class="hint" ng-show="state.showHints">The custom conclusion to appear
                                                 at the end of every comment (optional)
                                             </div>
@@ -409,14 +412,8 @@
                                        ng-show="!showAddStudents">keyboard_arrow_down</i>
                                     <span class="md-title">Add Students</span>
                                 </md-button>
-                                <!--<h1>-->
-                                <!--&lt;!&ndash;<i class="material-icons inline-icon">person_add</i>&ndash;&gt;-->
-                                <!--<span>Add Students</span>-->
-                                <!---->
-                                <!--</h1>-->
 
                                 <span flex></span>
-
 
                             </md-toolbar>
 
@@ -867,7 +864,7 @@
                                                 <label>
                                                     Comment Text
                                                 </label>
-                                                <textarea ng-model="student.comment"
+                                                <textarea ng-style="state.theme.textColor" ng-model="student.comment"
                                                           class="almost-full-width"></textarea>
                                             </md-input-container>
                                         </div>
@@ -1100,7 +1097,8 @@
                                                 </md-tooltip>
                                                 </span>
                                             </td>
-                                            <td ng-click="addComment(comment.comment_text, true)" class="comment-text"
+                                            <td ng-style="state.theme.textColor"
+                                                ng-click="addComment(comment.comment_text, true)" class="comment-text"
                                                 ng-bind="comment.comment_text"></td>
                                             <td class="comment-edit" class="comment-edit"
                                                 ng-click="showEditCommentDialog(comment, false)"
@@ -1430,7 +1428,8 @@
 
                                 <div class="center-aligned quick-instructions-container"
                                      ng-hide="editingPattern.length > 0">
-                                    <fieldset class="quick-instructions" style="margin: auto;">
+                                    <fieldset ng-style="state.theme.textColor" class="quick-instructions"
+                                              style="margin: auto;">
                                         <br>
                                         Patterns allows you to build a sentence-by-sentence template that your comment
                                         or comments will conform to.

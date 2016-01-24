@@ -1344,8 +1344,9 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             positiveColor = '#FFA000';
             negativeColor = '#673AB7';
             neutralColor = '#A9B7C6';
-            unratedColor = 'black';
-            tooltipsFontColor = 'black';
+            unratedColor = '#000000';
+            tooltipsFontColor = '#000000';
+            textColor = '#E0E0E0';
         } else if (theme == 'breezy') {
             primaryColor = '#1976D2';
             altBackgroundColor = '#B0BEC5';
@@ -1367,7 +1368,8 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             negativeColor = '#4CAF50';
             neutralColor = '#4CAF50';
             unratedColor = '#4CAF50';
-            tooltipsFontColor = 'black';
+            tooltipsFontColor = '#000000';
+            textColor = '#4CAF50';
         } else if (theme == 'grass') {
             primaryColor = '#2E7D32';
             altBackgroundColor = '#A5D6A7';

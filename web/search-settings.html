@@ -15,7 +15,7 @@
             <!--Hints-->
             <!--</md-checkbox>-->
             <!--</div>-->
-            <!--<p flex-gt-xs="75" class="settings-text">Turn input hints on or off. This usually displays the same information as tooltips. Recommended on for mobile or touchscreen-only users; off if tooltips is on.</p>-->
+            <!--<p ng-style="state.theme.textColor" flex-gt-xs="75" class="settings-text">Turn input hints on or off. This usually displays the same information as tooltips. Recommended on for mobile or touchscreen-only users; off if tooltips is on.</p>-->
             <!--</div>-->
 
             <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
@@ -25,7 +25,8 @@
                         Tone Buttons
                     </md-checkbox>
                 </div>
-                <p flex-gt-xs="75" class="settings-text">Show or hide the tone buttons and indicators on the comments
+                <p ng-style="state.theme.textColor" flex-gt-xs="75" class="settings-text">Show or hide the tone buttons
+                    and indicators on the comments
                     list. Gives a little extra space to those who are on small screens or do not need to see or edit
                     tone.</p>
             </div>
@@ -37,7 +38,8 @@
                         Edit Buttons
                     </md-checkbox>
                 </div>
-                <p flex-gt-xs="75" class="settings-text">Show or hide the edit button on the comments list. Gives a
+                <p ng-style="state.theme.textColor" flex-gt-xs="75" class="settings-text">Show or hide the edit button
+                    on the comments list. Gives a
                     little extra space to those who are on small screens or are not going to edit the comment text.</p>
             </div>
 
@@ -48,7 +50,8 @@
                         Tags
                     </md-checkbox>
                 </div>
-                <p flex-gt-xs="75" class="settings-text">Show or hide the tags button and indicator on the comments
+                <p ng-style="state.theme.textColor" flex-gt-xs="75" class="settings-text">Show or hide the tags button
+                    and indicator on the comments
                     list. Gives a little extra space to those who are on small screens or are not going to look at or
                     edit tags.</p>
             </div>
@@ -67,7 +70,8 @@
                         </md-input-container>
 
                     </div>
-                    <p flex-gt-xs="75" class="settings-text">If searching is slow, generally for mobile users with
+                    <p ng-style="state.theme.textColor" flex-gt-xs="75" class="settings-text">If searching is slow,
+                        generally for mobile users with
                         limited computing power, you can load the page with only some of the comments to improve
                         performance. This is done by default for users on mobile devices. You may reload with any number
                         of comments from 1 to <span ng-bind="formatNumber(totalCommentsSize)"></span>.<br><br>
@@ -104,7 +108,8 @@
                         Shuffle All
                     </md-button>
                 </div>
-                <p flex-gt-sm="75" class="settings-text">If you don't like the order of the comments for some reason you
+                <p ng-style="state.theme.textColor" flex-gt-sm="75" class="settings-text">If you don't like the order of
+                    the comments for some reason you
                     can shuffle them all here. I'm not really sure why you would need to do this. Maybe you want to see
                     different comments on the first page of Single Student? But why wouldn't you just change the page if
                     you wanted to see different comments, that seems easier.</p>
