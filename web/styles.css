@@ -342,6 +342,11 @@ td.comment-text:hover {
     margin: auto;
 }
 
+.no-matches {
+    margin-left: 2em;
+    margin-top: 2em;
+}
+
 .all-students-content {
     border-radius: 0 0 5px 5px;
 }

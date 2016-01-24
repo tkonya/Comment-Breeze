@@ -382,16 +382,24 @@ public class CommentResource {
     @Produces("application/json")
     public Response getStats(@Context HttpServletRequest request) throws JSONException {
 
-        System.out.println("In comment resource");
+        System.out.println("In stats");
 
         DatabaseHandler databaseHandler = new DatabaseHandler();
         JSONObject jsonObject = new JSONObject();
 
-        jsonObject.put("password_fails", databaseHandler.getJSONArrayFor("SELECT COUNT(*) FROM password_fails WHERE time > CURRENT_DATE - INTERVAL 1 WEEK"));
+        jsonObject.put("fails", databaseHandler.getJSONArrayFor("SELECT COUNT(*) as fails FROM password_fails WHERE time > CURRENT_DATE - INTERVAL 1 WEEK").getJSONObject(0).getString("fails"));
 
-        jsonObject.put("tone_rated", "");
+        jsonObject.put("tagged", databaseHandler.getJSONArrayFor("SELECT COUNT(DISTINCT comment_id) as rated FROM comment_tags").getJSONObject(0).getString("rated"));
 
-        jsonObject.put("edited", "");
+        jsonObject.put("rated", databaseHandler.getJSONArrayFor("SELECT COUNT(*) as rated FROM comments WHERE pos_neg IS NOT NULL OR verified_pos_neg IS NOT NULL").getJSONObject(0).getString("rated"));
+
+        jsonObject.put("flagged", databaseHandler.getJSONArrayFor("SELECT COUNT(*) as flagged FROM comments WHERE flagged = TRUE").getJSONObject(0).getString("flagged"));
+
+        jsonObject.put("unread", databaseHandler.getJSONArrayFor("SELECT COUNT(*) as unread FROM contact WHERE `read` = FALSE").getJSONObject(0).getString("unread"));
+
+        jsonObject.put("edited", databaseHandler.getJSONArrayFor("SELECT COUNT(*) as edited FROM comments WHERE comment_text != verified_comment_text").getJSONObject(0).getString("edited"));
+
+        databaseHandler.closeConnection();
 
         return Response.ok(jsonObject.toString()).build();
     }

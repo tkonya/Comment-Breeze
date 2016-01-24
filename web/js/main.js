@@ -4,7 +4,7 @@ var commentApp = angular.module('commentApp', ['angular-clipboard', 'ngMaterial'
         $mdThemingProvider.theme('darkula')
             .primaryPalette('amber', {
                 'default': '700', // toolbars / card headers
-                'hue-1': '500', // non-disabled menu items, menu button on individual students
+                'hue-1': '500', // non-disabled menu items, menu button on individual students, text that should stand out from the background more than primary default
                 'hue-2': '400',
                 'hue-3': '600'
             })
@@ -20,7 +20,7 @@ var commentApp = angular.module('commentApp', ['angular-clipboard', 'ngMaterial'
         $mdThemingProvider.theme('breezy')
             .primaryPalette('blue', {
                 'default': '500', // toolbars / card headers
-                'hue-1': '700', // non-disabled menu items, menu button on individual students
+                'hue-1': '700', // non-disabled menu items, menu button on individual students, text that should stand out from the background more than primary default
                 'hue-2': '400',
                 'hue-3': '600'
             })
@@ -36,7 +36,7 @@ var commentApp = angular.module('commentApp', ['angular-clipboard', 'ngMaterial'
         $mdThemingProvider.theme('prince')
             .primaryPalette('deep-purple', {
                 'default': '500', // toolbars / card headers
-                'hue-1': '700', // non-disabled menu items, menu button on individual students
+                'hue-1': '700', // non-disabled menu items, menu button on individual students, text that should stand out from the background more than primary default
                 'hue-2': '400',
                 'hue-3': '600'
             })
@@ -51,7 +51,7 @@ var commentApp = angular.module('commentApp', ['angular-clipboard', 'ngMaterial'
         $mdThemingProvider.theme('matrix')
             .primaryPalette('green', {
                 'default': '900', // toolbars / card headers
-                'hue-1': '700', // non-disabled menu items, menu button on individual students
+                'hue-1': '700', // non-disabled menu items, menu button on individual students, text that should stand out from the background more than primary default
                 'hue-2': '400',
                 'hue-3': '600'
             })
@@ -66,7 +66,7 @@ var commentApp = angular.module('commentApp', ['angular-clipboard', 'ngMaterial'
         $mdThemingProvider.theme('grass')
             .primaryPalette('green', {
                 'default': 'A700', // toolbars / card headers
-                'hue-1': '800', // non-disabled menu items, menu button on individual students
+                'hue-1': '800', // non-disabled menu items, menu button on individual students, text that should stand out from the background more than primary default
                 'hue-2': '400',
                 'hue-3': '600'
             })
@@ -116,7 +116,7 @@ commentApp.directive('chooseFileButton', function() {
     };
 });
 
-commentApp.controller('CommentController', function ($scope, $http, $mdToast, $mdDialog, $mdMedia, $document, $location) {
+commentApp.controller('CommentController', function ($scope, $http, $mdToast, $mdDialog, $mdMedia, $location) {
 
     // comments
     $scope.comments = [];
@@ -208,6 +208,8 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             email: '',
             message: ''
         };
+
+        $scope.stats = null;
     };
 
 
@@ -679,8 +681,13 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         $mdToast.show(
             {
                 template: '<md-toast class="toast-style">' + text + '</md-toast>',
-                position: 'bottom right',
-                parent: $document[0].querySelector('#toastBounds')
+                position: 'bottom right'
+
+                // it used to be like this but I don't think I need it this way anymore
+                // will need to inject $document if we have to put this back for some reason
+                //template: '<md-toast class="toast-style">' + text + '</md-toast>',
+                //position: 'bottom right',
+                //parent: $document[0].querySelector('#toastBounds')
             }
         );
     };
@@ -1382,6 +1389,21 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         } else {
             return {};
         }
+    };
+
+    $scope.showStats = function () {
+
+        if ($scope.stats) {
+            $scope.showDialog('/stats.html');
+        } else {
+            $http.get('/rest/comments/stats').success(function (data) {
+                $scope.stats = data;
+                $scope.showDialog('/stats.html');
+            }).error(function () {
+                $scope.illToastToThat('Error getting stats');
+            });
+        }
+
     };
 
     $scope.setInitialApplicationState();

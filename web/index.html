@@ -124,7 +124,8 @@
                                         <span ng-show="isMobile">(this may be moved inside the drop down menu on smaller screens)<br></span>
                                         <br>
 
-                                        <md-button class="md-primary" ng-click="selectedTab = tabIndexes.build">
+                                        <md-button class="md-primary md-hue-1"
+                                                   ng-click="selectedTab = tabIndexes.build">
                                             <i class="material-icons inline-icon">build</i>
                                             Start Building Comments!
                                         </md-button>
@@ -138,7 +139,7 @@
                                         This site is free to use, but it's not free to run, plus it took a lot of time
                                         to code.<br>
                                         Donations will help me pay for the server costs, and if there's enough maybe
-                                        even buy me a coffee.<br>
+                                        even buy me a coff<span ng-click="showStats();">e</span>e.<br>
                                         Any amount is appreciated.
                                     </p>
                                     <br>
@@ -210,31 +211,31 @@
                                     Done
                                 </md-button>
                             </md-toolbar>
-                            <md-subheader class="md-primary md-background md-hue-3">
-                                Set the color theme below. Bookmarks will save your theme, so you can always come back
-                                to it.
-                            </md-subheader>
-                            <div class="center-aligned">
-                                <md-content
-                                        class="theme-card-content md-background md-background md-hue-3 center-aligned colors-buttons"
-                                        layout-xs="column" layout-gt-xs="row">
-                                    <md-button class="md-primary" ng-click="setTheme('darkula')"
-                                               ng-disabled="state.theme.colorTheme == 'darkula'">Darkula
-                                    </md-button>
-                                    <md-button class="md-primary" ng-click="setTheme('breezy')"
+                            <md-content
+                                    class="theme-card-content md-background md-background md-hue-3 colors-buttons">
+                                <md-subheader class="md-primary md-background md-hue-3">
+                                    Set the color theme below. Bookmarks will save your theme, so you can always come
+                                    back
+                                    to it.
+                                </md-subheader>
+                                <div layout-xs="column" layout-gt-xs="row">
+                                    <md-button class="md-primary md-hue-1" ng-click="setTheme('breezy')"
                                                ng-disabled="state.theme.colorTheme == 'breezy'">Breezy
                                     </md-button>
-                                    <md-button class="md-primary" ng-click="setTheme('grass')"
+                                    <md-button class="md-primary md-hue-1" ng-click="setTheme('grass')"
                                                ng-disabled="state.theme.colorTheme == 'grass'">Grass
                                     </md-button>
-                                    <md-button class="md-primary" ng-click="setTheme('prince')"
+                                    <md-button class="md-primary md-hue-1" ng-click="setTheme('darkula')"
+                                               ng-disabled="state.theme.colorTheme == 'darkula'">Darkula
+                                    </md-button>
+                                    <md-button class="md-primary md-hue-1" ng-click="setTheme('prince')"
                                                ng-disabled="state.theme.colorTheme == 'prince'">Prince
                                     </md-button>
-                                    <md-button class="md-primary" ng-click="setTheme('matrix')"
+                                    <md-button class="md-primary md-hue-1" ng-click="setTheme('matrix')"
                                                ng-disabled="state.theme.colorTheme == 'matrix'">Matrix
                                     </md-button>
-                                </md-content>
-                            </div>
+                                </div>
+                            </md-content>
                         </section>
 
                         <section class="control-card md-whiteframe-5dp md-background md-hue-3">
@@ -991,7 +992,7 @@
 
                             <md-content class="comment-bank-content md-background md-hue-3" layout="column" layout-fill>
 
-                                <md-subheader class="md-primary md-background md-hue-3">
+                                <md-subheader class="md-primary md-hue-1 md-background md-hue-3">
                                     <span ng-show="editingStudent == null">Select a student from the Build tab to edit their comments here</span>
                                     <span ng-show="editingStudent != null">Search for comments and click to add to your comment for {{editingStudent.name}}</span>
                                 </md-subheader>
@@ -1310,7 +1311,7 @@
 
                             <md-content class="comment-bank-content md-background md-hue-3" layout="column" layout-fill>
 
-                                <md-subheader class="md-primary md-background md-hue-3">
+                                <md-subheader class="md-primary md-hue-1 md-background md-hue-3">
                                     <span ng-show="editingStudent == null">Now editing default pattern</span>
                                     <span ng-hide="editingStudent == null">Now editing individual pattern for {{editingStudent.name}}</span>
                                 </md-subheader>
@@ -1363,15 +1364,16 @@
                                         class="multi-student-comment-row repeated-item pattern-piece-row" layout-fill
                                         layout-xs="column" layout-sm="column" layout-gt-sm="row">
                                         <td flex-xs flex-sm flex-gt-sm="50">
-                                            <md-input-container class="full-width">
+                                            <md-input-container class="full-width" ng-show="search.found_comment">
                                                 <label>
                                                     <span ng-show="search.result_count && state.settings.getSearchResultCount">{{search.result_count}} search results for sentence {{$index + 1}}</span>
                                                     <span ng-hide="search.result_count && state.settings.getSearchResultCount">Search result for sentence {{$index + 1}}</span>
                                                 </label>
                                                 <textarea ng-model="search.found_comment" readonly
-                                                          placeholder="No matching comments found"
                                                           class="almost-full-width"></textarea>
                                             </md-input-container>
+                                            <span ng-hide="search.found_comment" class="no-matches">No matching comments found<br
+                                                    hide-gt-sm><br hide-gt-sm></span>
                                         </td>
                                         <td flex layout="column">
 

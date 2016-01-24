@@ -1,0 +1,24 @@
+<md-dialog flex="90" md-theme="{{ state.theme.colorTheme }}">
+    <md-dialog-content class="dialog-modal">
+        <md-content>
+            <div class="center-aligned ">
+                <h2 ng-style="state.theme.highlightColor">Stats</h2>
+            </div>
+
+            Total Not Deleted Comments: {{totalCommentsSize}}<br>
+
+            Tagged: {{stats.tagged}} ({{(stats.tagged / totalCommentsSize * 100).toFixed(2)}}%)<br>
+            Rated: {{stats.rated}} ({{(stats.rated / totalCommentsSize * 100).toFixed(2)}}%)<br>
+            Flagged: {{stats.flagged}} ({{(stats.flagged / totalCommentsSize * 100).toFixed(2)}}%)<br>
+            Edited: {{stats.edited}} ({{(stats.edited / totalCommentsSize * 100).toFixed(2)}}%)<br>
+
+            Unread messages: {{stats.unread}}<br>
+            Password Fails last 7 days: {{stats.fails}}<br>
+
+            <div class="center-aligned close-modal-elements">
+                <md-button class="md-primary" ng-click="closeDialog()">Close Settings</md-button>
+            </div>
+        </md-content>
+
+    </md-dialog-content>
+</md-dialog>
