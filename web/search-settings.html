@@ -2,7 +2,7 @@
     <md-dialog-content class="dialog-modal">
         <md-content>
             <div class="center-aligned ">
-                <h2 ng-style="state.theme.highlightColor">Search Settings</h2>
+                <h2 ng-style="state.theme.highlightColor">Comment Bank and Search Settings</h2>
             </div>
 
             <md-divider></md-divider>
@@ -83,7 +83,7 @@
                         <i class="material-icons inline-icon">cached</i>
                         Reload With <span ng-bind="formatNumber(state.settings.reduceCommentsSize);"></span>
                     </md-button>
-                    <md-button aria-label="Reload All" md-ink-ripple flex class="md-button md-raised md-primary"
+                    <md-button aria-label="Reload All" md-ink-ripple flex class="md-button md-raised md-accent"
                                md-ripple-size="auto" ng-click="reloadWithLimit(0)"
                                ng-disabled="comments.length == totalCommentsSize">
                         <i class="material-icons inline-icon">cached</i>

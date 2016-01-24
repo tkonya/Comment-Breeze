@@ -219,22 +219,23 @@
                                     to it.
                                 </md-subheader>
                                 <div layout-xs="column" layout-gt-xs="row">
-                                    <md-button class="md-primary md-hue-1" ng-click="setTheme('breezy')"
+                                    <md-button class="md-accent md-raised" ng-click="setTheme('breezy')"
                                                ng-disabled="state.theme.colorTheme == 'breezy'">Breezy
                                     </md-button>
-                                    <md-button class="md-primary md-hue-1" ng-click="setTheme('grass')"
+                                    <md-button class="md-accent md-raised" ng-click="setTheme('grass')"
                                                ng-disabled="state.theme.colorTheme == 'grass'">Grass
                                     </md-button>
-                                    <md-button class="md-primary md-hue-1" ng-click="setTheme('darkula')"
+                                    <md-button class="md-accent md-raised" ng-click="setTheme('darkula')"
                                                ng-disabled="state.theme.colorTheme == 'darkula'">Darkula
                                     </md-button>
-                                    <md-button class="md-primary md-hue-1" ng-click="setTheme('prince')"
+                                    <md-button class="md-accent md-raised" ng-click="setTheme('prince')"
                                                ng-disabled="state.theme.colorTheme == 'prince'">Prince
                                     </md-button>
-                                    <md-button class="md-primary md-hue-1" ng-click="setTheme('matrix')"
+                                    <md-button class="md-accent md-raised" ng-click="setTheme('matrix')"
                                                ng-disabled="state.theme.colorTheme == 'matrix'">Matrix
                                     </md-button>
                                 </div>
+                                <br>
                             </md-content>
                         </section>
 
@@ -356,7 +357,8 @@
                                             <div class="hint" ng-show="state.showHints">The custom introduction to
                                                 appear at the beginning of every comment (optional)
                                             </div>
-                                            <md-tooltip ng-show="state.settings.showTooltips" class="tooltip">
+                                            <md-tooltip ng-style="state.theme.tooltips"
+                                                        ng-show="state.settings.showTooltips" class="tooltip">
                                                 <span ng-style="state.theme.tooltips">The custom introduction to appear at the beginning of every comment (optional)</span>
                                             </md-tooltip>
                                         </md-input-container>
@@ -479,9 +481,9 @@
                                             <md-radio-button ng-disabled="!state.settings.enableNeutralGender"
                                                              ng-model="gender" value="neutral" class="gender-radio">
                                                 N<span hide-xs>eutral</span>
-                                                <md-tooltip
-                                                        ng-show="state.settings.showTooltips && !state.enableNeutralGender"
-                                                        class="tooltip">
+                                                <md-tooltip ng-style="state.theme.tooltips"
+                                                            ng-show="state.settings.showTooltips && !state.enableNeutralGender"
+                                                            class="tooltip">
                                                     Neutral gender can be enabled on the settings page
                                                 </md-tooltip>
                                                 <md-tooltip
@@ -566,7 +568,7 @@
 
                                         <md-button aria-label="Add" md-ink-ripple flex
                                                    ng-show="state.global_pattern.length < 1"
-                                                   class="md-button md-raised md-primary button-min-size add-pattern-button"
+                                                   class="md-button md-raised md-accent button-min-size add-pattern-button"
                                                    ng-click="editingPattern = []; selectedTab = tabIndexes.patterns"
                                                    md-ripple-size="auto">
                                             <i class="material-icons inline-icon">extension</i>
@@ -1345,7 +1347,7 @@
 
                                     <div flex layout="column">
                                         <md-button aria-label="Add new smart search" md-ink-ripple
-                                                   class="md-button md-raised md-primary" md-ripple-size="auto"
+                                                   class="md-button md-raised md-accent" md-ripple-size="auto"
                                                    ng-click="editingPattern.push(getSmartSearchResult(newPatternPiece, state.settings.getSearchResultCount)); newPatternPiece.search_text = ''; buildAllSmartSearchComments(); illToastToThat('Pattern piece added');">
                                             <i class="material-icons inline-icon">extension</i>
                                             <span>Add Pattern Piece</span>

@@ -303,6 +303,10 @@ td.comment-text:hover {
     opacity: 0;
 }
 
+.dialog-content {
+    margin: 2em;
+}
+
 .menu-content {
     max-height: 1000px;
 }
@@ -336,6 +340,10 @@ td.comment-text:hover {
     padding-left: 1em;
     padding-right: 1em;
     border-radius: 0 0 5px 5px;
+}
+
+.pos-neg-radio {
+    margin-left: 0.75em;
 }
 
 .colors-buttons {

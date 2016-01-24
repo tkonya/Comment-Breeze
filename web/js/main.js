@@ -1,6 +1,28 @@
 var commentApp = angular.module('commentApp', ['angular-clipboard', 'ngMaterial'])
     .config(function($mdThemingProvider) {
 
+        $mdThemingProvider.definePalette('black', {
+            '50': 'FAFAFA',
+            '100': 'F5F5F5',
+            '200': 'EEEEEE',
+            '300': 'BDBDBD',
+            '400': '9E9E9E',
+            '500': '757575',
+            '600': '616161',
+            '700': '424242',
+            '800': '111111',
+            '900': '000000',
+            'A100': '000000',
+            'A200': '000000',
+            'A400': '000000',
+            'A700': '000000',
+            'contrastDefaultColor': 'dark',    // whether, by default, text (contrast)
+            // on this palette should be dark or light
+            'contrastDarkColors': ['50', '100', //hues which contrast should be 'dark' by default
+                '200', '300', '400', 'A100'],
+            'contrastLightColors': undefined    // could also specify this if default was 'dark'
+        });
+
         $mdThemingProvider.theme('darkula')
             .primaryPalette('amber', {
                 'default': '700', // toolbars / card headers
@@ -56,11 +78,11 @@ var commentApp = angular.module('commentApp', ['angular-clipboard', 'ngMaterial'
                 'hue-3': '600'
             })
             .accentPalette('green')
-            .backgroundPalette('grey', {
-                'default': '900', // default, menu box
+            .backgroundPalette('black', {
+                'default': '800', // default, menu box
                 'hue-1': '900', // background background
                 'hue-2': '900', // no idea what is wrong with this hue
-                'hue-3': '900' // cards background
+                'hue-3': '800' // cards background
             }).dark();
 
         $mdThemingProvider.theme('grass')
@@ -361,13 +383,13 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
     };
 
     $scope.replaceStudentName = function(text, studentName, oldStudentName) {
-        console.log('replacing ' + oldStudentName + ' with ' + studentName + ' for the text ' + text);
+        //console.log('replacing ' + oldStudentName + ' with ' + studentName + ' for the text ' + text);
         if (studentName != null && studentName != '') {
             if (oldStudentName != null && oldStudentName != '' && studentName != oldStudentName) {
                 text = text.replace(new RegExp($scope.oldStudentName, 'g'), studentName);
             }
             text = text.replace(/STUDENT_NAME/g, studentName);
-            console.log('replace Student Name Fixed text: ' + text);
+            //console.log('replace Student Name Fixed text: ' + text);
             return text;
         }
         return text;
@@ -385,7 +407,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
     };
     
     $scope.replaceClassName = function(text) {
-        console.log('Changing class name for ' + text);
+        //console.log('Changing class name for ' + text);
         var className;
         if ($scope.state.class_name == null || $scope.state.class_name == '') {
             className = 'CLASS_NAME';
@@ -397,7 +419,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             text = text.replace(new RegExp($scope.state.old_class_name, 'g'), className);
         }
 
-        console.log('replace class name fixed text: ' + text);
+        //console.log('replace class name fixed text: ' + text);
         
         return text.replace(/CLASS_NAME/g, className);
     };
@@ -1012,7 +1034,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
     $scope.getSmartSearchResult = function(search, getResultCount) {
 
         // if there are no working search parameters passed then do not actually count the results, it's pointless!
-        if (getResultCount && search.tone == 'Any' && (search.search_text == '' || (!search.tags && !search.text))) {
+        if (getResultCount && search.tone == 'Any' && search.search_text == '') {
             getResultCount = false;
         }
 
@@ -1064,6 +1086,8 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
 
         if (getResultCount) {
             search.result_count = searchResults;
+        } else {
+            delete search.result_count;
         }
 
         return angular.copy(search);
@@ -1311,6 +1335,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         var neutralColor; // color for neutral comments icon
         var unratedColor; // color for unrated comments
         var tooltipsFontColor;
+        var textColor; // color of the text on the background or alt background
 
         // still have to set some colors that we want in ways angular material palettes don't support
         if (theme == 'darkula') {
@@ -1337,7 +1362,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             unratedColor = '#78909C';
         } else if (theme == 'matrix') {
             primaryColor = '#4CAF50';
-            altBackgroundColor = '#212121';
+            altBackgroundColor = '#191919';
             positiveColor = '#4CAF50';
             negativeColor = '#4CAF50';
             neutralColor = '#4CAF50';
@@ -1379,6 +1404,13 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             $scope.state.theme.tooltips = {
                 'font=weight': 'bold'
             };
+        }
+        if (textColor) {
+            $scope.state.theme.textColor = {
+                'color': textColor
+            };
+        } else {
+            $scope.state.theme.textColor = {};
         }
 
     };
