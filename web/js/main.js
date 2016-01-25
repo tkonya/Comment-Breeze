@@ -23,6 +23,28 @@ var commentApp = angular.module('commentApp', ['angular-clipboard', 'ngMaterial'
             'contrastLightColors': undefined    // could also specify this if default was 'dark'
         });
 
+        $mdThemingProvider.definePalette('adventure', {
+            '50': '66BB6A',
+            '100': '81C784',
+            '200': 'EEEEEE',
+            '300': 'BDBDBD',
+            '400': 'A5D6A7',
+            '500': '757575',
+            '600': '616161',
+            '700': '424242',
+            '800': '80D8FF',
+            '900': '4FC3F7',
+            'A100': '000000',
+            'A200': '000000',
+            'A400': '000000',
+            'A700': '000000',
+            'contrastDefaultColor': 'light',    // whether, by default, text (contrast)
+            // on this palette should be dark or light
+            'contrastDarkColors': ['50', '100', //hues which contrast should be 'dark' by default
+                '200', '300', '400', 'A100'],
+            'contrastLightColors': undefined    // could also specify this if default was 'dark'
+        });
+
         $mdThemingProvider.theme('darkula')
             .primaryPalette('amber', {
                 'default': '700', // toolbars / card headers
@@ -96,6 +118,21 @@ var commentApp = angular.module('commentApp', ['angular-clipboard', 'ngMaterial'
             .backgroundPalette('green', {
                 'default': '50', // default, menu box
                 'hue-1': '50', // background background
+                'hue-2': '50', // no idea what is wrong with this hue
+                'hue-3': '100' // cards background
+            });
+
+        $mdThemingProvider.theme('adventure')
+            .primaryPalette('blue', {
+                'default': '800', // toolbars / card headers
+                'hue-1': '900', // non-disabled menu items, menu button on individual students, text that should stand out from the background more than primary default
+                'hue-2': '400',
+                'hue-3': '600'
+            })
+            .accentPalette('yellow')
+            .backgroundPalette('adventure', {
+                'default': '50', // default, menu box
+                'hue-1': '900', // background background
                 'hue-2': '50', // no idea what is wrong with this hue
                 'hue-3': '100' // cards background
             });
@@ -176,7 +213,8 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
                 tabSwipe: false
             },
             theme: {
-                colorTheme: 'breezy'
+                colorTheme: 'breezy',
+                seizures: false
             }
         };
 
@@ -1377,6 +1415,14 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             negativeColor = '#0D47A1';
             neutralColor = '#78909C';
             unratedColor = '#455A64';
+        } else if (theme == 'adventure') {
+            primaryColor = '#1565C0';
+            altBackgroundColor = '#A5D6A7';
+            positiveColor = '#FFEB3B';
+            negativeColor = '#512DA8';
+            neutralColor = '#9E9E9E';
+            unratedColor = '#E0E0E0';
+            tooltipsFontColor = '#FFFFFF';
         }
 
         $scope.state.theme.highlightColor = {
@@ -1438,6 +1484,21 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             });
         }
 
+    };
+
+    $scope.confirmSeizures = function (ev) {
+        var confirm = $mdDialog.confirm()
+            .title('Seizure Mode')
+            .textContent('Are you sure you want to do this? The screen will flash rapidly.')
+            .ariaLabel('Start Seizure Mode')
+            .targetEvent(ev)
+            .ok('DO IT!')
+            .cancel('Cancel');
+        $mdDialog.show(confirm).then(function () {
+            $scope.startSeizures();
+        }, function () {
+
+        });
     };
 
     $scope.setInitialApplicationState();

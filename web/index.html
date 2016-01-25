@@ -78,7 +78,7 @@
                     <md-tab-body>
                         <div class="all-tabs main-tab">
                             <div class="front-page-content-container">
-                                <md-content class="front-page-content md-background md-hue-3">
+                                <md-content class="front-page-content md-whiteframe-5dp md-background md-hue-3">
                                     <br>
                                     <h2 ng-style="state.theme.highlightColor">Welcome to Comment Breeze!</h2>
 
@@ -98,7 +98,6 @@
                                         Blazing fast multi-student comment building<br>
                                         Customizable pattern-based generation<br>
                                         Designed for both smartphones and desktops<br>
-                                        Save and load<br>
                                     </p>
 
                                     <div ng-show="isMobile">
@@ -190,6 +189,7 @@
 
                                     <br><br>
                                 </md-content>
+                                <br><br>
                             </div>
                         </div>
                     </md-tab-body>
@@ -216,25 +216,27 @@
                             <md-content
                                     class="theme-card-content md-background md-background md-hue-3 colors-buttons">
                                 <md-subheader class="md-primary md-background md-hue-3">
-                                    Set the color theme below. Bookmarks will save your theme, so you can always come
-                                    back
-                                    to it.
+                                    Set the color theme below. If you bookmark this page while on your favorite theme it
+                                    will be set automatically when you return.
                                 </md-subheader>
                                 <div layout-xs="column" layout-gt-xs="row">
-                                    <md-button class="md-accent md-raised" ng-click="setTheme('breezy')"
+                                    <md-button class="md-accent md-raised" ng-click="setTheme('breezy');"
                                                ng-disabled="state.theme.colorTheme == 'breezy'">Breezy
                                     </md-button>
-                                    <md-button class="md-accent md-raised" ng-click="setTheme('grass')"
-                                               ng-disabled="state.theme.colorTheme == 'grass'">Grass
-                                    </md-button>
-                                    <md-button class="md-accent md-raised" ng-click="setTheme('darkula')"
+                                    <md-button class="md-accent md-raised" ng-click="setTheme('darkula');"
                                                ng-disabled="state.theme.colorTheme == 'darkula'">Darkula
                                     </md-button>
-                                    <md-button class="md-accent md-raised" ng-click="setTheme('prince')"
+                                    <md-button class="md-accent md-raised" ng-click="setTheme('grass');"
+                                               ng-disabled="state.theme.colorTheme == 'grass'">Grass
+                                    </md-button>
+                                    <md-button class="md-accent md-raised" ng-click="setTheme('prince');"
                                                ng-disabled="state.theme.colorTheme == 'prince'">Prince
                                     </md-button>
-                                    <md-button class="md-accent md-raised" ng-click="setTheme('matrix')"
+                                    <md-button class="md-accent md-raised" ng-click="setTheme('matrix');"
                                                ng-disabled="state.theme.colorTheme == 'matrix'">Matrix
+                                    </md-button>
+                                    <md-button class="md-accent md-raised" ng-click="setTheme('adventure');"
+                                               ng-disabled="state.theme.colorTheme == 'adventure'">Adventure
                                     </md-button>
                                 </div>
                                 <br>
@@ -273,18 +275,18 @@
                                             </md-button>
                                         </md-menu-item>
                                         <md-divider></md-divider>
-                                        <md-menu-item hide-gt-sm>
-                                            <md-button ng-click="showDialog('/settings.html');"
-                                                       class="md-primary md-hue-1">
-                                                <i class="material-icons inline-icon">settings</i>
-                                                <span>Settings</span>
-                                            </md-button>
-                                        </md-menu-item>
                                         <md-menu-item>
                                             <md-button ng-click="toggleColorThemesVisibility()"
                                                        class="md-primary md-hue-1">
                                                 <i class="material-icons inline-icon">color_lens</i>
                                                 <span>Themes</span>
+                                            </md-button>
+                                        </md-menu-item>
+                                        <md-menu-item>
+                                            <md-button ng-click="showDialog('/settings.html');"
+                                                       class="md-primary md-hue-1">
+                                                <i class="material-icons inline-icon">settings</i>
+                                                <span>Settings</span>
                                             </md-button>
                                         </md-menu-item>
                                         <md-menu-item hide-gt-sm>
@@ -309,16 +311,6 @@
                                         </md-menu-item>
                                     </md-menu-content>
                                 </md-menu>
-
-                                <md-button hide-xs hide-sm ng-click="showDialog('/settings.html');">
-                                    <i class="material-icons inline-icon">settings</i>
-                                    <span hide-xs>Settings</span>
-                                    <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips"
-                                                class="tooltip"
-                                                md-direction="bottom">
-                                        Show application settings
-                                    </md-tooltip>
-                                </md-button>
 
                                 <md-button hide-xs hide-sm ng-click="showDialog('/build-help.html');">
                                     <i class="material-icons inline-icon">help</i>
@@ -550,7 +542,8 @@
                                                 Generate Random Comment
                                                 <md-tooltip ng-style="state.theme.tooltips"
                                                             ng-show="state.settings.showTooltips" class="tooltip">
-                                                    Start with a random comment {{makeSomethingUpSize}} sentences long
+                                                    Start with a random comment {{state.settings.makeSomethingUpSize}}
+                                                    sentences long
                                                 </md-tooltip>
                                             </md-radio-button>
                                             <md-radio-button ng-show="state.global_pattern.length > 0"
@@ -1431,7 +1424,8 @@
 
                                 <div class="center-aligned quick-instructions-container"
                                      ng-hide="editingPattern.length > 0">
-                                    <fieldset ng-style="state.theme.textColor" class="quick-instructions"
+                                    <md-divider></md-divider>
+                                    <div ng-style="state.theme.textColor" class="quick-instructions"
                                               style="margin: auto;">
                                         <br>
                                         Patterns allows you to build a sentence-by-sentence template that your comment
@@ -1452,7 +1446,7 @@
 
                                         <span ng-click="showSmartSearchHelp()" class="cursor-pointer">See the help for more details</span>
                                         <br><br>
-                                    </fieldset>
+                                    </div>
                                     <br><br>
                                 </div>
 
