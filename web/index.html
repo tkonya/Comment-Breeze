@@ -52,6 +52,7 @@
     <meta name="theme-color" content="#ffffff">
 
 </head>
+
 <body ng-app="commentApp" ng-controller="CommentController" md-theme="{{ state.theme.colorTheme }}">
 
     <script>
@@ -68,7 +69,8 @@
 
         <div id="toastBounds">
 
-            <md-tabs md-dynamic-height="true" md-center-tabs="true" md-selected="selectedTab">
+            <md-tabs md-dynamic-height="true" md-center-tabs="true" md-selected="selectedTab"
+                     md-swipe-content="{{ state.settings.tabSwipe }}">
                 <md-tab md-on-select="selectTab();">
                     <md-tab-label>
                         Comment Breeze
@@ -692,7 +694,7 @@
                                                 </form>
                                             </div>
 
-                                            <div class="all-students-gender-radios">
+                                            <div class="all-students-gender-radios" ng-hide="student.collapsed">
                                                 <md-radio-group ng-model="student.gender"
                                                                 class="md-primary radio-button-group"
                                                                 layout="row"
@@ -734,7 +736,7 @@
                                             <br hide-gt-xs>
 
                                             <div flex>
-                                                <div ng-show="student.pattern && student.pattern_type == 'global'"
+                                                <div ng-show="student.pattern && student.pattern_type == 'global' && !student.collapsed"
                                                      class="center-aligned">
                                                     <i class="material-icons inline-icon">extension</i> Default Pattern
                                                     <md-tooltip ng-style="state.theme.tooltips"
@@ -743,7 +745,7 @@
                                                     </md-tooltip>
                                                 </div>
 
-                                                <div ng-show="student.pattern && student.pattern_type == 'individual'"
+                                                <div ng-show="student.pattern && student.pattern_type == 'individual' && !student.collapsed"
                                                      class="center-aligned">
                                                     <i class="material-icons inline-icon">extension</i> Individual
                                                     Pattern
@@ -1314,6 +1316,7 @@
                                 <md-subheader class="md-primary md-hue-1 md-background md-hue-3">
                                     <span ng-show="editingStudent == null">Now editing default pattern</span>
                                     <span ng-hide="editingStudent == null">Now editing individual pattern for {{editingStudent.name}}</span>
+                                    <span ng-hide="editingPattern.length < 1"><br>Pattern length: {{editingPattern.length}}</span>
                                 </md-subheader>
 
                                 <div layout-xs="column" layout-sm="column" layout-md="row" layout-gt-md="row"

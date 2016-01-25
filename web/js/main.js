@@ -172,10 +172,11 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
                 reduceCommentsSize: 10000,
                 showCommonTags: false,
                 newStudentFill: 'random',
-                useSmartSearch: false
+                useSmartSearch: false,
+                tabSwipe: false
             },
             theme: {
-                colorTheme: 'darkula'
+                colorTheme: 'breezy'
             }
         };
 
@@ -1152,20 +1153,19 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
     };
 
     $scope.setMobileSettings = function() {
+        if ($mdMedia('xs') || $mdMedia('sm')) {
+            $scope.isMobile = true;
+            $scope.state.settings.tabSwipe = true;
+            $scope.state.settings.showTooltips = false;
+            $scope.state.settings.showEditButtons = false;
+        }
+
         if ($mdMedia('xs')) {
             $scope.commentSizeToGet = 2000;
-            $scope.state.settings.showTooltips = false;
             $scope.state.settings.showTags = false;
-            $scope.state.settings.showEditButtons = false;
             $scope.state.settings.showTone = false;
-            $scope.isMobile = true;
         } else if ($mdMedia('sm')) {
-            $scope.state.settings.showTooltips = false;
-            $scope.state.settings.showEditButtons = false;
-            //$scope.showHints = true;
             $scope.commentSizeToGet = 6000;
-            //$scope.showHints = true;
-            $scope.isMobile = true;
         }
     };
 
