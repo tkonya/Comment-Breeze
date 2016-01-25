@@ -225,6 +225,10 @@
                                     </md-button>
                                     <md-button class="md-accent md-raised" ng-click="setTheme('darkula');"
                                                ng-disabled="state.theme.colorTheme == 'darkula'">Darkula
+                                        <md-tooltip ng-style="state.theme.tooltips"
+                                                    ng-show="state.settings.showTooltips" class="tooltip">
+                                            Based on your favorite IDE's dark theme
+                                        </md-tooltip>
                                     </md-button>
                                     <md-button class="md-accent md-raised" ng-click="setTheme('grass');"
                                                ng-disabled="state.theme.colorTheme == 'grass'">Grass
@@ -234,10 +238,17 @@
                                     </md-button>
                                     <md-button class="md-accent md-raised" ng-click="setTheme('matrix');"
                                                ng-disabled="state.theme.colorTheme == 'matrix'">Matrix
+                                        <md-tooltip ng-style="state.theme.tooltips"
+                                                    ng-show="state.settings.showTooltips" class="tooltip">
+                                            What if I told you this is the best website for report card comments
+                                        </md-tooltip>
                                     </md-button>
                                     <md-button class="md-accent md-raised" ng-click="setTheme('adventure');"
                                                ng-disabled="state.theme.colorTheme == 'adventure'">Adventure
                                     </md-button>
+                                    <!--<md-button class="md-accent md-raised" ng-click="setTheme('brownie');"-->
+                                    <!--ng-disabled="state.theme.colorTheme == 'brownie'">Brownie-->
+                                    <!--</md-button>-->
                                 </div>
                                 <br>
                             </md-content>

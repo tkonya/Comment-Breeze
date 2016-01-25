@@ -137,6 +137,21 @@ var commentApp = angular.module('commentApp', ['angular-clipboard', 'ngMaterial'
                 'hue-3': '100' // cards background
             });
 
+        $mdThemingProvider.theme('brownie')
+            .primaryPalette('brown', {
+                'default': '900', // toolbars / card headers
+                'hue-1': '900', // non-disabled menu items, menu button on individual students, text that should stand out from the background more than primary default
+                'hue-2': '400',
+                'hue-3': '600'
+            })
+            .accentPalette('brown')
+            .backgroundPalette('brown', {
+                'default': '200', // default, menu box
+                'hue-1': '600', // background background
+                'hue-2': '50', // no idea what is wrong with this hue
+                'hue-3': '500' // cards background
+            }).dark();
+
 
         $mdThemingProvider.alwaysWatchTheme(true);
     });
@@ -1423,6 +1438,15 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             neutralColor = '#9E9E9E';
             unratedColor = '#E0E0E0';
             tooltipsFontColor = '#FFFFFF';
+        } else if (theme == 'brownie') {
+            primaryColor = '#3E2723';
+            altBackgroundColor = '#8D6E63';
+            positiveColor = '#D7CCC8';
+            negativeColor = '#D7CCC8';
+            neutralColor = '#D7CCC8';
+            unratedColor = '#D7CCC8';
+            textColor = '#D7CCC8';
+            tooltipsFontColor = '#5D4037';
         }
 
         $scope.state.theme.highlightColor = {
