@@ -125,7 +125,7 @@
                                         <span ng-show="isMobile">(this may be moved inside the drop down menu on smaller screens)<br></span>
                                         <br>
 
-                                        <md-button class="md-primary md-hue-1"
+                                        <md-button class="md-accent md-button md-raised"
                                                    ng-click="selectedTab = tabIndexes.build">
                                             <i class="material-icons inline-icon">build</i>
                                             Start Building Comments!
@@ -309,17 +309,17 @@
                                         </md-menu-item>
                                         <md-divider></md-divider>
                                         <md-menu-item>
-                                            <md-button class="md-primary md-hue-1" ng-click="showConfirm($event)">
+                                            <md-button class="md-primary md-hue-1" ng-click="showResetDialog();">
                                                 <i class="material-icons inline-icon">refresh</i>
                                                 <span>Reset App</span>
                                             </md-button>
                                         </md-menu-item>
-                                        <md-menu-item>
-                                            <md-button class="md-primary md-hue-1" flex>
-                                                <i class="material-icons inline-icon">close</i>
-                                                <span>Close Menu</span>
-                                            </md-button>
-                                        </md-menu-item>
+                                        <!--<md-menu-item>-->
+                                        <!--<md-button class="md-primary md-hue-1" flex>-->
+                                        <!--<i class="material-icons inline-icon">close</i>-->
+                                        <!--<span>Close Menu</span>-->
+                                        <!--</md-button>-->
+                                        <!--</md-menu-item>-->
                                     </md-menu-content>
                                 </md-menu>
 
@@ -428,10 +428,10 @@
                                 <div ng-show="showAddStudents" layout-xs="column" layout-sm="column" layout-gt-sm="row"
                                      layout-fill>
                                     <div flex layout="column" class="add-student-divs">
-                                        <form ng-submit="addMultiStudent()" autocomplete="off" flex>
+                                        <form ng-submit="addStudent()" autocomplete="off" flex>
                                             <md-input-container class="input-container full-width">
                                                 <label>New Student Name</label>
-                                                <input type="text" ng-model="newMultiStudent">
+                                                <input type="text" ng-model="newStudentName">
                                             </md-input-container>
                                             <div class="hint" ng-show="showHints">Add all the students that you would
                                                 like to make comments for today
@@ -443,16 +443,16 @@
                                         </form>
 
                                         <md-button aria-label="Add" md-ink-ripple flex
-                                                   ng-disabled="newMultiStudent == ''"
-                                                   class="help-button md-button md-raised md-primary button-min-size"
-                                                   ng-click="addMultiStudent()" md-ripple-size="auto">
+                                                   ng-disabled="newStudentName == ''"
+                                                   class="help-button md-button md-raised md-accent button-min-size"
+                                                   ng-click="addStudent()" md-ripple-size="auto">
                                             <i class="material-icons inline-icon">person_add</i>
                                             <span>Add</span>
                                             <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips"
                                                         class="tooltip">
-                                                Adds <span ng-bind="newMultiStudent"
-                                                           ng-hide="newMultiStudent == ''"></span><span
-                                                    ng-show="newMultiStudent == ''">student</span> to the list
+                                                Adds <span ng-bind="newStudentName"
+                                                           ng-hide="newStudentName == ''"></span><span
+                                                    ng-show="newStudentName == ''">student</span> to the list
                                             </md-tooltip>
                                         </md-button>
                                     </div>
@@ -665,12 +665,12 @@
                                                 <span>Remove All Students</span>
                                             </md-button>
                                         </md-menu-item>
-                                        <md-menu-item>
-                                            <md-button aria-label="Remove All Students" class="md-primary md-hue-1">
-                                                <i class="material-icons inline-icon">close</i>
-                                                <span>Close Menu</span>
-                                            </md-button>
-                                        </md-menu-item>
+                                        <!--<md-menu-item>-->
+                                        <!--<md-button aria-label="Remove All Students" class="md-primary md-hue-1">-->
+                                        <!--<i class="material-icons inline-icon">close</i>-->
+                                        <!--<span>Close Menu</span>-->
+                                        <!--</md-button>-->
+                                        <!--</md-menu-item>-->
                                     </md-menu-content>
                                 </md-menu>
 
@@ -771,14 +771,14 @@
                                                 <md-menu-content class="menu-content">
                                                     <md-menu-item>
                                                         <md-button class="md-primary md-hue-1" flex
-                                                                   ng-click="editStudentWithSearch(student)">
+                                                                   ng-click="editStudentWithSearch(student, true);">
                                                             <i class="material-icons inline-icon">search</i>
                                                             <span>Edit w/ Search</span>
                                                         </md-button>
                                                     </md-menu-item>
                                                     <md-menu-item>
                                                         <md-button class="md-primary md-hue-1" flex
-                                                                   ng-click="editMultiStudentAsSmartSearch(student)">
+                                                                   ng-click="editStudentWithPatterns(student, true);">
                                                             <i class="material-icons inline-icon">extension</i>
                                                             <span>Edit w/ Patterns</span>
                                                         </md-button>
@@ -852,12 +852,12 @@
                                                             <span>Remove Student</span>
                                                         </md-button>
                                                     </md-menu-item>
-                                                    <md-menu-item>
-                                                        <md-button class="md-primary md-hue-1" flex>
-                                                            <i class="material-icons inline-icon">close</i>
-                                                            <span>Close Menu</span>
-                                                        </md-button>
-                                                    </md-menu-item>
+                                                    <!--<md-menu-item>-->
+                                                    <!--<md-button class="md-primary md-hue-1" flex>-->
+                                                    <!--<i class="material-icons inline-icon">close</i>-->
+                                                    <!--<span>Close Menu</span>-->
+                                                    <!--</md-button>-->
+                                                    <!--</md-menu-item>-->
                                                 </md-menu-content>
                                             </md-menu>
 
@@ -894,10 +894,50 @@
                     </md-tab-label>
                     <md-tab-body>
 
-                        <section class="control-card md-whiteframe-5dp md-background md-hue-3" ng-show="editingStudent">
+                        <section class="control-card md-whiteframe-5dp md-background md-hue-3"
+                                 ng-show="!editingStudentSearch && state.students.length > 0">
+                            <md-toolbar class="md-toolbar-tools control-card-toolbar">
+                                <md-button ng-click="showSelectStudentSearch = !showSelectStudentSearch">
+                                    <i class="material-icons inline-icon" ng-show="showSelectStudentSearch">keyboard_arrow_up</i>
+                                    <i class="material-icons inline-icon" ng-show="!showSelectStudentSearch">keyboard_arrow_down</i>
+                                    <span class="md-title">Select Student</span>
+                                </md-button>
+
+                                <span flex></span>
+
+                            </md-toolbar>
+
+                            <md-content class="select-student-card-content md-background md-hue-3">
+
+                                <md-subheader ng-show="showSelectStudentSearch"
+                                              class="md-primary md-hue-1 md-background md-hue-3">
+                                    Select a student to edit with search
+                                </md-subheader>
+
+                                <div class="select-student-card-inner-content" ng-show="showSelectStudentSearch"
+                                     layout-xs="column" layout-gt-xs="row" layout-fill>
+
+                                    <md-input-container flex-xs="100" flex-sm="50" flex-gt-sm="30"
+                                                        class="select-student-input">
+                                        <md-select ng-model="studentToEditWithSearch" placeholder="Student to Edit"
+                                                   md-on-close="editStudentWithSearch(studentToEditWithSearch, false);">
+                                            <md-option ng-value="student" ng-repeat="student in state.students">{{$index
+                                                + 1}}: {{ student.name }}
+                                            </md-option>
+                                        </md-select>
+                                    </md-input-container>
+                                </div>
+
+                                <br ng-hide="showSelectStudentSearch">
+
+                            </md-content>
+                        </section>
+
+                        <section class="control-card md-whiteframe-5dp md-background md-hue-3"
+                                 ng-show="editingStudentSearch">
                             <md-toolbar class="md-toolbar-tools control-card-toolbar">
                                 <h1>
-                                    <span>Editing Comment For {{editingStudent.name}}</span>
+                                    <span>Editing Comment For {{editingStudentSearch.name}}</span>
                                 </h1>
 
                                 <span hide-xs hide-sm flex></span>
@@ -908,18 +948,18 @@
                                     <span>Done Editing</span>
                                     <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips"
                                                 class="tooltip">
-                                        Saves the changes you've made and goes back to the Multi Student tab
+                                        Saves the changes you've made
                                     </md-tooltip>
                                 </md-button>
 
                                 <md-button aria-label="Cancel Editing" md-ink-ripple
-                                           ng-click="selectedTab = tabIndexes.build; editingStudent = null;"
+                                           ng-click="cancelEditingStudentSearch();"
                                            md-ripple-size="auto">
                                     <i class="material-icons inline-icon">cancel</i>
                                     <span>Cancel Editing</span>
                                     <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips"
                                                 class="tooltip">
-                                        Goes back to the Multi Student tab without saving anything
+                                        Cancel editing and
                                     </md-tooltip>
                                 </md-button>
 
@@ -929,7 +969,8 @@
 
                                 <md-input-container class="input-container">
                                     <label>Your Comments</label>
-                                    <textarea ng-model="editingStudent.comment" class="almost-full-width"></textarea>
+                                    <textarea ng-model="editingStudentSearch.comment"
+                                              class="almost-full-width"></textarea>
                                     <div class="hint" ng-show="showHints">Add comments by clicking below and edit them
                                         as needed
                                     </div>
@@ -997,9 +1038,10 @@
 
                             <md-content class="comment-bank-content md-background md-hue-3" layout="column" layout-fill>
 
-                                <md-subheader class="md-primary md-hue-1 md-background md-hue-3">
-                                    <span ng-show="editingStudent == null">Select a student from the Build tab to edit their comments here</span>
-                                    <span ng-show="editingStudent != null">Search for comments and click to add to your comment for {{editingStudent.name}}</span>
+                                <md-subheader ng-show="editingStudentSearch != null || state.students.length < 1"
+                                              class="md-primary md-hue-1 md-background md-hue-3">
+                                    <span ng-show="state.students.length < 1">Add some students on the build tab to get started</span>
+                                    <span ng-show="editingStudentSearch != null">Search for comments and click to add to your comment for {{editingStudentSearch.name}}</span>
                                 </md-subheader>
 
                                 <div layout-xs="column" layout-sm="column" layout-gt-sm="row" layout-fill>
@@ -1172,10 +1214,50 @@
                     </md-tab-label>
                     <md-tab-body>
 
-                        <section class="control-card md-whiteframe-5dp md-background md-hue-3" ng-show="editingStudent">
+                        <section class="control-card md-whiteframe-5dp md-background md-hue-3"
+                                 ng-show="!editingStudentPattern && state.students.length > 0">
+                            <md-toolbar class="md-toolbar-tools control-card-toolbar">
+                                <md-button ng-click="showSelectStudentPattern = !showSelectStudentPattern">
+                                    <i class="material-icons inline-icon" ng-show="showSelectStudentPattern">keyboard_arrow_up</i>
+                                    <i class="material-icons inline-icon" ng-show="!showSelectStudentPattern">keyboard_arrow_down</i>
+                                    <span class="md-title">Select Student</span>
+                                </md-button>
+
+                                <span flex></span>
+
+                            </md-toolbar>
+
+                            <md-content class="select-student-card-content md-background md-hue-3">
+
+                                <md-subheader ng-show="showSelectStudentPattern"
+                                              class="md-primary md-hue-1 md-background md-hue-3">
+                                    Select a student to edit with Patterns, or leave empty to edit the default pattern
+                                </md-subheader>
+
+                                <div class="select-student-card-inner-content" ng-show="showSelectStudentPattern"
+                                     layout-xs="column" layout-gt-xs="row" layout-fill>
+
+                                    <md-input-container flex-xs="100" flex-sm="50" flex-gt-sm="30"
+                                                        class="select-student-input">
+                                        <md-select ng-model="studentToEditWithPattern" placeholder="Student to Edit"
+                                                   md-on-close="editStudentWithPatterns(studentToEditWithPattern, false);">
+                                            <md-option ng-value="student" ng-repeat="student in state.students">{{$index
+                                                + 1}}: {{ student.name }}
+                                            </md-option>
+                                        </md-select>
+                                    </md-input-container>
+                                </div>
+
+                                <br ng-hide="showSelectStudentPattern">
+
+                            </md-content>
+                        </section>
+
+                        <section class="control-card md-whiteframe-5dp md-background md-hue-3"
+                                 ng-show="editingStudentPattern">
                             <md-toolbar class="md-toolbar-tools control-card-toolbar">
                                 <h1>
-                                    <span>Comments for {{editingStudent.name}}</span>
+                                    <span>Comments for {{editingStudentPattern.name}}</span>
                                 </h1>
 
                                 <span flex></span>
@@ -1191,7 +1273,7 @@
                                 </md-button>
 
                                 <md-button aria-label="Cancel Editing" md-ink-ripple
-                                           ng-click="selectedTab = tabIndexes.build; editingStudent = null;"
+                                           ng-click="cancelEditingStudentPattern();"
                                            md-ripple-size="auto">
                                     <i class="material-icons inline-icon">cancel</i>
                                     <span>Cancel<span hide-xs> Editing</span></span>
@@ -1207,7 +1289,8 @@
 
                                 <md-input-container class="input-container">
                                     <label>Your Comments</label>
-                                    <textarea ng-model="editingStudent.comment" class="almost-full-width"></textarea>
+                                    <textarea ng-model="editingStudentPattern.comment"
+                                              class="almost-full-width"></textarea>
                                     <div class="hint" ng-show="showHints">Add comments by clicking below and edit them
                                         as needed
                                     </div>
@@ -1261,7 +1344,7 @@
                                                 <span>Load Sample Pattern</span>
                                             </md-button>
                                         </md-menu-item>
-                                        <md-menu-item ng-hide="editingStudent">
+                                        <md-menu-item ng-hide="editingStudentPattern">
                                             <md-button class="md-primary md-hue-1"
                                                        ng-disabled="editingPattern.length < 1 || state.students.length < 1"
                                                        aria-label="Remove All Searches" md-ink-ripple flex
@@ -1294,12 +1377,12 @@
                                                 <span>Remove All Searches</span>
                                             </md-button>
                                         </md-menu-item>
-                                        <md-menu-item>
-                                            <md-button class="md-primary md-hue-1" flex>
-                                                <i class="material-icons inline-icon">close</i>
-                                                <span>Close Menu</span>
-                                            </md-button>
-                                        </md-menu-item>
+                                        <!--<md-menu-item>-->
+                                        <!--<md-button class="md-primary md-hue-1" flex>-->
+                                        <!--<i class="material-icons inline-icon">close</i>-->
+                                        <!--<span>Close Menu</span>-->
+                                        <!--</md-button>-->
+                                        <!--</md-menu-item>-->
                                     </md-menu-content>
                                 </md-menu>
 
@@ -1318,8 +1401,8 @@
                             <md-content class="comment-bank-content md-background md-hue-3" layout="column" layout-fill>
 
                                 <md-subheader class="md-primary md-hue-1 md-background md-hue-3">
-                                    <span ng-show="editingStudent == null">Now editing default pattern</span>
-                                    <span ng-hide="editingStudent == null">Now editing individual pattern for {{editingStudent.name}}</span>
+                                    <span ng-show="editingStudentPattern == null">Now editing default pattern</span>
+                                    <span ng-hide="editingStudentPattern == null">Now editing individual pattern for {{editingStudentPattern.name}}</span>
                                     <span ng-hide="editingPattern.length < 1"><br>Pattern length: {{editingPattern.length}}</span>
                                 </md-subheader>
 

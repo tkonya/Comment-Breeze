@@ -1,10 +1,10 @@
-<md-dialog flex="90" md-theme="{{ state.theme.colorTheme }}">
-    <md-dialog-content class="dialog-modal">
-        <md-content>
-            <div class="center-aligned ">
-                <h2 ng-style="state.theme.highlightColor">Patterns</h2>
-            </div>
-
+<md-dialog flex="90" md-theme="{{ state.theme.colorTheme }}" class="dialog-top-level">
+    <md-dialog-content>
+        <md-toolbar class="md-toolbar-tools dialog-toolbar">
+            <h1>Patterns Help</h1>
+            <span flex></span>
+        </md-toolbar>
+        <md-content class="dialog-content">
             <h4 ng-style="state.theme.highlightColor">Setup:</h4>
             <p ng-style="state.theme.textColor">
                 The default pattern can be created or edited by just selecting the tab, as long as you are not currently

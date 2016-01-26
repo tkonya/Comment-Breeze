@@ -1,18 +1,17 @@
-<md-dialog flex="90" md-theme="{{ state.theme.colorTheme }}">
-    <md-dialog-content class="dialog-modal">
-        <md-content>
-            <div class="center-aligned ">
-                <h2 ng-style="state.theme.highlightColor">
-                    <span ng-show="state.class_name">All Comments for {{state.class_name}}</span>
-                    <span ng-show="!state.class_name">All Comments</span>
-                </h2>
-            </div>
+<md-dialog flex="90" md-theme="{{ state.theme.colorTheme }}" class="dialog-top-level">
+    <md-dialog-content>
+        <md-toolbar class="md-toolbar-tools dialog-toolbar">
+            <h1 ng-show="state.class_name">All Comments for {{state.class_name}}</h1>
+            <h1 ng-show="!state.class_name">All Comments</h1>
+            <span flex></span>
+        </md-toolbar>
+        <md-content class="dialog-content">
 
             <md-input-container class="almost-full-width">
                 <label>
                     All Comments
                 </label>
-            <textarea ng-model="state.all_student_comments" placeholder="There's nothing here!"
+            <textarea readonly ng-model="state.all_student_comments" placeholder="There's nothing here!"
                       class="almost-full-width"></textarea>
             </md-input-container>
 

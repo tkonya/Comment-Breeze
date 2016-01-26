@@ -303,10 +303,6 @@ td.comment-text:hover {
     opacity: 0;
 }
 
-.dialog-content {
-    margin: 2em;
-}
-
 .menu-content {
     max-height: 1000px;
 }
@@ -328,10 +324,22 @@ td.comment-text:hover {
     border-radius: 5px 5px 0 0;
 }
 
+.dialog-toolbar {
+    border-radius: 5px 5px 0 0;
+}
+
 .control-card-content {
     padding-top: 2em;
     padding-left: 1em;
     padding-right: 1em;
+    border-radius: 0 0 5px 5px;
+}
+
+.dialog-content {
+    padding-top: 1em;
+    padding-left: 2em;
+    padding-right: 2em;
+    padding-bottom: 1em;
     border-radius: 0 0 5px 5px;
 }
 
@@ -340,6 +348,19 @@ td.comment-text:hover {
     padding-left: 1em;
     padding-right: 1em;
     border-radius: 0 0 5px 5px;
+}
+
+.select-student-card-content {
+    border-radius: 0 0 5px 5px;
+}
+
+.select-student-card-inner-content {
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.select-student-input {
+    margin-top: 0 !important;
 }
 
 .pos-neg-radio {
@@ -415,4 +436,8 @@ td.comment-text:hover {
 
 .dialog-modal {
     padding: 2em;
+}
+
+.dialog-top-level {
+    border-radius: 5px !important;
 }

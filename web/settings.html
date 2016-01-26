@@ -1,12 +1,10 @@
-<md-dialog flex="80" md-theme="{{ state.theme.colorTheme }}">
-    <md-dialog-content style="padding: 2em;">
-
-        <md-content>
-            <div class="center-aligned ">
-                <h2 ng-style="state.theme.highlightColor">Application Settings</h2>
-            </div>
-
-            <md-divider></md-divider>
+<md-dialog flex="80" md-theme="{{ state.theme.colorTheme }}" class="dialog-top-level">
+    <md-toolbar class="md-toolbar-tools dialog-toolbar">
+        <h1>Application Settings</h1>
+        <span flex></span>
+    </md-toolbar>
+    <md-dialog-content>
+        <md-content class="dialog-content">
 
             <h3 class="settings-header" ng-style="state.theme.highlightColor">Visibility</h3>
             <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
@@ -83,6 +81,19 @@
                     Enable swiping on page to change tabs. This is useful on smartphones, but can be annoying on
                     desktops because clicking and dragging to select text can trigger it inadvertently. Recommended on
                     for mobile or tablet users; off for users with a mouse.
+                </p>
+            </div>
+
+            <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
+                <div flex-gt-sm="25" class="setting-control-container">
+                    <md-checkbox ng-model="state.settings.showAnnoy" class="setting-control"
+                                 aria-label="Enable Annoy Message">
+                        Enable Annoy
+                    </md-checkbox>
+                </div>
+                <p ng-style="state.theme.textColor" flex-gt-sm="75" class="settings-text">
+                    Enable a pop up when you navigate away from a tab where you were editing a student without saving
+                    your work. Helpful if you forget to save your work.
                 </p>
             </div>
 

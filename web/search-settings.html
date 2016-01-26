@@ -1,11 +1,10 @@
-<md-dialog flex="90" md-theme="{{ state.theme.colorTheme }}">
-    <md-dialog-content class="dialog-modal">
-        <md-content>
-            <div class="center-aligned ">
-                <h2 ng-style="state.theme.highlightColor">Comment Bank and Search Settings</h2>
-            </div>
-
-            <md-divider></md-divider>
+<md-dialog flex="90" md-theme="{{ state.theme.colorTheme }}" class="dialog-top-level">
+    <md-dialog-content>
+        <md-toolbar class="md-toolbar-tools dialog-toolbar">
+            <h1>Comment Bank and Search Settings</h1>
+            <span flex></span>
+        </md-toolbar>
+        <md-content class="dialog-content">
 
             <h3 ng-style="state.theme.highlightColor" class="settings-header">Visibility</h3>
 

@@ -1,0 +1,41 @@
+<md-dialog flex-xs="90" flex-sm="80" flex-gt-sm="70" md-theme="{{ state.theme.colorTheme }}" class="dialog-top-level">
+    <md-toolbar class="md-toolbar-tools dialog-toolbar">
+        <h1>Don't Forget <span ng-show="annoySource == 'search'" ng-bind="editingStudentSearch.name"></span><span
+                ng-show="annoySource == 'patterns'" ng-bind="editingStudentPattern.name"></span>!</h1>
+        <span flex></span>
+    </md-toolbar>
+    <md-dialog-content>
+        <md-content class="dialog-content">
+            <p>
+                You navigated away from {{annoySource}}, but you left <span ng-show="annoySource == 'search'"
+                                                                            ng-bind="editingStudentSearch.name"></span><span
+                    ng-show="annoySource == 'patterns'" ng-bind="editingStudentPattern.name"></span> being edited
+                without saving or cancelling.<br><br>
+                Your changes will be there if you go back to {{annoySource}} now, but they could be accidentally
+                overwritten later if you start editing another student on {{annoySource}} before saving.
+            </p>
+            <br>
+            <md-checkbox ng-model="state.settings.showAnnoy" ng-true-value="false" ng-false-value="true"
+                         class="setting-control"
+                         aria-label="Enable Annoy Message">
+                Don't show this message again
+            </md-checkbox>
+
+            <div class="center-aligned close-modal-elements">
+                <md-button class="md-raised md-accent" ng-click="closeDialog('save')">
+                    <i class="material-icons inline-icon">done</i>
+                    Save for me
+                </md-button>
+                <md-button class="md-raised md-accent" ng-click="closeDialog('cancel')">
+                    <i class="material-icons inline-icon">cancel</i>
+                    Cancel for me
+                </md-button>
+                <md-button class="md-raised md-accent" ng-click="closeDialog('ignore')">
+                    <span ng-show="state.settings.showAnnoy">Ignore This Time</span>
+                    <span ng-hide="state.settings.showAnnoy">Ignore Permanently</span>
+                </md-button>
+            </div>
+        </md-content>
+
+    </md-dialog-content>
+</md-dialog>
