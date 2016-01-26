@@ -439,5 +439,7 @@ td.comment-text:hover {
 }
 
 .dialog-top-level {
+    max-width: 1160px !important;
+    max-height: 95% !important;
     border-radius: 5px !important;
 }

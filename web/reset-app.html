@@ -1,9 +1,13 @@
 <md-dialog flex="90" md-theme="{{ state.theme.colorTheme }}" class="dialog-top-level">
+    <md-toolbar class="md-toolbar-tools dialog-toolbar">
+        <h1>Reset Application</h1>
+        <span flex></span>
+        <md-button ng-click="closeDialog()" class="md-primary">
+            <i class="material-icons inline-icon">close</i>
+            <span hide-xs hide-sm>Close</span>
+        </md-button>
+    </md-toolbar>
     <md-dialog-content>
-        <md-toolbar class="md-toolbar-tools dialog-toolbar">
-            <h1>Reset Application</h1>
-            <span flex></span>
-        </md-toolbar>
         <md-content class="dialog-content">
             <p>Resetting the application will erase all work, but does not require network connectivity and will not use
                 data.</p>

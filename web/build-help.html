@@ -1,9 +1,13 @@
 <md-dialog flex="90" md-theme="{{ state.theme.colorTheme }}" class="dialog-top-level">
+    <md-toolbar class="md-toolbar-tools dialog-toolbar">
+        <h1>Build Help</h1>
+        <span flex></span>
+        <md-button ng-click="closeDialog()" class="md-primary">
+            <i class="material-icons inline-icon">close</i>
+            <span hide-xs hide-sm>Close</span>
+        </md-button>
+    </md-toolbar>
     <md-dialog-content>
-        <md-toolbar class="md-toolbar-tools dialog-toolbar">
-            <h1>Build Help</h1>
-            <span flex></span>
-        </md-toolbar>
         <md-content class="dialog-content">
 
             <h4 ng-style="state.theme.highlightColor">Setup:</h4>
