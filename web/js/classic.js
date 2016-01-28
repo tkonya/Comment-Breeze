@@ -981,16 +981,6 @@ commentApp.controller('CommentController', function($scope, $http, $mdToast, $md
         $scope.buildAllSmartSearchComments();
     };
 
-    $scope.setSearchTextCheckboxes = function(search) {
-        if (search.search_text != '') {
-            search.tags = true;
-            search.text = true;
-        } else {
-            search.tags = false;
-            search.text = false;
-        }
-    };
-
     $scope.resetAllSingleStudent = function() {
         $scope.studentName = '';
         $scope.oldStudentName = null;

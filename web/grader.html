@@ -1,0 +1,55 @@
+<md-dialog flex-xs="90" flex-sm="60" flex-gt-sm="50" md-theme="{{ state.theme.colorTheme }}" class="dialog-top-level">
+    <md-toolbar class="md-toolbar-tools dialog-toolbar">
+        <h1>
+            Grade {{ editingStudentGrade.name }}
+        </h1>
+        <span flex></span>
+        <md-button ng-click="closeDialog()" class="md-primary">
+            <i class="material-icons inline-icon">close</i>
+            <span hide-xs hide-sm>Close</span>
+        </md-button>
+    </md-toolbar>
+    <md-dialog-content>
+        <md-content class="grader-content">
+
+            <table class="comment-bank-table">
+                <tr ng-repeat="pattern_piece in editingStudentGrade.pattern" ng-style="getAltBackgroundColor($even)"
+                    class="multi-student-comment-row repeated-item">
+                    <td class="grader-td">
+                        <md-input-container class="almost-full-width grader-input">
+                            <label>Search Text</label>
+                            <input type="text" autocomplete="off" placeholder="No Search Text Entered"
+                                   ng-model="pattern_piece.search_text">
+                        </md-input-container>
+                    </td>
+                    <td class="grader-td">
+                        <md-radio-group ng-model="pattern_piece.tone" layout="row" class="grader-radio-container">
+                            <md-radio-button ng-hide="true" value="Any">Any</md-radio-button>
+                            <md-radio-button value="Any">Any</md-radio-button>
+                            <md-radio-button class="grader-radio-button" value="Negative">Negative</md-radio-button>
+                            <md-radio-button class="grader-radio-button" value="Neutral">Neutral</md-radio-button>
+                            <md-radio-button class="grader-radio-button" value="Positive">Positive</md-radio-button>
+                        </md-radio-group>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="center-aligned close-modal-elements">
+                <md-button class="md-accent md-button md-raised" ng-hide="gradingIndex != null" ng-click="saveGrade()">
+                    <i class="material-icons inline-icon">done</i>
+                    Save
+                </md-button>
+                <md-button class="md-accent md-button md-raised" ng-show="gradingIndex != null"
+                           ng-click="saveGrade(); gradeAllStudents(gradingIndex + 1);">
+                    <i class="material-icons inline-icon">done</i>
+                    Save
+                </md-button>
+                <md-button ng-click="closeDialog()">
+                    <i class="material-icons inline-icon">done</i>
+                    Cancel
+                </md-button>
+            </div>
+
+        </md-content>
+    </md-dialog-content>
+</md-dialog>

@@ -253,6 +253,10 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         // editing a student
         $scope.editingStudentSearch = null;
         $scope.editingStudentPattern = null;
+        $scope.editingStudentGrade = null;
+
+        $scope.gradingIndex = null;
+        $scope.hasNextStudentToGrade = true;
         $scope.goBackToBuild = false;
 
         $scope.studentToEditWithSearch = null;
@@ -720,6 +724,50 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
                 };
             }
         });
+    };
+
+    $scope.gradeStudent = function (student) {
+
+        $scope.editingStudentGrade = angular.copy(student);
+        $scope.editingStudentGrade.pattern = angular.copy($scope.state.global_pattern);
+
+        $mdDialog.show({
+            clickOutsideToClose: true,
+            scope: $scope,        // use parent scope in template
+            preserveScope: true,  // do not forget this if use parent scope
+            templateUrl: '/grader.html',
+            controller: function DialogController($scope, $mdDialog) {
+                $scope.closeDialog = function () {
+                    $mdDialog.hide();
+                    $scope.editingStudentGrade = null;
+                };
+                $scope.saveGrade = function () {
+                    $scope.regenerateMultiStudentComment($scope.editingStudentGrade, false);
+                    $scope.editingStudentGrade.pattern_type = 'grade';
+                    for (var i = 0; i < $scope.state.students.length; ++i) {
+                        if ($scope.state.students[i].student_id == $scope.editingStudentGrade.student_id) {
+                            $scope.state.students[i] = $scope.editingStudentGrade;
+                            break;
+                        }
+                    }
+                    $scope.editingStudentGrade = null;
+                    $mdDialog.hide();
+                };
+            }
+        });
+    };
+
+    $scope.gradeAllStudents = function (index) {
+        $scope.gradingIndex = index;
+        if (index <= $scope.state.students.length - 1) {
+            $scope.gradeStudent($scope.state.students[index]);
+        } else {
+            console.log('trying to grade too many!');
+        }
+
+        if ($scope.gradingIndex == $scope.state.students.length - 1) {
+            $scope.gradingIndex = null;
+        }
     };
 
     $scope.showAnnoyDialog = function () {

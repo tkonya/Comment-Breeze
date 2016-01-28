@@ -41,6 +41,17 @@ td.comment-text:hover {
     margin: 0;
 }
 
+.grader-td {
+    width: 50%;
+}
+
+.grader-input {
+    margin-left: 1em;
+    margin-right: 2em;
+    padding-right: 2em;
+    top: 1em;
+}
+
 .intro-conclusion-multi {
     margin-top: 0;
 }
@@ -341,6 +352,24 @@ td.comment-text:hover {
     padding-right: 2em;
     padding-bottom: 1em;
     border-radius: 0 0 5px 5px;
+}
+
+.grader-content {
+    padding-bottom: 1em;
+    border-radius: 0 0 5px 5px;
+}
+
+.grader-radio-container {
+    padding-left: 1em;
+}
+
+.grader-radio-button {
+    margin-left: 1em;
+}
+
+.grader-row {
+    margin-top: 0.3em;
+    margin-bottom: 0.3em;
 }
 
 .theme-card-content {

@@ -636,6 +636,16 @@
                                         </md-menu-item>
                                         <md-divider></md-divider>
                                         <md-menu-item>
+                                            <md-button aria-label="Grade all students"
+                                                       class="md-primary md-hue-1"
+                                                       ng-disabled="state.global_pattern.length < 1"
+                                                       ng-click="gradeAllStudents(0);">
+                                                <i class="material-icons inline-icon">grade</i>
+                                                <span>Grade All Students</span>
+                                            </md-button>
+                                        </md-menu-item>
+                                        <md-divider></md-divider>
+                                        <md-menu-item>
                                             <md-button md-prevent-menu-close class="md-primary md-hue-1" flex
                                                        ng-click="regenerateAllStudentComments(true);">
                                                 <i class="material-icons inline-icon">autorenew</i>
@@ -745,7 +755,7 @@
                                                     <i class="material-icons inline-icon">extension</i> Default Pattern
                                                     <md-tooltip ng-style="state.theme.tooltips"
                                                                 ng-show="state.settings.showTooltips" class="tooltip">
-                                                        This student is using the default Smart Search pattern
+                                                        This student is using the default pattern
                                                     </md-tooltip>
                                                 </div>
 
@@ -755,7 +765,18 @@
                                                     Pattern
                                                     <md-tooltip ng-style="state.theme.tooltips"
                                                                 ng-show="state.settings.showTooltips" class="tooltip">
-                                                        This student is using a Smart Search pattern distinct to them
+                                                        This student is using a pattern distinct to them
+                                                    </md-tooltip>
+                                                </div>
+
+                                                <div ng-show="student.pattern && student.pattern_type == 'grade' && !student.collapsed"
+                                                     class="center-aligned">
+                                                    <i class="material-icons inline-icon">grade</i> Grade
+                                                    Pattern
+                                                    <md-tooltip ng-style="state.theme.tooltips"
+                                                                ng-show="state.settings.showTooltips" class="tooltip">
+                                                        This student is using a pattern based off the default pattern
+                                                        but with tone differences
                                                     </md-tooltip>
                                                 </div>
                                             </div>
@@ -789,6 +810,15 @@
                                                                    ng-click="applyGlobalPatternToStudent(student);">
                                                             <i class="material-icons inline-icon">extension</i>
                                                             <span>Apply Default Pattern</span>
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-divider></md-divider>
+                                                    <md-menu-item>
+                                                        <md-button class="md-primary md-hue-1" flex
+                                                                   ng-click="gradeStudent(student);"
+                                                                   ng-disabled="state.global_pattern.length < 1">
+                                                            <i class="material-icons inline-icon">grade</i>
+                                                            <span>Grade Student</span>
                                                         </md-button>
                                                     </md-menu-item>
                                                     <md-divider></md-divider>
@@ -1475,9 +1505,7 @@
                                             <form ng-submit="resubmitSearch(search, state.settings.getSearchResultCount);  buildAllSmartSearchComments();">
                                                 <md-input-container class="input-container full-width">
                                                     <label>Search Text</label>
-                                                    <input type="text" autocomplete="off"
-                                                           ng-change="setSearchTextCheckboxes(search, state.settings.getSearchResultCount);"
-                                                           ng-model="search.search_text">
+                                                    <input type="text" autocomplete="off" ng-model="search.search_text">
                                                 </md-input-container>
                                             </form>
 
