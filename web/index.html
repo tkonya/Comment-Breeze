@@ -264,7 +264,7 @@
                                     <span class="md-title">Global <span hide-xs>Details</span></span>
                                 </md-button>
 
-                                <span flex hide-xs hide-sm></span>
+                                <span flex></span>
 
                                 <md-menu class="menu">
                                     <md-button ng-click="$mdOpenMenu($event);" class="full-width">
@@ -937,15 +937,17 @@
                                  ng-show="editingStudentSearch">
                             <md-toolbar class="md-toolbar-tools control-card-toolbar">
                                 <h1>
-                                    <span>Editing Comment For {{editingStudentSearch.name}}</span>
+                                    <span hide-xs>Editing Comment For {{editingStudentSearch.name}}</span>
+                                    <span hide-gt-xs>{{editingStudentSearch.name}}'s Comments</span>
                                 </h1>
 
-                                <span hide-xs hide-sm flex></span>
+                                <span flex></span>
 
                                 <md-button aria-label="Done Editing" md-ink-ripple md-ripple-size="auto"
                                            ng-click="doneEditingStudentSearch();">
                                     <i class="material-icons inline-icon">done</i>
-                                    <span>Done Editing</span>
+                                    <span hide-xs hide-sm>Done Editing</span>
+                                    <span hide-xs hide-gt-sm>Done</span>
                                     <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips"
                                                 class="tooltip">
                                         Saves the changes you've made
@@ -956,7 +958,8 @@
                                            ng-click="cancelEditingStudentSearch();"
                                            md-ripple-size="auto">
                                     <i class="material-icons inline-icon">cancel</i>
-                                    <span>Cancel Editing</span>
+                                    <span hide-xs hide-sm>Cancel Editing</span>
+                                    <span hide-xs hide-gt-sm>Cancel</span>
                                     <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips"
                                                 class="tooltip">
                                         Cancel editing and
@@ -1265,7 +1268,8 @@
                                 <md-button aria-label="Done Editing" md-ink-ripple md-ripple-size="auto"
                                            ng-click="doneEditingStudentPattern();">
                                     <i class="material-icons inline-icon">done</i>
-                                    <span>Done<span hide-xs> Editing</span></span>
+                                    <span hide-xs hide-sm>Done Editing</span>
+                                    <span hide-xs hide-gt-sm>Done</span>
                                     <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips"
                                                 class="tooltip">
                                         Saves the changes you've made and goes back to the Multi Student tab
@@ -1276,7 +1280,8 @@
                                            ng-click="cancelEditingStudentPattern();"
                                            md-ripple-size="auto">
                                     <i class="material-icons inline-icon">cancel</i>
-                                    <span>Cancel<span hide-xs> Editing</span></span>
+                                    <span hide-xs hide-sm>Cancel Editing</span>
+                                    <span hide-xs hide-gt-sm>Cancel</span>
                                     <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips"
                                                 class="tooltip">
                                         Goes back to the Multi Student tab without saving anything
