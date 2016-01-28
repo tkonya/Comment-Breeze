@@ -1314,7 +1314,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         if ($mdMedia('xs')) {
             $scope.commentSizeToGet = 2000;
             $scope.state.settings.showTags = false;
-            $scope.state.settings.showTone = false;
+            //$scope.state.settings.showTone = false;
         } else if ($mdMedia('sm')) {
             $scope.commentSizeToGet = 6000;
         }
