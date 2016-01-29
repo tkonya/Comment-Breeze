@@ -247,7 +247,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         };
 
         // local storage of the state object
-        $scope.cachedCommentsDetails = false;
+        $scope.cachedComments = false;
         $scope.clearCacheOnExit = true;
 
         // mobile
@@ -917,7 +917,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
                     $scope.illToastToThat('Application reset');
                     $scope.setTheme();
 
-                    if ($scope.clearCacheOnExit) {
+                    if ($scope.clearCacheOnExit == 'true') {
                         $scope.removeStateLocal();
                     }
 
@@ -1783,20 +1783,20 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
 
     };
 
-    $scope.confirmSeizures = function (ev) {
-        var confirm = $mdDialog.confirm()
-            .title('Seizure Mode')
-            .textContent('Are you sure you want to do this? The screen will flash rapidly.')
-            .ariaLabel('Start Seizure Mode')
-            .targetEvent(ev)
-            .ok('DO IT!')
-            .cancel('Cancel');
-        $mdDialog.show(confirm).then(function () {
-            $scope.startSeizures();
-        }, function () {
-
-        });
-    };
+    //$scope.confirmSeizures = function (ev) {
+    //    var confirm = $mdDialog.confirm()
+    //        .title('Seizure Mode')
+    //        .textContent('Are you sure you want to do this? The screen will flash rapidly.')
+    //        .ariaLabel('Start Seizure Mode')
+    //        .targetEvent(ev)
+    //        .ok('DO IT!')
+    //        .cancel('Cancel');
+    //    $mdDialog.show(confirm).then(function () {
+    //        $scope.startSeizures();
+    //    }, function () {
+    //
+    //    });
+    //};
 
     // for testing only so I can get to things I want without making everything up repeatedly
     $scope.loadSampleState = function () {
