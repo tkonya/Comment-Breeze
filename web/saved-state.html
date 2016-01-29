@@ -1,0 +1,52 @@
+<md-dialog flex="90" md-theme="{{ state.theme.colorTheme }}" class="dialog-top-level">
+    <md-toolbar class="md-toolbar-tools dialog-toolbar">
+        <h1>Previous Work Found</h1>
+        <span flex></span>
+        <md-button ng-click="closeDialog()" class="md-primary">
+            <i class="material-icons inline-icon">close</i>
+            <span hide-xs hide-sm>Close</span>
+        </md-button>
+    </md-toolbar>
+    <md-dialog-content>
+        <md-content class="dialog-content">
+
+            <p ng-show="savedState.class_name">
+                We found comments from {{savedState.date_created | date:'yyyy-MM-dd'}} for
+                {{savedState.students.length}} students in class {{savedState.class_name}} saved in the browser.
+            </p>
+
+            <p ng-hide="savedState.class_name">
+                We found comments from {{savedState.date_created | date:'yyyy-MM-dd'}} for
+                {{savedState.students.length}} students saved in the browser.
+            </p>
+
+            <p>
+                Do you want to restore this class?
+            </p>
+
+
+            <div class="center-aligned  close-modal-elements">
+                <md-button aria-label="Copy All Comments" flex class="md-button md-raised md-accent"
+                           ng-click="dialogLoadLocal();">
+                    <i class="material-icons inline-icon">restore</i>
+                    <span>Restore Cached Comments</span>
+                    <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip"
+                                md-direction="below">
+                        Restore the browsers cached comments
+                    </md-tooltip>
+                </md-button>
+                <md-button aria-label="Delete cached comments" flex class="md-button md-raised md-accent"
+                           ng-click="dialogRemoveLocal();">
+                    <i class="material-icons inline-icon">delete</i>
+                    <span>Delete Cached Comments</span>
+                    <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip"
+                                md-direction="below">
+                        Delete the browsers cached comments
+                    </md-tooltip>
+                </md-button>
+                <md-button ng-click="closeDialog()">Close</md-button>
+            </div>
+        </md-content>
+
+    </md-dialog-content>
+</md-dialog>

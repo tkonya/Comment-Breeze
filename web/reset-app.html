@@ -9,11 +9,22 @@
     </md-toolbar>
     <md-dialog-content>
         <md-content class="dialog-content">
-            <p>Resetting the application will erase all work, but does not require network connectivity and will not use
-                data.</p>
+            <p>
+                Resetting the application will erase all work, but does not require network connectivity and will not
+                use data.<br><br>
+
+                Once you are done with comments, and you have saved them or copied them elsewhere, you should reset the
+                application and clear the cache.
+                This is especially true if you are using a shared computer.
+            </p>
+
+            <md-checkbox ng-model="clearCacheOnExit" class="setting-control"
+                         aria-label="Enable auto caching">
+                Clear Cache
+            </md-checkbox>
 
             <div class="center-aligned close-modal-elements">
-                <md-button class="md-primary" ng-click="resetApplication()">
+                <md-button class="md-accent md-raised" ng-click="resetApplication()">
                     <i class="material-icons inline-icon">refresh</i>
                     Reset Application
                 </md-button>

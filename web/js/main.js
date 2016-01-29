@@ -1,4 +1,4 @@
-var commentApp = angular.module('commentApp', ['angular-clipboard', 'ngMaterial'])
+var commentApp = angular.module('commentApp', ['angular-clipboard', 'ngMaterial', 'ngStorage'])
     .config(function($mdThemingProvider) {
 
         $mdThemingProvider.definePalette('black', {
@@ -199,7 +199,7 @@ commentApp.directive('chooseFileButton', function() {
     };
 });
 
-commentApp.controller('CommentController', function ($scope, $http, $mdToast, $mdDialog, $mdMedia, $location, $timeout) {
+commentApp.controller('CommentController', function ($scope, $http, $mdToast, $mdDialog, $mdMedia, $location, $timeout, $localStorage, $interval, $window) {
 
     // comments
     $scope.comments = [];
@@ -213,6 +213,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
     $scope.setInitialApplicationState = function() {
         // application state - this is the object that gets saved or loaded
         $scope.state = {
+            date_created: new Date(),
             class_name: '',
             old_class_name: '',
             introduction: '',
@@ -235,13 +236,18 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
                 newStudentFill: 'random',
                 useSmartSearch: false,
                 tabSwipe: false,
-                showAnnoy: true
+                showAnnoy: true,
+                autoCache: true
             },
             theme: {
                 colorTheme: 'breezy',
                 seizures: false
             }
         };
+
+        // local storage of the state object
+        $scope.savedState = null;
+        $scope.clearCacheOnExit = true;
 
         // mobile
         $scope.isMobile = false;
@@ -843,6 +849,53 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         });
     };
 
+    $scope.showExitAppDialog = function () {
+        $mdDialog.show({
+            clickOutsideToClose: true,
+            scope: $scope,        // use parent scope in template
+            preserveScope: true,  // do not forget this if use parent scope
+            templateUrl: '/exit-app.html',
+            controller: function DialogController($scope, $mdDialog) {
+                $scope.closeDialog = function (exit) {
+
+                    if ($scope.clearCacheOnExit) {
+                        $scope.state.settings.autoCache = false;
+                        $scope.stopAutoCaching();
+                        $scope.removeStateLocal();
+                    }
+
+                    if (exit) {
+                        $window.close();
+                    }
+
+                    $mdDialog.hide();
+                };
+            }
+        });
+    };
+
+    $scope.showSavedStateDialog = function () {
+        $mdDialog.show({
+            clickOutsideToClose: true,
+            scope: $scope,        // use parent scope in template
+            preserveScope: true,  // do not forget this if use parent scope
+            templateUrl: '/saved-state.html',
+            controller: function DialogController($scope, $mdDialog) {
+                $scope.closeDialog = function () {
+                    $mdDialog.hide();
+                };
+                $scope.dialogLoadLocal = function () {
+                    $scope.restoreStateLocal();
+                    $mdDialog.hide();
+                };
+                $scope.dialogRemoveLocal = function () {
+                    delete $localStorage.commentBreeze;
+                    $mdDialog.hide();
+                };
+            }
+        });
+    };
+
     $scope.showResetDialog = function () {
         $mdDialog.show({
             clickOutsideToClose: true,
@@ -862,6 +915,11 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
                     $scope.setMobileSettings();
                     $scope.illToastToThat('Application reset');
                     $scope.setTheme();
+
+                    if ($scope.clearCacheOnExit) {
+                        $scope.removeStateLocal();
+                    }
+
                     $mdDialog.hide();
                 }
             }
@@ -1748,9 +1806,62 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         $scope.loadSampleSmartSearch();
     };
 
-    $scope.poop = function () {
+    $scope.saveStateLocal = function (requireStudents) {
+        if (!requireStudents || (requireStudents && $scope.state.students.length > 0)) {
+            console.log('saving local state');
+            $localStorage.commentBreeze = angular.toJson($scope.state);
+            $scope.savedState = {
+                commentBreeze: angular.copy($scope.state)
+            }
+        }
+    };
 
-    }
+    $scope.restoreStateLocal = function () {
+        console.log('loading local state');
+        $scope.state = angular.fromJson($localStorage.commentBreeze);
+        $scope.illToastToThat('Cached comments restored');
+    };
+
+    $scope.removeStateLocal = function () {
+        console.log('removing local state');
+        $scope.savedState = null;
+        delete $localStorage.commentBreeze;
+    };
+
+    $scope.checkLocalState = function () {
+        $scope.savedState = angular.fromJson($localStorage.commentBreeze);
+        if ($scope.savedState) {
+            $scope.showSavedStateDialog();
+        }
+    };
+
+    $scope.autoCacheCheckboxChanged = function () {
+        if ($scope.state.settings.autoCache) {
+            $scope.startAutoCaching();
+        } else {
+            $scope.stopAutoCaching();
+        }
+    };
+
+    $scope.autoCacheInterval = null;
+    $scope.startAutoCaching = function () {
+        if ($scope.state.settings.autoCache) {
+            console.log('starting auto caching');
+            $scope.autoCacheInterval = $interval(function () {
+                $scope.saveStateLocal(true);
+            }, 30000)
+        }
+    };
+
+    $scope.stopAutoCaching = function () {
+        if (!$scope.state.settings.autoCache) {
+            console.log('stopping auto caching');
+            if (angular.isDefined($scope.autoCacheInterval)) {
+                $interval.cancel($scope.autoCacheInterval);
+                $scope.autoCacheInterval = undefined;
+            }
+        }
+    };
 
     $scope.setInitialApplicationState();
     $scope.setPassword();
@@ -1758,5 +1869,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
     $scope.setMobileSettings();
     $scope.getComments();
     $scope.getTheme();
+    $scope.checkLocalState();
+    $scope.startAutoCaching();
 
 });

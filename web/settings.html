@@ -101,6 +101,58 @@
                 </p>
             </div>
 
+            <md-divider></md-divider>
+
+            <h3 class="settings-header" ng-style="state.theme.highlightColor">Auto Caching</h3>
+            <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
+                <div flex-gt-sm="25" class="setting-control-container">
+                    <md-checkbox ng-model="state.settings.autoCache" ng-change="autoCacheCheckboxChanged();"
+                                 class="setting-control"
+                                 aria-label="Enable auto caching">
+                        Cache Work
+                    </md-checkbox>
+                </div>
+                <p ng-style="state.theme.textColor" flex-gt-sm="75" class="settings-text">
+                    Your browser can save your work automatically. This is helpful if the browser or the tab is closed
+                    accidentally. Each time Comment Breeze is loaded it checks for
+                    saved work and will allow you to reload it if you choose. This is not a reliable way to save your
+                    work and should only be considered a backup option. <br><br>
+
+                    This may be undesirable on a shared computer since others could access your work if you
+                    leave comment breeze without deleting the cache first.
+                </p>
+            </div>
+            <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
+                <md-button aria-label="Copy All Comments" ng-disabled="!savedState" flex
+                           class="md-button md-raised md-accent" ng-click="restoreStateLocal();">
+                    <i class="material-icons inline-icon">file_download</i>
+                    <span>Restore Comments</span>
+                    <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip"
+                                md-direction="below">
+                        Load the browsers cached comments
+                    </md-tooltip>
+                </md-button>
+                <md-button aria-label="Copy All Comments" flex class="md-button md-raised md-accent"
+                           ng-click="saveStateLocal(); illToastToThat('Saved comments to browser cache');">
+                    <i class="material-icons inline-icon">file_upload</i>
+                    <span>Cache Comments</span>
+                    <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip"
+                                md-direction="below">
+                        Load the browsers cached comments
+                    </md-tooltip>
+                </md-button>
+                <md-button aria-label="Delete cached comments" ng-disabled="!savedState" flex
+                           class="md-button md-raised md-accent"
+                           ng-click="state.settings.autoCache = false; stopAutoCaching(); removeStateLocal();">
+                    <i class="material-icons inline-icon">delete</i>
+                    <span>Delete Cache</span>
+                    <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip"
+                                md-direction="below">
+                        Remove the browsers cached comments
+                    </md-tooltip>
+                </md-button>
+            </div>
+
             <br>
 
             <md-divider></md-divider>
