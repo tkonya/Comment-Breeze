@@ -68,7 +68,9 @@ var commentApp = angular.module('commentApp', ['angular-clipboard', 'ngMaterial'
                 'hue-2': '400',
                 'hue-3': '600'
             })
-            .accentPalette('green')
+            .accentPalette('green', {
+                'default': 'A700'
+            })
             .backgroundPalette('blue-grey', {
                 'default': '100', // default, menu box
                 'hue-1': '50', // background background
@@ -1526,9 +1528,39 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
 
         var fileName;
         if ($scope.state.class_name != '') {
-            fileName = 'Comment Breeze ' + $scope.state.class_name + ' ' + today + '.txt';
+            fileName = 'Comment Breeze Save File - ' + $scope.state.class_name + ' ' + today + '.txt';
         } else {
-            fileName = 'Comment Breeze ' + today + '.txt';
+            fileName = 'Comment Breeze Save File - ' + today + '.txt';
+        }
+
+        downloadLink.attr('download', fileName);
+        downloadLink[0].click();
+    };
+
+    $scope.saveComments = function () {
+        $scope.buildAllStudentComments();
+        var blob = new Blob([$scope.state.all_student_comments], {type: "text/html;charset=utf-8;"});
+        var downloadLink = angular.element('<a></a>');
+        downloadLink.attr('href', window.URL.createObjectURL(blob));
+
+        // all this just to get the date
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1; //January is 0
+        var yyyy = today.getFullYear();
+        if (dd < 10) {
+            dd = '0' + dd
+        }
+        if (mm < 10) {
+            mm = '0' + mm
+        }
+        today = yyyy + '-' + mm + '-' + dd;
+
+        var fileName;
+        if ($scope.state.class_name != '') {
+            fileName = 'Comment Breeze Comments - ' + $scope.state.class_name + ' ' + today + '.txt';
+        } else {
+            fileName = 'Comment Breeze Comments - ' + today + '.txt';
         }
 
         downloadLink.attr('download', fileName);

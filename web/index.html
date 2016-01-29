@@ -12,7 +12,7 @@
     <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>-->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.2/angular.min.js"></script>
 
-    <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript" src="js/main.js?version=1"></script>
     <script src="angular-clipboard/angular-clipboard.js"></script>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -51,6 +51,10 @@
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="msapplication-TileImage" content="/mstile-144x144.png">
     <meta name="theme-color" content="#ffffff">
+
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
 
 </head>
 
@@ -262,7 +266,7 @@
                                     <i class="material-icons inline-icon"
                                        ng-show="showGlobalDetails">keyboard_arrow_up</i>
                                     <i class="material-icons inline-icon" ng-show="!showGlobalDetails">keyboard_arrow_down</i>
-                                    <span class="md-title">Global <span hide-xs>Details</span></span>
+                                    <span class="md-title">Class <span hide-xs>Details</span></span>
                                 </md-button>
 
                                 <span flex></span>
@@ -633,6 +637,14 @@
                                                        ng-click="showDialog('/finished-comments.html');">
                                                 <i class="material-icons inline-icon">view_list</i>
                                                 <span>Show Finished Comments</span>
+                                            </md-button>
+                                        </md-menu-item>
+                                        <md-menu-item>
+                                            <md-button ng-click="saveComments();"
+                                                       ng-disabled="!state.all_student_comments"
+                                                       class="md-primary md-hue-1">
+                                                <i class="material-icons inline-icon">file_download</i>
+                                                <span>Save Comments</span>
                                             </md-button>
                                         </md-menu-item>
                                         <md-divider></md-divider>
