@@ -10,14 +10,14 @@
     <md-dialog-content>
         <md-content class="dialog-content">
 
-            <p ng-show="savedState.class_name">
-                We found comments from {{savedState.date_created | date:'yyyy-MM-dd'}} for
-                {{savedState.students.length}} students in class {{savedState.class_name}} saved in the browser.
+            <p ng-show="cachedComments.class_name">
+                We found comments from {{cachedComments.date_created | date:'yyyy-MM-dd'}} for
+                {{cachedComments.students}} students in class {{cachedComments.class_name}} saved in the browser.
             </p>
 
-            <p ng-hide="savedState.class_name">
-                We found comments from {{savedState.date_created | date:'yyyy-MM-dd'}} for
-                {{savedState.students.length}} students saved in the browser.
+            <p ng-hide="cachedComments.class_name">
+                We found comments from {{cachedComments.date_created | date:'yyyy-MM-dd'}} for
+                {{cachedComments.students}} students saved in the browser.
             </p>
 
             <p>
