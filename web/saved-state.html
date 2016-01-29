@@ -8,16 +8,18 @@
         </md-button>
     </md-toolbar>
     <md-dialog-content>
-        <md-content class="dialog-content">
+        <md-content class="dialog-content center-aligned">
 
             <p ng-show="cachedComments.class_name">
-                We found comments from {{cachedComments.date_created | date:'yyyy-MM-dd'}} for
-                {{cachedComments.students}} students in class {{cachedComments.class_name}} saved in the browser.
+                We found comments saved in the browser's cache from {{cachedComments.date_created | date:'yyyy-MM-dd'}}
+                for
+                {{cachedComments.students}} students in class "{{cachedComments.class_name}}".
             </p>
 
             <p ng-hide="cachedComments.class_name">
-                We found comments from {{cachedComments.date_created | date:'yyyy-MM-dd'}} for
-                {{cachedComments.students}} students saved in the browser.
+                We found comments saved in the browser's cache from {{cachedComments.date_created | date:'yyyy-MM-dd'}}
+                for
+                {{cachedComments.students}} students.
             </p>
 
             <p>

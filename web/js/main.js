@@ -1828,21 +1828,28 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
     };
 
     $scope.checkLocalState = function () {
-        var localState = angular.fromJson($localStorage.commentBreeze);
-        if (localState) {
-            $scope.cachedComments = {
-                class_name: angular.copy(localState.class_name),
-                students: angular.copy(localState.students.length),
-                date_created: angular.copy(localState.date_created)
-            };
-            $scope.showSavedStateDialog();
+        var params = $location.search();
+        if (!params.noCache) {
+            var localState = angular.fromJson($localStorage.commentBreeze);
+            if (localState) {
+                $scope.cachedComments = {
+                    class_name: angular.copy(localState.class_name),
+                    students: angular.copy(localState.students.length),
+                    date_created: angular.copy(localState.date_created)
+                };
+                $scope.showSavedStateDialog();
+            }
+        } else {
+            $scope.state.settings.autoCache = false;
         }
     };
 
     $scope.autoCacheCheckboxChanged = function () {
         if ($scope.state.settings.autoCache) {
+            $location.search('noCache', null);
             $scope.startAutoCaching();
         } else {
+            $location.search('noCache', true);
             $scope.stopAutoCaching();
         }
     };
