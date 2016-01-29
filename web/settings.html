@@ -123,7 +123,7 @@
                 </p>
             </div>
             <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
-                <md-button aria-label="Copy All Comments" ng-disabled="!savedState" flex
+                <md-button aria-label="Copy All Comments" ng-disabled="!cachedCommentsExist" flex
                            class="md-button md-raised md-accent" ng-click="restoreStateLocal();">
                     <i class="material-icons inline-icon">file_download</i>
                     <span>Restore Comments</span>
@@ -141,7 +141,7 @@
                         Load the browsers cached comments
                     </md-tooltip>
                 </md-button>
-                <md-button aria-label="Delete cached comments" ng-disabled="!savedState" flex
+                <md-button aria-label="Delete cached comments" ng-disabled="!cachedCommentsExist" flex
                            class="md-button md-raised md-accent"
                            ng-click="state.settings.autoCache = false; stopAutoCaching(); removeStateLocal();">
                     <i class="material-icons inline-icon">delete</i>

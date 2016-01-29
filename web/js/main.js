@@ -246,7 +246,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         };
 
         // local storage of the state object
-        $scope.savedState = null;
+        $scope.cachedCommentsExist = false;
         $scope.clearCacheOnExit = true;
 
         // mobile
@@ -1810,9 +1810,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         if (!requireStudents || (requireStudents && $scope.state.students.length > 0)) {
             console.log('saving local state');
             $localStorage.commentBreeze = angular.toJson($scope.state);
-            $scope.savedState = {
-                commentBreeze: angular.copy($scope.state)
-            }
+            $scope.cachedCommentsExist = true;
         }
     };
 
@@ -1824,13 +1822,13 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
 
     $scope.removeStateLocal = function () {
         console.log('removing local state');
-        $scope.savedState = null;
+        $scope.cachedCommentsExist = false;
         delete $localStorage.commentBreeze;
     };
 
     $scope.checkLocalState = function () {
-        $scope.savedState = angular.fromJson($localStorage.commentBreeze);
-        if ($scope.savedState) {
+        if (angular.fromJson($localStorage.commentBreeze)) {
+            $scope.cachedCommentsExist = true;
             $scope.showSavedStateDialog();
         }
     };
