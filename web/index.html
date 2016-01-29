@@ -9,7 +9,8 @@
     <link rel="stylesheet" type="text/css" href="styles.css">
 
     <!--<script src="angular/angular.min.js"></script>-->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>-->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0-rc.2/angular.min.js"></script>
 
     <script type="text/javascript" src="js/main.js"></script>
     <script src="angular-clipboard/angular-clipboard.js"></script>
@@ -765,7 +766,7 @@
                                                     Pattern
                                                     <md-tooltip ng-style="state.theme.tooltips"
                                                                 ng-show="state.settings.showTooltips" class="tooltip">
-                                                        This student is using a pattern distinct to them
+                                                        This student is using a unique pattern
                                                     </md-tooltip>
                                                 </div>
 
@@ -775,8 +776,8 @@
                                                     Pattern
                                                     <md-tooltip ng-style="state.theme.tooltips"
                                                                 ng-show="state.settings.showTooltips" class="tooltip">
-                                                        This student is using a pattern based off the default pattern
-                                                        but with tone differences
+                                                        This student is using a pattern derived from another, but with
+                                                        tone differences
                                                     </md-tooltip>
                                                 </div>
                                             </div>
@@ -815,7 +816,7 @@
                                                     <md-divider></md-divider>
                                                     <md-menu-item>
                                                         <md-button class="md-primary md-hue-1" flex
-                                                                   ng-click="gradeStudent(student);"
+                                                                   ng-click="gradeStudent(student, true);"
                                                                    ng-disabled="state.global_pattern.length < 1">
                                                             <i class="material-icons inline-icon">grade</i>
                                                             <span>Grade Student</span>
@@ -1079,18 +1080,23 @@
 
                                 <div layout-xs="column" layout-sm="column" layout-gt-sm="row" layout-fill>
 
-                                    <md-input-container flex-gt-sm="75" class="search-and-filter side-margins">
-                                        <label>Search Comments</label>
-                                        <input type="text" ng-model="searchComments" ng-change="changeCommentsPage(1);">
-                                        <div class="hint" ng-show="state.showHints">Instant search on comments. This is
-                                            the best way to find comments if you have an idea of what you want to say.
-                                        </div>
-                                        <md-tooltip ng-style="state.theme.tooltips"
-                                                    ng-show="state.settings.showTooltips" class="tooltip">
-                                            Instant search on comments. This is the best way to find comments if you
-                                            have an idea of what you want to say.
-                                        </md-tooltip>
-                                    </md-input-container>
+                                    <form ng-submit="submitSearch();" flex-gt-sm="75" class="side-margins">
+                                        <md-input-container class="full-width search-and-filter">
+                                            <label>Search Comments</label>
+                                            <input type="text" autocomplete="off" ng-model="searchComments"
+                                                   ng-change="changeCommentsPage(1);" class="almost-full-width">
+                                            <div class="hint" ng-show="state.showHints">Instant search on comments. This
+                                                is
+                                                the best way to find comments if you have an idea of what you want to
+                                                say.
+                                            </div>
+                                            <md-tooltip ng-style="state.theme.tooltips" md-direction="top"
+                                                        ng-show="state.settings.showTooltips" class="tooltip">
+                                                Instant search on comments. This is the best way to find comments if you
+                                                have an idea of what you want to say.
+                                            </md-tooltip>
+                                        </md-input-container>
+                                    </form>
 
                                     <md-input-container flex-gt-sm="25" class="search-and-filter side-margins">
                                         <label>Filter on Tone</label>
@@ -1491,8 +1497,14 @@
                                         <td flex-xs flex-sm flex-gt-sm="50">
                                             <md-input-container class="full-width" ng-show="search.found_comment">
                                                 <label>
-                                                    <span ng-show="search.result_count && state.settings.getSearchResultCount">{{search.result_count}} search results for sentence {{$index + 1}}</span>
-                                                    <span ng-hide="search.result_count && state.settings.getSearchResultCount">Search result for sentence {{$index + 1}}</span>
+                                                    <span ng-hide="editingStudentPattern == null">
+                                                        <span ng-show="search.result_count && state.settings.getSearchResultCount">{{search.result_count}} search results for sentence {{$index + 1}}</span>
+                                                        <span ng-hide="search.result_count && state.settings.getSearchResultCount">Search result for sentence {{$index + 1}}</span>
+                                                    </span>
+                                                    <span ng-show="editingStudentPattern == null">
+                                                        <span ng-show="search.result_count && state.settings.getSearchResultCount">{{search.result_count}} search result samples for sentence {{$index + 1}}</span>
+                                                        <span ng-hide="search.result_count && state.settings.getSearchResultCount">Sample search result for sentence {{$index + 1}}</span>
+                                                    </span>
                                                 </label>
                                                 <textarea ng-model="search.found_comment" readonly
                                                           class="almost-full-width"></textarea>

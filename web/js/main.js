@@ -156,6 +156,13 @@ var commentApp = angular.module('commentApp', ['angular-clipboard', 'ngMaterial'
         $mdThemingProvider.alwaysWatchTheme(true);
     });
 
+// replaces all non-space characters in the string with the poop emoji
+commentApp.filter('poopFilter', function ($sce) {
+    var urlPattern = /[^\s\\]/gi;
+    return function (text, target) {
+        return $sce.trustAsHtml(text.replace(urlPattern, '&#128169;'));
+    };
+});
 
 commentApp.directive('onReadFile', function ($parse) {
     return {
@@ -190,7 +197,7 @@ commentApp.directive('chooseFileButton', function() {
     };
 });
 
-commentApp.controller('CommentController', function ($scope, $http, $mdToast, $mdDialog, $mdMedia, $location) {
+commentApp.controller('CommentController', function ($scope, $http, $mdToast, $mdDialog, $mdMedia, $location, $timeout) {
 
     // comments
     $scope.comments = [];
@@ -343,6 +350,20 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
 
     $scope.toggleColorThemesVisibility = function () {
         $scope.showColorThemes = !$scope.showColorThemes;
+    };
+
+    $scope.submitSearch = function () {
+        if ($scope.editingStudentSearch != null) {
+            for (var i = 0; i < $scope.comments.length; ++i) {
+                if ($scope.comments[i].comment_text.toLowerCase().indexOf($scope.searchComments.toLowerCase()) > -1) {
+                    $scope.addComment($scope.comments[i].comment_text, true);
+                    $scope.searchComments = '';
+                    return;
+                }
+            }
+            console.log('no search result found');
+            $scope.searchComments = '';
+        }
     };
 
     $scope.addComment = function(comment, showToast) {
@@ -726,10 +747,17 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         });
     };
 
-    $scope.gradeStudent = function (student) {
+    $scope.gradeStudent = function (student, setIndexNull) {
+
+        if (setIndexNull) {
+            $scope.gradingIndex = null;
+        }
 
         $scope.editingStudentGrade = angular.copy(student);
-        $scope.editingStudentGrade.pattern = angular.copy($scope.state.global_pattern);
+
+        if (!$scope.editingStudentGrade.pattern || $scope.editingStudentGrade.pattern.length < 1) {
+            $scope.editingStudentGrade.pattern = angular.copy($scope.state.global_pattern);
+        }
 
         $mdDialog.show({
             clickOutsideToClose: true,
@@ -747,6 +775,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
                     for (var i = 0; i < $scope.state.students.length; ++i) {
                         if ($scope.state.students[i].student_id == $scope.editingStudentGrade.student_id) {
                             $scope.state.students[i] = $scope.editingStudentGrade;
+                            $scope.illToastToThat($scope.state.students[i].name + ' graded');
                             break;
                         }
                     }
@@ -758,15 +787,30 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
     };
 
     $scope.gradeAllStudents = function (index) {
-        $scope.gradingIndex = index;
-        if (index <= $scope.state.students.length - 1) {
-            $scope.gradeStudent($scope.state.students[index]);
-        } else {
-            console.log('trying to grade too many!');
+
+        var time = 0;
+        if (index > 0) {
+            time = 400;
         }
 
-        if ($scope.gradingIndex == $scope.state.students.length - 1) {
-            $scope.gradingIndex = null;
+        $timeout(function () {
+            $scope.gradingIndex = index;
+            if (index <= $scope.state.students.length - 1) {
+                $scope.gradeStudent($scope.state.students[index], false);
+            } else {
+                console.log('trying to grade too many!');
+            }
+
+            if ($scope.gradingIndex == $scope.state.students.length - 1) {
+                $scope.gradingIndex = null;
+            }
+        }, time);
+
+    };
+
+    $scope.setAllGrades = function (grade) {
+        for (var i = 0; i < $scope.editingStudentGrade.pattern.length; ++i) {
+            $scope.editingStudentGrade.pattern[i].tone = grade;
         }
     };
 
@@ -878,7 +922,11 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         );
     };
 
-    $scope.addStudent = function () {
+    $scope.addStudent = function (studentName) {
+
+        if (studentName) {
+            $scope.newStudentName = studentName;
+        }
 
         if ($scope.newStudentName == null || $scope.newStudentName == '') {
             return;
@@ -1658,6 +1706,19 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
 
         });
     };
+
+    // for testing only so I can get to things I want without making everything up repeatedly
+    $scope.loadSampleState = function () {
+        $scope.addStudent('Jimmy M');
+        $scope.addStudent('Amanda F');
+        $scope.addStudent('Alex M');
+        $scope.addStudent('Jenny F');
+        $scope.loadSampleSmartSearch();
+    };
+
+    $scope.poop = function () {
+
+    }
 
     $scope.setInitialApplicationState();
     $scope.setPassword();

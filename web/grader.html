@@ -11,25 +11,60 @@
     </md-toolbar>
     <md-dialog-content>
         <md-content class="grader-content">
+            <div class="center-aligned">
+                <div layout-xs="column" layout-sm="column" layout-gt-sm="row">
+                    <span hide-sm hide-xs flex></span>
+                    <md-button class="md-accent md-button md-raised" ng-click="setAllGrades('Negative')">
+                        <i class="material-icons inline-icon">thumb_down</i>
+                        All Negative
+                    </md-button>
+                    <md-button class="md-accent md-button md-raised" ng-click="setAllGrades('Neutral')">
+                        <i class="material-icons inline-icon">thumbs_up_down</i>
+                        All Neutral
+                    </md-button>
+                    <md-button class="md-accent md-button md-raised" ng-click="setAllGrades('Positive')">
+                        <i class="material-icons inline-icon">thumb_up</i>
+                        All Positive
+                    </md-button>
+                    <span hide-sm hide-xs flex></span>
+                </div>
+            </div>
 
             <table class="comment-bank-table">
                 <tr ng-repeat="pattern_piece in editingStudentGrade.pattern" ng-style="getAltBackgroundColor($even)"
+                    layout-xs="column" layout-sm="column" layout-gt-sm="row"
                     class="multi-student-comment-row repeated-item">
-                    <td class="grader-td">
+                    <td class="grader-td" flex layout="row">
                         <md-input-container class="almost-full-width grader-input">
-                            <label>Search Text</label>
+                            <label>Search Text for sentence {{$index + 1}}</label>
                             <input type="text" autocomplete="off" placeholder="No Search Text Entered"
+                                   class="almost-full-width"
                                    ng-model="pattern_piece.search_text">
                         </md-input-container>
                     </td>
-                    <td class="grader-td">
+                    <td class="grader-td" flex>
+
+                        <br hide-xs hide-sm>
+                        <br hide-xs hide-sm>
                         <md-radio-group ng-model="pattern_piece.tone" layout="row" class="grader-radio-container">
                             <md-radio-button ng-hide="true" value="Any">Any</md-radio-button>
-                            <md-radio-button value="Any">Any</md-radio-button>
-                            <md-radio-button class="grader-radio-button" value="Negative">Negative</md-radio-button>
-                            <md-radio-button class="grader-radio-button" value="Neutral">Neutral</md-radio-button>
-                            <md-radio-button class="grader-radio-button" value="Positive">Positive</md-radio-button>
+                            <md-radio-button class="md-primary" value="Any">Any</md-radio-button>
+                            <md-radio-button class="md-primary grader-radio-button" value="Negative">
+                                <span hide-xs>Negative</span>
+                                <span hide-gt-xs>Neg.</span>
+                            </md-radio-button>
+                            <md-radio-button class="md-primary grader-radio-button" value="Neutral">
+                                <span hide-xs>Neutral</span>
+                                <span hide-gt-xs>Neut.</span>
+                            </md-radio-button>
+                            <md-radio-button class="md-primary grader-radio-button" value="Positive">
+                                <span hide-xs>Positive</span>
+                                <span hide-gt-xs>Pos.</span>
+                            </md-radio-button>
                         </md-radio-group>
+
+                        <br hide-gt-sm>
+                        <br hide-gt-sm>
                     </td>
                 </tr>
             </table>
@@ -38,15 +73,30 @@
                 <md-button class="md-accent md-button md-raised" ng-hide="gradingIndex != null" ng-click="saveGrade()">
                     <i class="material-icons inline-icon">done</i>
                     Save
+                    <md-tooltip ng-style="state.theme.tooltips"
+                                ng-show="state.settings.showTooltips && editingStudentGrade"
+                                class="tooltip">
+                        Saves these grades as a pattern and regenerates the comment accordingly
+                    </md-tooltip>
                 </md-button>
                 <md-button class="md-accent md-button md-raised" ng-show="gradingIndex != null"
                            ng-click="saveGrade(); gradeAllStudents(gradingIndex + 1);">
                     <i class="material-icons inline-icon">done</i>
                     Save
+                    <md-tooltip ng-style="state.theme.tooltips"
+                                ng-show="state.settings.showTooltips && editingStudentGrade"
+                                class="tooltip">
+                        Saves these grades as a pattern, regenerates the comment accordingly and opens the next student
+                    </md-tooltip>
                 </md-button>
                 <md-button ng-click="closeDialog()">
-                    <i class="material-icons inline-icon">done</i>
+                    <i class="material-icons inline-icon">cancel</i>
                     Cancel
+                    <md-tooltip ng-style="state.theme.tooltips"
+                                ng-show="state.settings.showTooltips && editingStudentGrade"
+                                class="tooltip">
+                        Do not save these grades and stops grading
+                    </md-tooltip>
                 </md-button>
             </div>
 

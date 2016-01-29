@@ -34,9 +34,17 @@
                 blank or generate a comment based on the default pattern (if you have defined a default pattern).
             </p>
 
+            <h4 ng-style="state.theme.highlightColor">Using Search:</h4>
+            <p ng-style="state.theme.textColor">
+                Search allows you to quickly find and add comments from the comment bank.
+                Click on "Edit w/ Search" in a student's menu, or just go to the search tab and select a student there
+                to edit them with search.
+            </p>
+
             <h4 ng-style="state.theme.highlightColor">Using Patterns:</h4>
             <p ng-style="state.theme.textColor">
-                Patterns allow you to fine tune how comments will be generated. To set a default pattern just go
+                Patterns allow you fine-grained control over how comments will be generated. To set a default pattern
+                just go
                 straight to the "Patterns" tab or click on the "Add Default Pattern" button under "Add Students".
                 There are instructions on how to make patterns on the Patterns tab.<br><br>
 
@@ -47,6 +55,21 @@
                 You can also define individual patterns for students. Once a student is added you can go into their menu
                 and click "Edit w/ Patterns". This will put their current comment into a pattern format and allow you to
                 modify it as necessary.
+            </p>
+
+            <h4 ng-style="state.theme.highlightColor">Grading Students:</h4>
+            <p ng-style="state.theme.textColor">
+                Comment Breeze allows you to grade students in various subjects quickly. The only requirement is that
+                you have a default pattern defined
+                (this would outline the subjects you want to grade them on).<br><br>
+
+                All students can be graded by clicking "Grade All Students" in the All Students menu. You can also grade
+                students one at a time
+                or revise your grade by clicking "Grade Student" in a student's menu.<br><br>
+
+                Grading will apply a derivative pattern based on whatever pattern is currently assigned to the student,
+                or the default pattern if
+                no pattern has yet been applied.
             </p>
 
             <h4 ng-style="state.theme.highlightColor">Editing:</h4>

@@ -47,8 +47,7 @@ td.comment-text:hover {
 
 .grader-input {
     margin-left: 1em;
-    margin-right: 2em;
-    padding-right: 2em;
+    margin-right: 1em;
     top: 1em;
 }
 
@@ -361,6 +360,7 @@ td.comment-text:hover {
 
 .grader-radio-container {
     padding-left: 1em;
+    bottom: 2em;
 }
 
 .grader-radio-button {
