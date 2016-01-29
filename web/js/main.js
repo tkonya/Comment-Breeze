@@ -237,7 +237,8 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
                 useSmartSearch: false,
                 tabSwipe: false,
                 showAnnoy: true,
-                autoCache: true
+                autoCache: true,
+                cacheInterval: 20
             },
             theme: {
                 colorTheme: 'breezy',
@@ -1846,13 +1847,21 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         }
     };
 
+    $scope.changeCacheInterval = function () {
+        var revertToState = $scope.state.settings.autoCache;
+        $scope.state.settings.autoCache = false;
+        $scope.stopAutoCaching();
+        $scope.state.settings.autoCache = revertToState;
+        $scope.startAutoCaching();
+    };
+
     $scope.autoCacheInterval = null;
     $scope.startAutoCaching = function () {
         if ($scope.state.settings.autoCache) {
             console.log('starting auto caching');
             $scope.autoCacheInterval = $interval(function () {
                 $scope.saveStateLocal(true);
-            }, 30000)
+            }, ($scope.state.settings.cacheInterval * 1000))
         }
     };
 

@@ -220,6 +220,10 @@ td.comment-text:hover {
     margin-bottom: 0.5em;
 }
 
+.cache-interval {
+    bottom: 2em;
+}
+
 .setting-control {
     margin-bottom: 0;
     width: auto;

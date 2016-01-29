@@ -123,6 +123,18 @@
                 </p>
             </div>
             <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
+                <div flex-gt-xs="25" class="setting-control-container" class="setting-control-container">
+                    <md-input-container class="settings-number-input setting-control cache-interval">
+                        <label>Cache Interval</label>
+                        <input type="number" ng-change="changeCacheInterval();" ng-disabled="!state.settings.autoCache"
+                               ng-model="state.settings.cacheInterval" min="1" max="360">
+                    </md-input-container>
+                </div>
+                <p ng-style="state.theme.textColor" flex-gt-xs="75" class="settings-text">
+                    The cache interval is how often your work is saved to the browser's cache, in seconds.
+                </p>
+            </div>
+            <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
                 <md-button aria-label="Copy All Comments" ng-disabled="!cachedComments" flex
                            class="md-button md-raised md-accent" ng-click="restoreStateLocal();">
                     <i class="material-icons inline-icon">file_download</i>
