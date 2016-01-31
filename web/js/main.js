@@ -213,6 +213,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
     $scope.setInitialApplicationState = function() {
         // application state - this is the object that gets saved or loaded
         $scope.state = {
+            class_id: $scope.getRandomID(),
             date_created: new Date(),
             class_name: '',
             old_class_name: '',
@@ -241,8 +242,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
                 cacheInterval: 20
             },
             theme: {
-                colorTheme: 'breezy',
-                seizures: false
+                colorTheme: 'breezy'
             }
         };
 
@@ -995,6 +995,10 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
 
         var student = {};
 
+        // make a random id for this student
+        student.student_id = $scope.getRandomID();
+        student.date_created = new Date();
+
         if ($scope.newStudentName.endsWith(' m') || $scope.newStudentName.endsWith(' M')) {
             student.gender = "male";
             student.name = $scope.newStudentName.replace(' m', '').replace(' M', '');
@@ -1012,22 +1016,17 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         }
         student.old_name = student.name;
 
-        // make a random id for this student
-        student.student_id = '';
-        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        for (var random = 0; random < 32; ++random) {
-            student.student_id += possible.charAt(Math.floor(Math.random() * possible.length));
-        }
-
         if ($scope.state.settings.newStudentFill == 'blank') {
 
             // start with blank pattern
             student.comment = '';
+            student.pattern_type = 'blank';
 
         } else if ($scope.state.settings.newStudentFill == 'random') {
 
             // start with totally random comment
             student.comment = $scope.fixGenderPronouns($scope.replaceClassName($scope.replaceStudentName($scope.getRandomComments(), student.name, student.old_name), true), student.gender);
+            student.pattern_type = 'random';
 
         } else if ($scope.state.settings.newStudentFill == 'default_pattern' && $scope.state.global_pattern.length > 0) {
 
@@ -1048,6 +1047,16 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         $scope.illToastToThat('Added student: ' + student.name + ' (' + student.gender + ')');
 
         $scope.buildAllStudentComments();
+    };
+
+    $scope.getRandomID = function() {
+        // number of possible combinations for 32 : 118641409870829875747200248099338674690997616640000000
+        var randomID = '';
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        for (var random = 0; random < 32; ++random) {
+            randomID += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+        return randomID;
     };
 
     $scope.regenerateMultiStudentComment = function(student, forceRandom) {
