@@ -1012,11 +1012,11 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         }
         student.old_name = student.name;
 
-        // make an id for this student, based on their name + 8 random characters
-        student.student_id = student.name.replace(/\s+/g, '');
+        // make a random id for this student
+        student.student_id = '';
         var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        for (var random = 0; random < 8; ++random) {
-            student.student_id += '-' + possible.charAt(Math.floor(Math.random() * possible.length));
+        for (var random = 0; random < 32; ++random) {
+            student.student_id += possible.charAt(Math.floor(Math.random() * possible.length));
         }
 
         if ($scope.state.settings.newStudentFill == 'blank') {
