@@ -166,7 +166,7 @@ public class CommentResource {
 
                 databaseHandler = new DatabaseHandler();
                 preparedStatement = databaseHandler.getConnection().prepareStatement(
-                    "UPDATE comments SET comment_text = IFNULL(?, comment_text), pos_neg = IFNULL(?, pos_neg), verified_pos_neg = IFNULL(?, pos_neg), deleted = IFNULL(?, deleted), last_update_ip = IFNULL(?, last_update_ip), last_update = CURRENT_TIMESTAMP, flagged = IFNULL(?, flagged) WHERE comment_id = ?"
+                    "UPDATE comments SET comment_text = IFNULL(?, comment_text), pos_neg = IFNULL(?, pos_neg), verified_pos_neg = IFNULL(?, verified_pos_neg), deleted = IFNULL(?, deleted), last_update_ip = IFNULL(?, last_update_ip), last_update = CURRENT_TIMESTAMP, flagged = IFNULL(?, flagged) WHERE comment_id = ?"
                 );
 
                 if (comment.has("comment_text") && canEdit) {
