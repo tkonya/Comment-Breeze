@@ -220,6 +220,11 @@ td.comment-text:hover {
     margin-bottom: 0.5em;
 }
 
+.sample-result-input-container {
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}
+
 .cache-interval {
     bottom: 2em;
 }

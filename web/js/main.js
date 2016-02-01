@@ -914,6 +914,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
                     $location.search('limit', null);
                     $scope.setInitialApplicationState();
                     $scope.setMobileSettings();
+                    $scope.changeFilter();
                     $scope.illToastToThat('Application reset');
                     $scope.setTheme();
 
@@ -936,6 +937,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             // put the comments back in
             if ($scope.allComments.length > 0) {
                 $scope.comments = $scope.allComments;
+                $scope.allComments = [];
             }
 
         } else {
