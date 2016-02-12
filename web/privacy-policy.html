@@ -26,14 +26,17 @@
                    ng-href="https://addons.opera.com/en/extensions/details/google-analytics-opt-out-by-google/?display=en">Opera</a>
             </p>
 
+            <h4 ng-style="state.theme.highlightColor">Comment Metadata:</h4>
+            <p ng-style="state.theme.textColor">
+                Metadata about your comments is stored when you copy or save them.<br>
+                This includes a hash of your IP address, comment length and type of pattern used.
+                This does not include class names, student names or comment text.
+            </p>
+
             <h4 ng-style="state.theme.highlightColor">IP Addresses:</h4>
             <p ng-style="state.theme.textColor">
-                IP addresses associated with any comment edits are logged.<br><br>
-                This includes rating positive/neutral/negative, tagging, marking flagged or deleted or editing the
-                comment text.<br>
-                Incorrect password attempts also have their associated IP's logged.<br>
-                This does not include editing your comments for one of your students.<br>
-                Entries on the contact form do not have their IP addresses logged.
+                Cleartext IP address are logged for security when comments are rated, tagged or edited, or when an incorrect password is entered.<br>
+                Hashed IP addresses are logged for analytics when you copy or save your comments.
             </p>
 
             <h4 ng-style="state.theme.highlightColor">Your Comments:</h4>
@@ -45,7 +48,8 @@
             <h4 ng-style="state.theme.highlightColor">Local Storage:</h4>
             <p ng-style="state.theme.textColor">
                 By default Comment Breeze will cache your comments, in your browser, in case something happens. This can
-                be turned off in settings.
+                be turned off in settings.<br><br>
+                To clear this storage after you are done use the "Reset App" button in the Class Details menu.
             </p>
 
             <h4 ng-style="state.theme.highlightColor">Cookies:</h4>

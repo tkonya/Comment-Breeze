@@ -1,17 +1,20 @@
 package com.rest;
 
+import com.sun.org.apache.bcel.internal.util.BCELifier;
 import com.utilities.AppProperties;
 import com.utilities.LockoutHandler;
 import org.codehaus.jettison.json.JSONArray;
 import com.utilities.DatabaseHandler;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -375,6 +378,75 @@ public class CommentResource {
         }
 
         return Response.ok(jsonObject.toString()).build();
+    }
+
+    @PUT
+    @Path("/analytics")
+    @Produces("application/json")
+    public Response saveAnalytics(@Context HttpServletRequest request, @QueryParam("analytics") JSONObject analytics) throws JSONException {
+
+        DatabaseHandler databaseHandler = null;
+        PreparedStatement preparedStatement = null;
+        try {
+
+            databaseHandler = new DatabaseHandler();
+            preparedStatement = databaseHandler.getConnection().prepareStatement(
+                "INSERT INTO analytics (student_id, class_id, ip_hash, created, last_modified, pattern_type, sentences_count, trigger_action) VALUES (?, ?, ?, ?, ?, ?, ?, ?)" +
+                "ON DUPLICATE KEY UPDATE ip_hash = ?, last_modified = ?, pattern_type = ?, sentences_count = ?, trigger_action = ?");
+
+            String ipHash = getMD5(request.getRemoteAddr());
+
+            for (int i = 0; i < analytics.getJSONArray("students").length(); ++i) {
+
+                preparedStatement.setString(1, analytics.getJSONArray("students").getJSONObject(i).getString("student_id"));
+                preparedStatement.setString(2, analytics.getString("class_id"));
+                preparedStatement.setString(3, ipHash);
+                preparedStatement.setString(4, analytics.getJSONArray("students").getJSONObject(i).getString("created"));
+                preparedStatement.setString(5, analytics.getJSONArray("students").getJSONObject(i).getString("last_modified"));
+                preparedStatement.setString(6, analytics.getJSONArray("students").getJSONObject(i).getString("pattern_type"));
+                preparedStatement.setInt(7, analytics.getJSONArray("students").getJSONObject(i).getInt("sentences_count"));
+                preparedStatement.setString(8, analytics.getString("trigger_action"));
+
+                preparedStatement.setString(9, ipHash);
+                preparedStatement.setString(10, analytics.getJSONArray("students").getJSONObject(i).getString("last_modified"));
+                preparedStatement.setString(11, analytics.getJSONArray("students").getJSONObject(i).getString("pattern_type"));
+                preparedStatement.setString(12, analytics.getJSONArray("students").getJSONObject(i).getString("sentences_count"));
+                preparedStatement.setString(13, analytics.getString("trigger_action"));
+
+                preparedStatement.addBatch();
+            }
+            preparedStatement.executeBatch();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (databaseHandler != null) {
+                databaseHandler.closeConnection();
+            }
+        }
+
+        return Response.ok().build();
+    }
+
+    private String getMD5(String text) {
+        try {
+            java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
+            byte[] array = md.digest(text.getBytes());
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < array.length; ++i) {
+                sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1,3));
+            }
+            return sb.toString();
+        } catch (java.security.NoSuchAlgorithmException e) {
+        }
+        return null;
     }
 
     @GET

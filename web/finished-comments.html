@@ -21,7 +21,7 @@
 
             <div class="center-aligned  close-modal-elements">
                 <md-button aria-label="Copy All Comments" md-ink-ripple flex class="md-button md-raised md-accent"
-                           md-ripple-size="auto" ng-click="illToastToThat('All comments copied to clipboard');"
+                           md-ripple-size="auto" ng-click="illToastToThat('All comments copied to clipboard'); saveAnalyticsClass('Copy All Comments - Finished Comments');"
                            clipboard text="state.all_student_comments">
                     <i class="material-icons inline-icon">content_copy</i>
                     <span>Copy All Comments</span>
@@ -30,7 +30,7 @@
                         Copy comments for all students including introduction and conclusion if applicable
                     </md-tooltip>
                 </md-button>
-                <md-button ng-click="saveComments();" ng-disabled="!state.all_student_comments"
+                <md-button ng-click="saveComments(); saveAnalyticsClass('Save Comments - Finished Comments');" ng-disabled="!state.all_student_comments"
                            class="md-accent md-raised">
                     <i class="material-icons inline-icon">file_download</i>
                     <span>Save Comments</span>
