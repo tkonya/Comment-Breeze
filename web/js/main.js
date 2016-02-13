@@ -793,6 +793,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
                         if ($scope.state.students[i].student_id == $scope.editingStudentGrade.student_id) {
                             $scope.state.students[i] = $scope.editingStudentGrade;
                             $scope.illToastToThat($scope.state.students[i].name + ' graded');
+                            $scope.buildAllStudentComments();
                             break;
                         }
                     }
@@ -1242,6 +1243,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
                 }
                 $scope.illToastToThat('Saved comment changes for ' + $scope.state.students[i].name);
                 $scope.buildWholeStudentComment($scope.state.students[i]);
+                $scope.buildAllStudentComments();
                 $scope.studentToEditWithSearch = null;
                 return;
             }
@@ -1277,6 +1279,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
                 }
                 $scope.illToastToThat('Saved pattern changes for ' + $scope.state.students[i].name);
                 $scope.buildWholeStudentComment($scope.state.students[i]);
+                $scope.buildAllStudentComments();
                 $scope.studentToEditWithPattern = null;
                 return;
             }
