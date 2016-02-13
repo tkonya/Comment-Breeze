@@ -1199,6 +1199,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
     };
 
     $scope.buildAllStudentComments = function() {
+        console.log('building all comments');
         $scope.state.all_student_comments = '';
         for (var i = 0; i < $scope.state.students.length; ++i) {
             $scope.state.all_student_comments += $scope.state.students[i].name + ':\n\n';
