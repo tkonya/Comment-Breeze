@@ -230,7 +230,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
                 showEditButtons: true,
                 makeSomethingUpSize: 10,
                 getSearchResultCount: false,
-                avoidHer: true,
+                highAccuracyGenderedPronouns: true,
                 enableNeutralGender: false,
                 reduceCommentsSize: 10000,
                 showCommonTags: false,
@@ -283,7 +283,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
 
         // patterns
         $scope.editingPattern = [];
-        $scope.newPatternPiece = {search_text: '', found_comment: '', tone: 'Any', tags: false, text: false};
+        $scope.newPatternPiece = {search_text: '', found_comment: '', tone: 'Any'};
         $scope.limitedToneFilterOptions = ['Any', 'Positive', 'Neutral', 'Negative'];
 
         // collapse cards
@@ -1116,7 +1116,9 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         for (var i = 0; i < size; ++i) {
             var randomComment = $scope.comments[Math.floor(Math.random() * $scope.comments.length)];
 
-            if ($scope.state.settings.avoidHer && $scope.gender != 'female' && (randomComment.comment_text.indexOf(' her ') > 0 || randomComment.comment_text.startsWith('Her') || randomComment.comment_text.endsWith(' her.'))) {
+            if ($scope.state.settings.highAccuracyGenderedPronouns &&
+                (($scope.gender != 'female' && (randomComment.comment_text.indexOf(' her ') > 0 || randomComment.comment_text.startsWith('Her') || randomComment.comment_text.endsWith(' her.'))) ||
+                ($scope.gender != 'male' && (randomComment.comment_text.indexOf(' his ') > 0 || randomComment.comment_text.startsWith('His') || randomComment.comment_text.endsWith(' his.'))))) {
                 --i;
                 continue;
             }
@@ -1395,7 +1397,9 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
                 index -= $scope.comments.length;
             }
 
-            if ($scope.state.settings.avoidHer && $scope.gender != 'female' && ($scope.comments[index].comment_text.indexOf(' her ') > 0 || $scope.comments[index].comment_text.startsWith('Her') || $scope.comments[index].comment_text.endsWith(' her.'))) {
+            if ($scope.state.settings.highAccuracyGenderedPronouns &&
+                (($scope.gender != 'female' && ($scope.comments[index].comment_text.indexOf(' her ') > 0 || $scope.comments[index].comment_text.startsWith('Her') || $scope.comments[index].comment_text.endsWith(' her.'))) ||
+                ($scope.gender != 'male' && ($scope.comments[index].comment_text.indexOf(' his ') > 0 || $scope.comments[index].comment_text.startsWith('His') || $scope.comments[index].comment_text.endsWith(' his.'))))) {
                 continue;
             }
 
@@ -1413,9 +1417,11 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             ++searchResults;
             if (!getResultCount) {
                 search.found_comment = $scope.capitalizeFirstLetter($scope.comments[index].comment_text).trim();
+                search.found_comment_id = $scope.comments[index].comment_id;
                 break;
             } else if (search.found_comment == '') {
                 search.found_comment = $scope.capitalizeFirstLetter($scope.comments[index].comment_text).trim();
+                search.found_comment_id = $scope.comments[index].comment_id;
             }
         }
 
@@ -1428,14 +1434,13 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         return angular.copy(search);
     };
 
-    $scope.resubmitSearch = function(search, getResultCount, tone) {
-        console.log('resubmitting search for ' + search.search_text);
-        //console.log('getResultCount ? ' + getResultCount);
-        if (tone) {
-            search.tone = tone;
-        }
+    $scope.resubmitSearch = function(search, getResultCount) {
+        //console.log('resubmitting search for ' + search.search_text);
+        //console.log('tone: ' + search.tone);
+
         var newSearch = $scope.getSmartSearchResult(search, getResultCount);
         search.found_comment = newSearch.found_comment;
+        search.found_comment_id = newSearch.found_comment_id;
         if (getResultCount) {
             //console.log('result count for new search parameters: ' + newSearch.result_count);
             search.result_count = newSearch.result_count;

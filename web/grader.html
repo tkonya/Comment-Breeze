@@ -13,8 +13,17 @@
     </md-toolbar>
     <md-dialog-content>
         <md-content class="grader-content">
-            <div class="center-aligned">
-                <div layout-xs="column" layout-sm="column" layout-gt-sm="row">
+            <div class="center-aligned" layout-xs="column" layout-sm="column" layout-gt-sm="row" layout-fill>
+                <div layout="row" flex flex-gt-sm="50">
+                    <span hide-sm hide-xs flex></span>
+
+                    <md-checkbox ng-model="showAdvancedGraderView" class="grader-view-checkbox" aria-label="Advanced View">
+                        <span class="grader-view-checkbox-label">Advanced View</span>
+                    </md-checkbox>
+
+                    <span hide-sm hide-xs flex></span>
+                </div>
+                <div layout-xs="column" layout-gt-xs="row" flex flex-gt-sm="50">
                     <span hide-sm hide-xs flex></span>
                     <md-button class="md-accent md-button md-raised" ng-click="setAllGrades('Negative'); resubmitAllGraderSearch(); buildAllGradeComments();">
                         <i class="material-icons inline-icon">thumb_down</i>
@@ -44,18 +53,19 @@
 
                         <br hide-xs hide-sm>
                         <br hide-xs hide-sm>
-                        <md-radio-group ng-model="pattern_piece.tone" layout="row" class="grader-radio-container">
-                            <md-radio-button ng-hide="true" value="Any">Any</md-radio-button>
-                            <md-radio-button ng-click="resubmitSearch(pattern_piece, false, 'Any');" class="md-primary" value="Any">Any</md-radio-button>
-                            <md-radio-button ng-click="resubmitSearch(pattern_piece, false, 'Negative');" class="md-primary grader-radio-button" value="Negative">
+                        <md-radio-group ng-model="pattern_piece.tone" layout="row" class="grader-radio-container" ng-change="resubmitSearch(pattern_piece, false);">
+                            <md-radio-button ng-value="'Any'" class="md-primary grader-radio-button">
+                                Any
+                            </md-radio-button>
+                            <md-radio-button ng-value="'Negative'" class="md-primary grader-radio-button">
                                 <span hide-xs>Negative</span>
                                 <span hide-gt-xs>Neg.</span>
                             </md-radio-button>
-                            <md-radio-button ng-click="resubmitSearch(pattern_piece, false, 'Neutral');" class="md-primary grader-radio-button" value="Neutral">
+                            <md-radio-button ng-value="'Neutral'" class="md-primary grader-radio-button">
                                 <span hide-xs>Neutral</span>
                                 <span hide-gt-xs>Neut.</span>
                             </md-radio-button>
-                            <md-radio-button ng-click="resubmitSearch(pattern_piece, false, 'Positive');" class="md-primary grader-radio-button" value="Positive">
+                            <md-radio-button ng-value="'Positive'" class="md-primary grader-radio-button">
                                 <span hide-xs>Positive</span>
                                 <span hide-gt-xs>Pos.</span>
                             </md-radio-button>
@@ -87,23 +97,23 @@
                             </md-input-container>
                         </form>
 
-                        <md-radio-group ng-model="pattern_piece.tone" layout="row" class="grader-radio-container">
-                            <md-radio-button class="md-primary grader-radio-button" value="Any" ng-click="resubmitSearch(pattern_piece, false, 'Any'); buildAllGradeComments();">Any</md-radio-button>
-                            <md-radio-button class="md-primary grader-radio-button" value="Negative" ng-click="resubmitSearch(pattern_piece, false, 'Negative'); buildAllGradeComments();">Neg.</md-radio-button>
-                            <md-radio-button class="md-primary grader-radio-button" value="Neutral" ng-click="resubmitSearch(pattern_piece, false, 'Neutral'); buildAllGradeComments();">Neut.</md-radio-button>
-                            <md-radio-button class="md-primary grader-radio-button" value="Positive" ng-click="resubmitSearch(pattern_piece, false, 'Positive'); buildAllGradeComments();">Pos.</md-radio-button>
+                        <md-radio-group ng-model="pattern_piece.tone" layout="row" ng-change="resubmitSearch(pattern_piece, false);" class="grader-radio-container advanced-view-grader-radio">
+                            <md-radio-button class="md-primary grader-radio-button" ng-value="'Any'">Any</md-radio-button>
+                            <md-radio-button class="md-primary grader-radio-button" ng-value="'Negative'">Neg.</md-radio-button>
+                            <md-radio-button class="md-primary grader-radio-button" ng-value="'Neutral'">Neut.</md-radio-button>
+                            <md-radio-button class="md-primary grader-radio-button" ng-value="'Positive'">Pos.</md-radio-button>
                         </md-radio-group>
 
                     </td>
                     <td flex-xs flex-sm flex-gt-sm="20" layout-xs="column" layout-sm="row" layout-gt-sm="column">
-                        <md-button aria-label="Remove All Students" md-ink-ripple flex class="cursor-pointer full-width" md-ripple-size="auto" ng-click="resubmitSearch(pattern_piece, false);  buildAllGradeComments();">
+                        <md-button aria-label="Remove All Students" md-ink-ripple flex class="cursor-pointer" md-ripple-size="auto" ng-click="resubmitSearch(pattern_piece, false);  buildAllGradeComments();">
                             <i class="material-icons inline-icon">autorenew</i>
                             <span>Regenerate</span>
                             <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip" md-direction="below">
                                 Regenerate this search result
                             </md-tooltip>
                         </md-button>
-                        <md-button aria-label="Remove Search" md-ink-ripple flex class="cursor-pointer full-width" md-ripple-size="auto" ng-click="editingStudentGrade.pattern.splice($index, 1);  buildAllGradeComments();">
+                        <md-button aria-label="Remove Search" md-ink-ripple flex class="cursor-pointer" md-ripple-size="auto" ng-click="editingStudentGrade.pattern.splice($index, 1);  buildAllGradeComments();">
                             <i class="material-icons inline-icon">delete</i>
                             <span>Remove</span>
                             <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip" md-direction="below">

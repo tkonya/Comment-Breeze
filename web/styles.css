@@ -235,6 +235,14 @@ td.comment-text:hover {
     vertical-align: bottom;
 }
 
+.grader-view-checkbox {
+    margin-top: 0.4em;
+}
+
+.grader-view-checkbox-label {
+    margin-top: 0.4em;
+}
+
 .zero-size {
     height: 0;
     width: 0;
@@ -480,4 +488,8 @@ td.comment-text:hover {
     max-width: 1160px !important;
     max-height: 95% !important;
     border-radius: 5px !important;
+}
+
+.advanced-view-grader-radio {
+    margin-bottom: 1em;
 }
