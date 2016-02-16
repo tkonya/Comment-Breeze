@@ -455,10 +455,18 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             manLadyAdult = 'adult';
         }
 
-        text = text.replace(/\bboy\b|\bgirl\b|\bchild\b/g,girlBoyChild).replace(/\bBoy\b|\bGirl\b|\bChild\b/g,$scope.capitalizeFirstLetter(girlBoyChild));
-        text = text.replace(/\bman\b|\blady\b|\badult\b/g,girlBoyChild).replace(/\bMan\b|\bLady\b|\bAdult\b/g,$scope.capitalizeFirstLetter(manLadyAdult));
-        text = text.replace(/\bhe\b|\bshe\b|\bthey\b/g,subject).replace(/\bhis\b|\bhers\b|\btheirs\b/g,possessivePronouns).replace(/\bhim\b|\bher\b|\bthem\b/g,object).replace(/\bhis\b|\bher\b|\btheir\b/g,possessiveAdjectives).replace(/\bhimself\b|\bherself\b|\btheirself\b/g,reflexivePronouns);
-        text = text.replace(/\bHe\b|\bShe\b|\bThey\b/g,$scope.capitalizeFirstLetter(subject)).replace(/\bHim\b|\bHer\b|\bThem\b/g,$scope.capitalizeFirstLetter(object)).replace(/\bHis\b|\bHers\b|\bTheirs\b/g,$scope.capitalizeFirstLetter(possessivePronouns)).replace(/\bHis\b|\bHer\b|\bTheir\b/g,$scope.capitalizeFirstLetter(possessiveAdjectives)).replace(/\bHimself\b|\bHerself\b|\bTheirself\b/g,$scope.capitalizeFirstLetter(reflexivePronouns));
+        if ($scope.state.settings.enableNeutralGender) {
+            text = text.replace(/\bboy\b|\bgirl\b|\bchild\b/g,girlBoyChild).replace(/\bBoy\b|\bGirl\b|\bChild\b/g,$scope.capitalizeFirstLetter(girlBoyChild));
+            text = text.replace(/\bman\b|\blady\b|\badult\b/g,girlBoyChild).replace(/\bMan\b|\bLady\b|\bAdult\b/g,$scope.capitalizeFirstLetter(manLadyAdult));
+            text = text.replace(/\bhe\b|\bshe\b|\bthey\b/g,subject).replace(/\bhis\b|\bhers\b|\btheirs\b/g,possessivePronouns).replace(/\bhim\b|\bher\b|\bthem\b/g,object).replace(/\bhis\b|\bher\b|\btheir\b/g,possessiveAdjectives).replace(/\bhimself\b|\bherself\b|\btheirself\b/g,reflexivePronouns);
+            text = text.replace(/\bHe\b|\bShe\b|\bThey\b/g,$scope.capitalizeFirstLetter(subject)).replace(/\bHim\b|\bHer\b|\bThem\b/g,$scope.capitalizeFirstLetter(object)).replace(/\bHis\b|\bHers\b|\bTheirs\b/g,$scope.capitalizeFirstLetter(possessivePronouns)).replace(/\bHis\b|\bHer\b|\bTheir\b/g,$scope.capitalizeFirstLetter(possessiveAdjectives)).replace(/\bHimself\b|\bHerself\b|\bTheirself\b/g,$scope.capitalizeFirstLetter(reflexivePronouns));
+        } else {
+            text = text.replace(/\bboy\b|\bgirl\b/g,girlBoyChild).replace(/\bBoy\b|\bGirl\b/g,$scope.capitalizeFirstLetter(girlBoyChild));
+            text = text.replace(/\bman\b|\blady\b/g,girlBoyChild).replace(/\bMan\b|\bLady\b/g,$scope.capitalizeFirstLetter(manLadyAdult));
+            text = text.replace(/\bhe\b|\bshe\b/g,subject).replace(/\bhis\b|\bhers\b/g,possessivePronouns).replace(/\bhim\b|\bher\b/g,object).replace(/\bhis\b|\bher\b/g,possessiveAdjectives).replace(/\bhimself\b|\bherself\b/g,reflexivePronouns);
+            text = text.replace(/\bHe\b|\bShe\b/g,$scope.capitalizeFirstLetter(subject)).replace(/\bHim\b|\bHer\b/g,$scope.capitalizeFirstLetter(object)).replace(/\bHis\b|\bHers\b/g,$scope.capitalizeFirstLetter(possessivePronouns)).replace(/\bHis\b|\bHer\b/g,$scope.capitalizeFirstLetter(possessiveAdjectives)).replace(/\bHimself\b|\bHerself\b/g,$scope.capitalizeFirstLetter(reflexivePronouns));
+        }
+
         //console.log('Gender Fixed text length: ' + text.length);
         return text;
     };
