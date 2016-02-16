@@ -859,31 +859,6 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         });
     };
 
-    $scope.showExitAppDialog = function () {
-        $mdDialog.show({
-            clickOutsideToClose: true,
-            scope: $scope,        // use parent scope in template
-            preserveScope: true,  // do not forget this if use parent scope
-            templateUrl: '/exit-app.html',
-            controller: function DialogController($scope, $mdDialog) {
-                $scope.closeDialog = function (exit) {
-
-                    if ($scope.clearCacheOnExit) {
-                        $scope.state.settings.autoCache = false;
-                        $scope.stopAutoCaching();
-                        $scope.removeStateLocal();
-                    }
-
-                    if (exit) {
-                        $window.close();
-                    }
-
-                    $mdDialog.hide();
-                };
-            }
-        });
-    };
-
     $scope.showSavedStateDialog = function () {
         $mdDialog.show({
             clickOutsideToClose: true,
