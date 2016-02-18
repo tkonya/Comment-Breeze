@@ -1,0 +1,60 @@
+<md-dialog flex="90" md-theme="{{ state.theme.colorTheme }}" class="dialog-top-level">
+    <md-toolbar class="md-toolbar-tools dialog-toolbar">
+        <h1>Add Students Help</h1>
+        <span flex></span>
+        <md-button ng-click="closeDialog()">
+            <i class="material-icons inline-icon">close</i>
+        </md-button>
+    </md-toolbar>
+    <md-dialog-content>
+        <md-content class="dialog-content">
+
+            <h4 ng-style="state.theme.highlightColor">Adding Students:</h4>
+            <p ng-style="state.theme.textColor">
+                Enter your student's names, as you would like them to appear in the comments, one after another by
+                selecting their gender, typing their name on the "New Student Name" line and then hitting enter or press the "Add"
+                button after each one.<br><br>
+
+                Tip: You may put a space after the students name and an "m" or "f" to set their gender. For example I
+                could enter in "Jimmy f", hit enter, and the page would add a female student named "Jimmy".
+                If you don't add one of those letters after the student's name to determine gender it will be whatever
+                gender is currently selected in the "Add Students" box.<br><br>
+
+                By default a totally random comment whenever a new student is added, but you may also choose to start
+                blank or generate a comment based on the default pattern (if you have defined a default pattern).<br><br>
+            </p>
+
+            <h4 ng-style="state.theme.highlightColor">Setting Gender:</h4>
+            <p ng-style="state.theme.textColor">
+                You can set the gender of the student to be added one of 2 ways:<br>
+                1. With the Male/Female/Neutral radio button<br>
+                2. You may put a space after the students name and an "m" or "f" to set their gender.<br><br>
+
+                Example: For example I could enter in "Jimmy f", hit enter, and the page would add a female student named "Jimmy".
+                If you don't add one of those letters after the student's name to determine gender it will be whatever
+                gender is currently selected in the "Add Students" box.<br><br>
+
+                If you set the gender with a capital letter ("M" or "F") it will also change the default gender. This could be useful if you have several students
+                in a row that are the same gender.<br><br>
+
+                Side Note: I used to have a neutral gender option alongside male and female for gender non-conforming students.
+                It could not be done reliably and would necessitate so much more proofreading and correction that it was pointless.<br><br>
+            </p>
+
+            <h4 ng-style="state.theme.highlightColor">Initial Comment:</h4>
+            <p ng-style="state.theme.textColor">
+                By default a totally random comment whenever a new student is added, but you may also choose to start
+                blank.<br><br>
+
+                A third option is to make a default pattern and have all new students added start with comments conforming to
+                the default pattern.<br><br>
+            </p>
+
+            <br>
+
+            <div class="center-aligned ">
+                <md-button class="md-primary" ng-click="closeDialog()">OK, I got it</md-button>
+            </div>
+        </md-content>
+    </md-dialog-content>
+</md-dialog>

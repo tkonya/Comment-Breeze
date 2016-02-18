@@ -231,7 +231,6 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
                 makeSomethingUpSize: 10,
                 getSearchResultCount: false,
                 highAccuracyGenderedPronouns: true,
-                enableNeutralGender: false,
                 reduceCommentsSize: 10000,
                 showCommonTags: false,
                 newStudentFill: 'random',
@@ -305,8 +304,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             main_page: 0,
             build: 1,
             search: 2,
-            patterns: 3,
-            donate: 4
+            patterns: 3
         };
         $scope.selectedTab = $scope.tabIndexes.main_page;
         $scope.annoySource = '';
@@ -446,26 +444,14 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             girlBoyChild = 'girl';
             manLadyAdult = 'lady';
         } else {
-            subject = 'they';
-            object = 'them';
-            possessiveAdjectives = 'their';
-            possessivePronouns = 'theirs';
-            reflexivePronouns = 'themselves';
-            girlBoyChild = 'child';
-            manLadyAdult = 'adult';
+            return text;
         }
 
-        if ($scope.state.settings.enableNeutralGender) {
-            text = text.replace(/\bboy\b|\bgirl\b|\bchild\b/g,girlBoyChild).replace(/\bBoy\b|\bGirl\b|\bChild\b/g,$scope.capitalizeFirstLetter(girlBoyChild));
-            text = text.replace(/\bman\b|\blady\b|\badult\b/g,girlBoyChild).replace(/\bMan\b|\bLady\b|\bAdult\b/g,$scope.capitalizeFirstLetter(manLadyAdult));
-            text = text.replace(/\bhe\b|\bshe\b|\bthey\b/g,subject).replace(/\bhis\b|\bhers\b|\btheirs\b/g,possessivePronouns).replace(/\bhim\b|\bher\b|\bthem\b/g,object).replace(/\bhis\b|\bher\b|\btheir\b/g,possessiveAdjectives).replace(/\bhimself\b|\bherself\b|\btheirself\b/g,reflexivePronouns);
-            text = text.replace(/\bHe\b|\bShe\b|\bThey\b/g,$scope.capitalizeFirstLetter(subject)).replace(/\bHim\b|\bHer\b|\bThem\b/g,$scope.capitalizeFirstLetter(object)).replace(/\bHis\b|\bHers\b|\bTheirs\b/g,$scope.capitalizeFirstLetter(possessivePronouns)).replace(/\bHis\b|\bHer\b|\bTheir\b/g,$scope.capitalizeFirstLetter(possessiveAdjectives)).replace(/\bHimself\b|\bHerself\b|\bTheirself\b/g,$scope.capitalizeFirstLetter(reflexivePronouns));
-        } else {
-            text = text.replace(/\bboy\b|\bgirl\b/g,girlBoyChild).replace(/\bBoy\b|\bGirl\b/g,$scope.capitalizeFirstLetter(girlBoyChild));
-            text = text.replace(/\bman\b|\blady\b/g,girlBoyChild).replace(/\bMan\b|\bLady\b/g,$scope.capitalizeFirstLetter(manLadyAdult));
-            text = text.replace(/\bhe\b|\bshe\b/g,subject).replace(/\bhis\b|\bhers\b/g,possessivePronouns).replace(/\bhim\b|\bher\b/g,object).replace(/\bhis\b|\bher\b/g,possessiveAdjectives).replace(/\bhimself\b|\bherself\b/g,reflexivePronouns);
-            text = text.replace(/\bHe\b|\bShe\b/g,$scope.capitalizeFirstLetter(subject)).replace(/\bHim\b|\bHer\b/g,$scope.capitalizeFirstLetter(object)).replace(/\bHis\b|\bHers\b/g,$scope.capitalizeFirstLetter(possessivePronouns)).replace(/\bHis\b|\bHer\b/g,$scope.capitalizeFirstLetter(possessiveAdjectives)).replace(/\bHimself\b|\bHerself\b/g,$scope.capitalizeFirstLetter(reflexivePronouns));
-        }
+        text = text.replace(/\bboy\b|\bgirl\b/g,girlBoyChild).replace(/\bBoy\b|\bGirl\b/g,$scope.capitalizeFirstLetter(girlBoyChild));
+        text = text.replace(/\bman\b|\blady\b/g,girlBoyChild).replace(/\bMan\b|\bLady\b/g,$scope.capitalizeFirstLetter(manLadyAdult));
+        text = text.replace(/\bhe\b|\bshe\b/g,subject).replace(/\bhis\b|\bhers\b/g,possessivePronouns).replace(/\bhim\b|\bher\b/g,object).replace(/\bhis\b|\bher\b/g,possessiveAdjectives).replace(/\bhimself\b|\bherself\b/g,reflexivePronouns);
+        text = text.replace(/\bHe\b|\bShe\b/g,$scope.capitalizeFirstLetter(subject)).replace(/\bHim\b|\bHer\b/g,$scope.capitalizeFirstLetter(object)).replace(/\bHis\b|\bHers\b/g,$scope.capitalizeFirstLetter(possessivePronouns)).replace(/\bHis\b|\bHer\b/g,$scope.capitalizeFirstLetter(possessiveAdjectives)).replace(/\bHimself\b|\bHerself\b/g,$scope.capitalizeFirstLetter(reflexivePronouns));
+
 
         //console.log('Gender Fixed text length: ' + text.length);
         return text;
@@ -574,7 +560,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             clickOutsideToClose: true,
             scope: $scope,        // use parent scope in template
             preserveScope: true,  // do not forget this if use parent scope
-            templateUrl: '/edit-comment-dialog.html',
+            templateUrl: '/dialogs/edit-comment-dialog.html',
             controller: function DialogController($scope, $mdDialog) {
                 $scope.closeDialog = function () {
                     $mdDialog.hide();
@@ -672,7 +658,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             clickOutsideToClose: true,
             scope: $scope,        // use parent scope in template
             preserveScope: true,  // do not forget this if use parent scope
-            templateUrl: '/edit-tone-dialog.html',
+            templateUrl: '/dialogs/edit-tone-dialog.html',
             controller: function DialogController($scope, $mdDialog) {
                 $scope.closeDialog = function () {
                     $mdDialog.hide();
@@ -720,7 +706,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             clickOutsideToClose: true,
             scope: $scope,        // use parent scope in template
             preserveScope: true,  // do not forget this if use parent scope
-            templateUrl: '/edit-tag-dialog.html',
+            templateUrl: '/dialogs/edit-tag-dialog.html',
             controller: function DialogController($scope, $mdDialog) {
                 $scope.closeDialog = function () {
                     $mdDialog.hide();
@@ -787,7 +773,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             clickOutsideToClose: true,
             scope: $scope,        // use parent scope in template
             preserveScope: true,  // do not forget this if use parent scope
-            templateUrl: '/grader.html',
+            templateUrl: '/dialogs/grader.html',
             controller: function DialogController($scope, $mdDialog) {
                 $scope.closeDialog = function () {
                     $mdDialog.hide();
@@ -846,7 +832,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             clickOutsideToClose: true,
             scope: $scope,        // use parent scope in template
             preserveScope: true,  // do not forget this if use parent scope
-            templateUrl: '/annoy.html',
+            templateUrl: '/dialogs/annoy.html',
             controller: function DialogController($scope, $mdDialog) {
                 $scope.closeDialog = function (whatToDo) {
                     $scope.showAnnoyThisTime = false;
@@ -872,7 +858,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             clickOutsideToClose: true,
             scope: $scope,        // use parent scope in template
             preserveScope: true,  // do not forget this if use parent scope
-            templateUrl: '/saved-state.html',
+            templateUrl: '/dialogs/saved-state.html',
             controller: function DialogController($scope, $mdDialog) {
                 $scope.closeDialog = function () {
                     $mdDialog.hide();
@@ -894,7 +880,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             clickOutsideToClose: true,
             scope: $scope,        // use parent scope in template
             preserveScope: true,  // do not forget this if use parent scope
-            templateUrl: '/reset-app.html',
+            templateUrl: '/dialogs/reset-app.html',
             controller: function DialogController($scope, $mdDialog) {
                 $scope.closeDialog = function () {
                     $mdDialog.hide();
@@ -994,6 +980,14 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         student.date_created = new Date().toISOString().slice(0, 19).replace('T', ' ');
         student.last_modified = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
+        // set the default gender if it's a capital letter
+        if ($scope.newStudentName.endsWith(' M')) {
+            $scope.gender = "male";
+        } else if ($scope.newStudentName.endsWith(' F')) {
+            $scope.gender = "female";
+        }
+
+        // now set the gender for the new student
         if ($scope.newStudentName.endsWith(' m') || $scope.newStudentName.endsWith(' M')) {
             student.gender = "male";
             student.name = $scope.newStudentName.replace(' m', '').replace(' M', '');
@@ -1001,9 +995,6 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         } else if ($scope.newStudentName.endsWith(' f') || $scope.newStudentName.endsWith(' F')) {
             student.gender = "female";
             student.name = $scope.newStudentName.replace(' f', '').replace(' F', '');
-        } else if ($scope.state.enableNeutralGender && ($scope.newStudentName.endsWith(' n') || $scope.newStudentName.endsWith(' N'))) {
-            student.gender = "neutral";
-            student.name = $scope.newStudentName.replace(' n', '').replace(' N', '');
         } else {
             student.name = $scope.newStudentName;
             student.gender = $scope.gender;
@@ -1475,14 +1466,6 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         }
     };
 
-    //$scope.justMakeSomethingUpSmartSearch = function() {
-    //    $scope.state.global_pattern = [];
-    //    for (var i = 0; i < $scope.state.settings.makeSomethingUpSize; ++i) {
-    //        $scope.state.global_pattern.push($scope.getSmartSearchResult($scope.newPatternPiece));
-    //    }
-    //    $scope.buildAllSmartSearchComments();
-    //};
-
     $scope.regenerateAllSmartSearch = function() {
         //console.log('Regenerating ' + $scope.state.global_pattern.length + ' searches');
         for (var i = 0; i < $scope.editingPattern.length; ++i) {
@@ -1820,7 +1803,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
     $scope.showStats = function () {
 
         if ($scope.stats) {
-            $scope.showDialog('/stats.html');
+            $scope.showDialog('/dialogs/stats.html');
         } else {
             $http.get('/rest/comments/stats').success(function (data) {
                 $scope.stats = data;

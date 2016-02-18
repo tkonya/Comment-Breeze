@@ -1,0 +1,67 @@
+<md-dialog flex="90" md-theme="{{ state.theme.colorTheme }}" class="dialog-top-level">
+    <md-toolbar class="md-toolbar-tools dialog-toolbar">
+        <h1>All Students Help</h1>
+        <span flex></span>
+        <md-button ng-click="closeDialog()">
+            <i class="material-icons inline-icon">close</i>
+        </md-button>
+    </md-toolbar>
+    <md-dialog-content>
+        <md-content class="dialog-content">
+
+            <h4 ng-style="state.theme.highlightColor">Using Patterns:</h4>
+            <p ng-style="state.theme.textColor">
+                Once students are already added you can apply the default pattern (assuming there is one) to them, if it wasn't applied at the time they were added.<br><br>
+
+                You can also define individual patterns for students. Once a student is added you can go into their menu and click "Edit w/ Patterns".
+                If they don't currently have a pattern this will put their current comment into a pattern format.
+                If they do have a pattern, such as the default pattern or a grade pattern, it will create an individual pattern out of it.<br><br>
+            </p>
+
+            <h4 ng-style="state.theme.highlightColor">Grading Students:</h4>
+            <p ng-style="state.theme.textColor">
+                Comment Breeze allows you to grade students in various subjects quickly. The only requirement is that
+                you have a default pattern defined
+                (this would outline the subjects you want to grade them on).<br><br>
+
+                All students can be graded by clicking "Grade All Students" in the All Students menu. You can also grade
+                students one at a time
+                or revise your grade by clicking "Grade Student" in a student's menu.<br><br>
+
+                Click on the title of the Grade Student window to expand it into the advanced view. This would give you something that resembles the patterns page where you can see which
+                sentences are generated, remove pieces and regenerate to find more approprate matches.<br><br>
+
+                Grading will apply a derivative pattern based on whatever pattern is currently assigned to the student,
+                or the default pattern if no pattern has yet been applied.<br><br>
+            </p>
+
+            <h4 ng-style="state.theme.highlightColor">Editing:</h4>
+            <p ng-style="state.theme.textColor">
+                All student's comments are editable in-place on this tab. You can use a student's menu to regenerate their comments or shuffle their comments.
+                Regenerating can either be totally random or based of their default or individual patterns. When you
+                select "Regenerate w/ Pattern", either for all students or on individual students, the app will try to
+                regenerate with whatever pattern is applied to the student, but if a pattern is not available it will
+                regenerate at random.
+            </p>
+
+            <h4 ng-style="state.theme.highlightColor">Viewing and Copying Finished Comments:</h4>
+            <p ng-style="state.theme.textColor">
+                An individual student's comment can be copied to the clipboard by going into their menu and
+                selecting "Copy Comment". This will copy the introduction, their comment, and the conclusion.<br><br>
+
+                All students comments can be copied by going into the all students menu and selecting "Copy All
+                Comments". This will copy each student's name before a paragraph with the introduction, their comment, and the conclusion.<br><br>
+
+                You may also view all student comments in the all students menu with "Show Finished Comments".<br><br>
+
+                Any of these actions will replace instances of "STUDENT_NAME" or "CLASS_NAME" in the introduction or conclusion.<br><br>
+            </p>
+
+            <br>
+
+            <div class="center-aligned ">
+                <md-button class="md-primary" ng-click="closeDialog()">OK, I got it</md-button>
+            </div>
+        </md-content>
+    </md-dialog-content>
+</md-dialog>

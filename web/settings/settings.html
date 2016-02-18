@@ -3,7 +3,6 @@
         <h1>Application Settings</h1>
         <span flex></span>
         <md-button ng-click="closeDialog()">
-            <i class="material-icons inline-icon">close</i>
             <span hide-xs hide-sm>Close</span>
         </md-button>
     </md-toolbar>
@@ -41,7 +40,7 @@
 
             <md-divider></md-divider>
 
-            <h3 class="settings-header" ng-style="state.theme.highlightColor">Gender Selection and Switching</h3>
+            <h3 class="settings-header" ng-style="state.theme.highlightColor">Gender Pronoun Exclusion</h3>
             <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
                 <div flex-gt-sm="25" class="setting-control-container">
                     <md-checkbox ng-model="state.settings.highAccuracyGenderedPronouns" class="setting-control"
@@ -54,23 +53,6 @@
                     This means it will get it wrong about 50% of the time and you would be required to fix it manually.
                     Turning on High Accuracy Gendered Pronouns avoid selecting comments with those pronouns if it would have to change the gender for them to match the student's gender.
                     This will reduce the number of comments available to each gender, but also reduce the number of corrections necessary.
-                </p>
-            </div>
-
-            <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
-                <div flex-gt-sm="25" class="setting-control-container">
-                    <md-checkbox ng-model="state.settings.enableNeutralGender" class="setting-control"
-                                 aria-label="Enable neutral gender">
-                        Enable Neutral <br hide-xs hide-sm>Gender
-                    </md-checkbox>
-                </div>
-                <p ng-style="state.theme.textColor" flex-gt-sm="75" class="settings-text">The gender neutral pronouns
-                    are also plural (they, them,
-                    etc...) and therefor switching to them from the singular male or female pronouns will often make the
-                    sentence grammatically incorrect because verbs will remain singular. You can turn on the ability to
-                    use gendered pronouns but more proofreading and correction will be required.
-                    This will also negatively affect non-neutral gendered students as the system will attempt to replace instances of the neutral pronouns with gender specific ones.
-                    It is recommended to just leave this off and manually modify the comments for gender non-conforming students.
                 </p>
             </div>
 

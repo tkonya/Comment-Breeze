@@ -1,0 +1,61 @@
+<md-dialog flex="90" md-theme="{{ state.theme.colorTheme }}" class="dialog-top-level">
+    <md-toolbar class="md-toolbar-tools dialog-toolbar">
+        <h1>Class Details Help</h1>
+        <span flex></span>
+        <md-button ng-click="closeDialog()">
+            <i class="material-icons inline-icon">close</i>
+        </md-button>
+    </md-toolbar>
+    <md-dialog-content>
+        <md-content class="dialog-content">
+
+            <h4 ng-style="state.theme.highlightColor">Class Name:</h4>
+            <p ng-style="state.theme.textColor">
+                The class name is strongly recommeded, as many comments have the variable "CLASS_NAME" in them that should be replaced with something.
+                If your class does not have a name you should start with something generic like "English Class" and then edit it out later if it sounds weird.
+            </p>
+
+            <h4 ng-style="state.theme.highlightColor">Introduction and Conclusion:</h4>
+            <p ng-style="state.theme.textColor">
+                The introduction and conclusion are optional sentences that will be added to the beginning and end of each student's comments.
+                They will not initially be visible when writing comments, but when you view finished comments or copy comments they will be appended.<br><br>
+
+                You can use the variables "STUDENT_NAME" and "CLASS_NAME" (no quotes) in them, and they will be replaced with the correct value when copying or viewing finished comments.
+            </p>
+
+            <h4 ng-style="state.theme.highlightColor">Save and Load:</h4>
+            <p ng-style="state.theme.textColor">
+                All of your progress can be saved in the Class Details menu. The save file includes your class name,
+                introduction, conclusion, all of your students and their comments, any patterns and
+                settings for each tab.
+                The save file is a normal txt file so your comments can be recovered even if you cannot access Comment
+                Breeze.<br><br>
+
+                You should always save your file after you are done. It will allow you to come back and edit easily if necessary, and it will be another copy of your work.<br><br>
+
+                Note: Windows notepad may not open the save file in an easily human-readable way. Try opening it with basically
+                any other document editor such as <a href="https://www.libreoffice.org/" target="_blank">Libre Office</a>, <a href="https://www.openoffice.org/" target="_blank">Open Office</a>, MS Word, <a href="https://notepad-plus-plus.org/" target="_blank">Notepad++</a>, Wordpad, etc...<br><br>
+
+                Loading your saved file will restore all of the things it saved. A good paradigm to follow would be to
+                make a save file for every class you have. This way the next time report cards are due you can just
+                reopen that file and all of your students will be there. You can just regenerate the comments and edit
+                as necessary.<br><br>
+
+            </p>
+
+            <h4 ng-style="state.theme.highlightColor">Reset App:</h4>
+            <p ng-style="state.theme.textColor">
+                You can reset the application in the Global Details menu. This can be helpful if you already loaded the
+                page but you now have low or no network connectivity. This will reset all fields and erase all students,
+                but will not need to reload the comments from the server. If you are on a shared computer you should clear
+                the cache when done; Reset App has an option to also clear the cache.
+            </p>
+
+            <br>
+
+            <div class="center-aligned ">
+                <md-button class="md-primary" ng-click="closeDialog()">OK, I got it</md-button>
+            </div>
+        </md-content>
+    </md-dialog-content>
+</md-dialog>

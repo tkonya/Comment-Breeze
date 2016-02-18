@@ -127,7 +127,7 @@
                                             <span ng-style="state.theme.highlightColor">*</span> All comments are not
                                             initially loaded
                                             for mobile users, <span class="cursor-pointer"
-                                                                    ng-click="showDialog('/search-settings.html');">see the "Resize Comments" section of search settings to change.</span>
+                                                                    ng-click="showDialog('/settings/search-settings.html');">see the "Resize Comments" section of search settings to change.</span>
                                         </p>
                                     </div>
 
@@ -180,7 +180,7 @@
 
                                     <h3>
                                         <span ng-style="state.theme.highlightColor" class="cursor-pointer"
-                                              ng-click="showDialog('/privacy-policy.html')">Privacy Policy</span>
+                                              ng-click="showDialog('/dialogs/privacy-policy.html')">Privacy Policy</span>
                                         -
                                         <span ng-style="state.theme.highlightColor" class="cursor-pointer"
                                               ng-click="showContactForm()">
@@ -301,13 +301,13 @@
                                             </md-button>
                                         </md-menu-item>
                                         <md-menu-item>
-                                            <md-button ng-click="showDialog('/settings.html');" class="md-primary md-hue-1">
+                                            <md-button ng-click="showDialog('/settings/settings.html');" class="md-primary md-hue-1">
                                                 <i class="material-icons inline-icon">settings</i>
                                                 <span>Settings</span>
                                             </md-button>
                                         </md-menu-item>
                                         <md-menu-item hide-gt-sm>
-                                            <md-button ng-click="showDialog('/build-help.html');" class="md-primary md-hue-1">
+                                            <md-button ng-click="showDialog('help/class-details-help.html');" class="md-primary md-hue-1">
                                                 <i class="material-icons inline-icon">help</i>
                                                 <span>Help</span>
                                             </md-button>
@@ -322,11 +322,11 @@
                                     </md-menu-content>
                                 </md-menu>
 
-                                <md-button hide-xs hide-sm ng-click="showDialog('/build-help.html');">
+                                <md-button hide-xs hide-sm ng-click="showDialog('help/class-details-help.html');">
                                     <i class="material-icons inline-icon">help</i>
-                                    <span hide-xs>Help</span>
+                                    <!--<span hide-xs>Help</span>-->
                                     <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip" md-direction="left">
-                                        Show the help document for this tab
+                                        Show the help document for Class Details
                                     </md-tooltip>
                                 </md-button>
 
@@ -338,7 +338,7 @@
                                      layout-gt-sm="row" layout-fill>
                                     <div layout="column" flex-xs="100" flex-gt-xs="50">
                                         <form ng-submit="changeClassName()" flex-gt-sm="20" flex-order="1">
-                                            <md-input-container class="input-container full-width" flex="100">
+                                            <md-input-container class="input-container almost-full-width" flex="100">
                                                 <label>Class Name</label>
                                                 <input ng-style="state.theme.textColor" type="text" ng-model="state.class_name" ng-blur="changeClassName()">
                                             </md-input-container>
@@ -351,9 +351,15 @@
                                             </md-tooltip>
                                         </form>
 
+                                        <input id="file-upload-input" type="file" on-read-file="loadState($fileContent);" ng-hide="true">
+
+                                    </div>
+
+                                    <div layout="column" flex-xs="100" flex-gt-xs="50" class="center-aligned">
+
                                         <md-input-container flex-gt-sm="35" flex-order="2" class="intro-conclusion-multi no-bottom-margin">
                                             <label>Introduction</label>
-                                            <textarea ng-style="state.theme.textColor" ng-model="state.introduction"></textarea>
+                                            <textarea ng-style="state.theme.textColor" class="almost-full-width" ng-model="state.introduction"></textarea>
                                             <div class="hint" ng-show="state.showHints">
                                                 The custom introduction to appear at the beginning of every comment (optional)
                                             </div>
@@ -364,7 +370,7 @@
 
                                         <md-input-container flex-gt-sm="35" flex-order="3" class="intro-conclusion-multi">
                                             <label>Conclusion</label>
-                                            <textarea ng-style="state.theme.textColor" ng-model="state.conclusion"></textarea>
+                                            <textarea ng-style="state.theme.textColor" class="almost-full-width" ng-model="state.conclusion"></textarea>
                                             <div class="hint" ng-show="state.showHints">
                                                 The custom conclusion to appear at the end of every comment (optional)
                                             </div>
@@ -372,13 +378,6 @@
                                                 The custom conclusion to appear at the end of every comment (optional)
                                             </md-tooltip>
                                         </md-input-container>
-
-                                        <input id="file-upload-input" type="file" on-read-file="loadState($fileContent);" ng-hide="true">
-
-                                    </div>
-
-                                    <div layout="column" hide-xs flex="50" class="center-aligned">
-
 
                                     </div>
                                 </div>
@@ -395,6 +394,14 @@
                                 </md-button>
 
                                 <span flex></span>
+
+                                <md-button ng-click="showDialog('help/add-students-help.html');">
+                                    <i class="material-icons inline-icon">help</i>
+                                    <!--<span hide-xs>Help</span>-->
+                                    <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip" md-direction="left">
+                                        Show the help document for Add Students
+                                    </md-tooltip>
+                                </md-button>
 
                             </md-toolbar>
 
@@ -440,15 +447,6 @@
                                                     Set default gender to female
                                                 </md-tooltip>
                                             </md-radio-button>
-                                            <md-radio-button ng-style="state.theme.textColor" ng-disabled="!state.settings.enableNeutralGender" ng-model="gender" value="neutral" class="gender-radio">
-                                                N<span hide-xs>eutral</span>
-                                                <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips && !state.enableNeutralGender" class="tooltip">
-                                                    Neutral gender can be enabled on the settings page
-                                                </md-tooltip>
-                                                <md-tooltip ng-show="state.settings.showTooltips && state.enableNeutralGender" class="tooltip">
-                                                    Set default gender to neutral
-                                                </md-tooltip>
-                                            </md-radio-button>
                                         </md-radio-group>
 
                                         <md-radio-group ng-model="gender" hide-gt-sm class="md-primary" layout="row" aria-label="Default Gender">
@@ -465,15 +463,6 @@
                                                     Set default gender to female
                                                 </md-tooltip>
                                             </md-radio-button>
-                                            <md-radio-button flex ng-disabled="!state.settings.enableNeutralGender" ng-model="gender" value="neutral" class="gender-radio">
-                                                Neutral
-                                                <md-tooltip ng-show="state.settings.showTooltips && !state.enableNeutralGender" class="tooltip">
-                                                    Neutral gender can be enabled on the settings page
-                                                </md-tooltip>
-                                                <md-tooltip ng-show="state.settings.showTooltips && state.enableNeutralGender" class="tooltip">
-                                                    Set default gender to neutral
-                                                </md-tooltip>
-                                            </md-radio-button>
                                         </md-radio-group>
 
                                     </div>
@@ -481,6 +470,7 @@
                                     <br hide-gt-sm>
                                     <br hide-gt-sm>
                                     <md-divider hide-gt-sm></md-divider>
+                                    <br hide-gt-sm>
                                     <br hide-gt-sm>
 
                                     <div class="radio-button-container add-student-divs" flex>
@@ -592,8 +582,23 @@
                                                 <span>Remove All Students</span>
                                             </md-button>
                                         </md-menu-item>
+                                        <md-divider hide-gt-xs></md-divider>
+                                        <md-menu-item hide-gt-xs>
+                                            <md-button ng-click="showDialog('help/all-students-help.html');">
+                                                <i class="material-icons inline-icon">help</i>
+                                                <span hide-xs>Help</span>
+                                            </md-button>
+                                        </md-menu-item>
                                     </md-menu-content>
                                 </md-menu>
+
+                                <md-button hide-xs hide-sm ng-click="showDialog('help/all-students-help.html');">
+                                    <i class="material-icons inline-icon">help</i>
+                                    <!--<span hide-xs>Help</span>-->
+                                    <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip" md-direction="left">
+                                        Show the help document for All Students
+                                    </md-tooltip>
+                                </md-button>
 
                             </md-toolbar>
 
@@ -628,15 +633,6 @@
                                                         F
                                                         <md-tooltip ng-show="state.settings.showTooltips && student.gender != 'female'" class="tooltip">
                                                             Set default gender to female
-                                                        </md-tooltip>
-                                                    </md-radio-button>
-                                                    <md-radio-button ng-disabled="!state.settings.enableNeutralGender" ng-model="student.gender" value="neutral">
-                                                        N
-                                                        <md-tooltip ng-show="state.settings.showTooltips && !state.enableNeutralGender" class="tooltip">
-                                                            Neutral gender can be enabled on the settings page
-                                                        </md-tooltip>
-                                                        <md-tooltip ng-show="state.settings.showTooltips && state.enableNeutralGender" class="tooltip">
-                                                            Set default gender to neutral
                                                         </md-tooltip>
                                                     </md-radio-button>
                                                 </md-radio-group>
@@ -874,13 +870,13 @@
                                     </md-button>
                                     <md-menu-content class="menu-content">
                                         <md-menu-item>
-                                            <md-button class="md-primary md-hue-1" ng-click="showDialog('/search-settings.html');">
+                                            <md-button class="md-primary md-hue-1" ng-click="showDialog('/settings/search-settings.html');">
                                                 <i class="material-icons inline-icon">settings</i>
                                                 <span>Settings</span>
                                             </md-button>
                                         </md-menu-item>
                                         <md-menu-item>
-                                            <md-button class="md-primary md-hue-1" ng-click="showDialog('/search-help.html');">
+                                            <md-button class="md-primary md-hue-1" ng-click="showDialog('/help/search-help.html');">
                                                 <i class="material-icons inline-icon">help</i>
                                                 <span>Help</span>
                                             </md-button>
@@ -888,19 +884,19 @@
                                     </md-menu-content>
                                 </md-menu>
 
-                                <md-button hide-xs hide-sm ng-click="showDialog('/search-settings.html');">
+                                <md-button hide-xs hide-sm ng-click="showDialog('/settings/search-settings.html');">
                                     <i class="material-icons inline-icon">settings</i>
-                                    <span hide-xs>Settings</span>
+                                    <!--<span hide-xs>Settings</span>-->
                                     <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip" md-direction="bottom">
                                         Show application settings
                                     </md-tooltip>
                                 </md-button>
 
-                                <md-button hide-xs hide-sm ng-click="showDialog('/search-help.html');">
+                                <md-button hide-xs hide-sm ng-click="showDialog('/help/search-help.html');">
                                     <i class="material-icons inline-icon">help</i>
-                                    <span hide-xs>Help</span>
+                                    <!--<span hide-xs>Help</span>-->
                                     <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip" md-direction="left">
-                                        Show the help document for this tab
+                                        Show the help document for Search
                                     </md-tooltip>
                                 </md-button>
 
@@ -1167,13 +1163,13 @@
                                         </md-menu-item>
                                         <md-divider></md-divider>
                                         <md-menu-item>
-                                            <md-button class="md-primary md-hue-1" ng-click="showDialog('/pattern-settings.html');">
+                                            <md-button class="md-primary md-hue-1" ng-click="showDialog('/settings/pattern-settings.html');">
                                                 <i class="material-icons inline-icon">settings</i>
                                                 <span>Settings</span>
                                             </md-button>
                                         </md-menu-item>
                                         <md-menu-item hide-gt-sm>
-                                            <md-button class="md-primary md-hue-1" ng-click="showDialog('/patterns-help.html');">
+                                            <md-button class="md-primary md-hue-1" ng-click="showDialog('/help/patterns-help.html');">
                                                 <i class="material-icons inline-icon">help</i>
                                                 <span>Help</span>
                                             </md-button>
@@ -1188,11 +1184,11 @@
                                     </md-menu-content>
                                 </md-menu>
 
-                                <md-button hide-xs ng-click="showDialog('/patterns-help.html');">
+                                <md-button hide-xs ng-click="showDialog('/help/patterns-help.html');">
                                     <i class="material-icons inline-icon">help</i>
-                                    <span hide-xs>Help</span>
+                                    <!--<span hide-xs>Help</span>-->
                                     <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip" md-direction="left">
-                                        Show the help document for this tab\
+                                        Show the help document for Patterns
                                     </md-tooltip>
                                 </md-button>
 
@@ -1317,7 +1313,7 @@
 
                                         <span ng-click="loadSampleSmartSearch()" class="cursor-pointer">Load sample search pattern</span><br><br>
 
-                                        <span ng-click="showSmartSearchHelp()" class="cursor-pointer">See the help for more details</span>
+                                        <span ng-click="showDialog('help/patterns-help.html');" class="cursor-pointer">See the help for more details</span>
                                         <br><br>
                                     </div>
                                     <br><br>
