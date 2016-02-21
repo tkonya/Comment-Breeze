@@ -224,7 +224,6 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             global_pattern: [],
             settings: {
                 showTooltips: true,
-                showHints: false,
                 showTone: true,
                 showTags: true,
                 showEditButtons: true,
@@ -282,8 +281,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
 
         // patterns
         $scope.editingPattern = [];
-        $scope.newPatternPiece = {search_text: '', found_comment: '', tone: 'Any'};
-        $scope.limitedToneFilterOptions = ['Any', 'Positive', 'Neutral', 'Negative'];
+        $scope.newPatternPiece = {search_text: '', tone: 'Any'};
 
         // collapse cards
         $scope.showGlobalDetails = true;
@@ -484,7 +482,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         //console.log('replacing ' + oldStudentName + ' with ' + studentName + ' for the text ' + text);
         if (studentName != null && studentName != '') {
             if (oldStudentName != null && oldStudentName != '' && studentName != oldStudentName) {
-                text = text.replace(new RegExp($scope.oldStudentName, 'g'), studentName);
+                text = text.replace(new RegExp(oldStudentName, 'g'), studentName);
             }
             text = text.replace(/STUDENT_NAME/g, studentName);
             //console.log('replace Student Name Fixed text: ' + text);

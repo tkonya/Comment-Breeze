@@ -342,9 +342,6 @@
                                                 <label>Class Name</label>
                                                 <input ng-style="state.theme.textColor" type="text" ng-model="state.class_name" ng-blur="changeClassName()">
                                             </md-input-container>
-                                            <div class="hint" ng-show="state.showHints">Will replace instances of
-                                                CLASS_NAME in comments
-                                            </div>
                                             <md-tooltip ng-style="state.theme.tooltips"
                                                         ng-show="state.settings.showTooltips" class="tooltip">
                                                 Will replace instances of CLASS_NAME in comments
@@ -360,9 +357,6 @@
                                         <md-input-container flex-gt-sm="35" flex-order="2" class="intro-conclusion-multi no-bottom-margin">
                                             <label>Introduction</label>
                                             <textarea ng-style="state.theme.textColor" class="almost-full-width" ng-model="state.introduction"></textarea>
-                                            <div class="hint" ng-show="state.showHints">
-                                                The custom introduction to appear at the beginning of every comment (optional)
-                                            </div>
                                             <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
                                                 <span ng-style="state.theme.tooltips">The custom introduction to appear at the beginning of every comment (optional)</span>
                                             </md-tooltip>
@@ -371,9 +365,6 @@
                                         <md-input-container flex-gt-sm="35" flex-order="3" class="intro-conclusion-multi">
                                             <label>Conclusion</label>
                                             <textarea ng-style="state.theme.textColor" class="almost-full-width" ng-model="state.conclusion"></textarea>
-                                            <div class="hint" ng-show="state.showHints">
-                                                The custom conclusion to appear at the end of every comment (optional)
-                                            </div>
                                             <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
                                                 The custom conclusion to appear at the end of every comment (optional)
                                             </md-tooltip>
@@ -414,9 +405,6 @@
                                                 <label>New Student Name</label>
                                                 <input type="text" ng-model="newStudentName">
                                             </md-input-container>
-                                            <div class="hint" ng-show="showHints">
-                                                Add all the students that you would like to make comments for today
-                                            </div>
                                             <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip">
                                                 Add all the students that you would like to make comments for today
                                             </md-tooltip>
@@ -844,9 +832,6 @@
                                 <md-input-container class="input-container">
                                     <label>Your Comments</label>
                                     <textarea ng-model="editingStudentSearch.comment" class="almost-full-width"></textarea>
-                                    <div class="hint" ng-show="showHints">Add comments by clicking below and edit them
-                                        as needed
-                                    </div>
                                     <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip" md-direction="right">
                                         Add comments by clicking below and edit them as needed
                                     </md-tooltip>
@@ -915,7 +900,6 @@
                                         <md-input-container class="full-width search-and-filter">
                                             <label>Search Comments</label>
                                             <input type="text" autocomplete="off" ng-model="searchComments" ng-change="changeCommentsPage(1);" class="almost-full-width">
-                                            <div class="hint" ng-show="state.showHints">Instant search on comments. This is the best way to find comments if you have an idea of what you want to say.</div>
                                             <md-tooltip ng-style="state.theme.tooltips" md-direction="top" ng-show="state.settings.showTooltips" class="tooltip">
                                                 Instant search on comments. This is the best way to find comments if you
                                                 have an idea of what you want to say.
@@ -1109,9 +1093,6 @@
                                 <md-input-container class="input-container">
                                     <label>Your Comments</label>
                                     <textarea ng-model="editingStudentPattern.comment" class="almost-full-width"></textarea>
-                                    <div class="hint" ng-show="showHints">Add comments by clicking below and edit them
-                                        as needed
-                                    </div>
                                     <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip" md-direction="right">
                                         Add comments by clicking below and edit them as needed
                                     </md-tooltip>
@@ -1218,7 +1199,7 @@
                                     <md-input-container flex class="search-and-filter side-margins">
                                         <label>Filter on Tone</label>
                                         <md-select ng-model="newPatternPiece.tone" flex-gt-xs="30">
-                                            <md-option ng-value="option" ng-repeat="option in limitedToneFilterOptions">
+                                            <md-option ng-value="option" ng-repeat="option in toneFilterOptions | limitTo: 4 : 0">
                                                 {{option}}
                                             </md-option>
                                         </md-select>
