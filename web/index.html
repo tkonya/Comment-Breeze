@@ -798,9 +798,17 @@
 
                         <section class="control-card md-whiteframe-5dp md-background md-hue-3" ng-show="editingStudentSearch">
                             <md-toolbar class="md-toolbar-tools control-card-toolbar">
+
+                                <!--<md-button ng-click="showEditingSearchComments = !showEditingSearchComments; refreshEditingStudentSearchTextArea();">-->
+                                    <!--<i class="material-icons inline-icon" ng-show="showEditingSearchComments">keyboard_arrow_up</i>-->
+                                    <!--<i class="material-icons inline-icon" ng-show="!showEditingSearchComments">keyboard_arrow_down</i>-->
+                                    <!--<span class="md-title">-->
+                                        <!--<span>EDITING {{editingStudentSearch.name.toUpperCase()}}</span>-->
+                                    <!--</span>-->
+                                <!--</md-button>-->
+
                                 <h1>
-                                    <span hide-xs>Comments for {{editingStudentSearch.name}}</span>
-                                    <span hide-gt-xs>{{editingStudentSearch.name}}'s Comments</span>
+                                    <span>EDITING {{editingStudentSearch.name.toUpperCase()}}</span>
                                 </h1>
 
                                 <span flex></span>
@@ -846,6 +854,7 @@
                                     </md-button>
 
                                 </div>
+
                                 <br>
 
                             </md-content>
@@ -1077,6 +1086,14 @@
                                     <span>Comments for {{editingStudentPattern.name}}</span>
                                 </h1>
 
+                                <!--<md-button ng-click="showEditingPatternComments = !showEditingPatternComments; refreshEditingStudentPatternTextArea();">-->
+                                    <!--<i class="material-icons inline-icon" ng-show="showEditingPatternComments">keyboard_arrow_up</i>-->
+                                    <!--<i class="material-icons inline-icon" ng-show="!showEditingPatternComments">keyboard_arrow_down</i>-->
+                                    <!--<span class="md-title">-->
+                                        <!--<span>EDITING {{editingStudentPattern.name.toUpperCase()}}</span>-->
+                                    <!--</span>-->
+                                <!--</md-button>-->
+
                                 <span flex></span>
 
                             </md-toolbar>
@@ -1120,6 +1137,7 @@
                                     </md-button>
 
                                 </div>
+
                                 <br>
 
                             </md-content>
@@ -1129,10 +1147,14 @@
                         <section class="control-card md-background md-hue-3 md-whiteframe-5dp">
 
                             <md-toolbar class="md-toolbar-tools control-card-toolbar">
-                                <h2>
-                                    <span hide-xs>ADD PATTERN PIECES</span>
-                                    <span hide-gt-xs>ADD PIECES</span>
-                                </h2>
+                                <md-button ng-click="showAddPieces = !showAddPieces;">
+                                    <i class="material-icons inline-icon" ng-show="showAddPieces">keyboard_arrow_up</i>
+                                    <i class="material-icons inline-icon" ng-show="!showAddPieces">keyboard_arrow_down</i>
+                                    <span class="md-title">
+                                        <span hide-xs>ADD PATTERN PIECES</span>
+                                        <span hide-gt-xs>ADD PIECES</span>
+                                    </span>
+                                </md-button>
 
                                 <span flex></span>
 
@@ -1176,41 +1198,43 @@
 
                             <md-content class="comment-bank-content md-background md-hue-3" layout="column" layout-fill>
 
-                                <md-subheader class="md-primary md-hue-1 md-background md-hue-3">
-                                    <span ng-show="editingStudentPattern == null">Add pattern piece to the default pattern</span>
-                                    <span ng-hide="editingStudentPattern == null">Add pattern piece to the individual pattern for {{editingStudentPattern.name}}</span>
-                                </md-subheader>
+                                <div ng-show="showAddPieces">
+                                    <md-subheader class="md-primary md-hue-1 md-background md-hue-3">
+                                        <span ng-show="editingStudentPattern == null">Add pattern piece to the default pattern</span>
+                                        <span ng-hide="editingStudentPattern == null">Add pattern piece to the individual pattern for {{editingStudentPattern.name}}</span>
+                                    </md-subheader>
 
-                                <div layout-xs="column" layout-sm="column" layout-md="row" layout-gt-md="row" layout-fill>
+                                    <div layout-xs="column" layout-sm="column" layout-md="row" layout-gt-md="row" layout-fill>
 
-                                    <form class="pattern-search-text-input side-margins" ng-submit="editingPattern.push(getSmartSearchResult(newPatternPiece, state.settings.getSearchResultCount)); newPatternPiece.search_text = ''; buildAllSmartSearchComments();" flex>
-                                        <md-input-container class="input-container pattern-search-text-input full-width">
-                                            <label>Search Text</label>
-                                            <input type="text"
-                                                   autocomplete="off" ng-model="newPatternPiece.search_text">
-                                        </md-input-container>
-                                        <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip" md-direction="below">
-                                            Search for this value in comment text and tags
-                                        </md-tooltip>
-                                    </form>
-
-                                    <md-input-container flex class="search-and-filter side-margins">
-                                        <label>Filter on Tone</label>
-                                        <md-select ng-model="newPatternPiece.tone" flex-gt-xs="30">
-                                            <md-option ng-value="option" ng-repeat="option in toneFilterOptions | limitTo: 4 : 0">
-                                                {{option}}
-                                            </md-option>
-                                        </md-select>
-                                    </md-input-container>
-
-                                    <div flex layout="column">
-                                        <md-button aria-label="Add new smart search" md-ink-ripple class="md-button md-raised md-accent" md-ripple-size="auto" ng-click="editingPattern.push(getSmartSearchResult(newPatternPiece, state.settings.getSearchResultCount)); newPatternPiece.search_text = ''; buildAllSmartSearchComments(); illToastToThat('Pattern piece added');">
-                                            <i class="material-icons inline-icon">extension</i>
-                                            <span>Add Pattern Piece</span>
+                                        <form class="pattern-search-text-input side-margins" ng-submit="editingPattern.push(getSmartSearchResult(newPatternPiece, state.settings.getSearchResultCount)); newPatternPiece.search_text = ''; buildAllSmartSearchComments();" flex>
+                                            <md-input-container class="input-container pattern-search-text-input full-width">
+                                                <label>Search Text</label>
+                                                <input type="text"
+                                                       autocomplete="off" ng-model="newPatternPiece.search_text">
+                                            </md-input-container>
                                             <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip" md-direction="below">
-                                                Adds a new smart search, which will try to find 1 matching sentence
+                                                Search for this value in comment text and tags
                                             </md-tooltip>
-                                        </md-button>
+                                        </form>
+
+                                        <md-input-container flex class="search-and-filter side-margins">
+                                            <label>Filter on Tone</label>
+                                            <md-select ng-model="newPatternPiece.tone" flex-gt-xs="30">
+                                                <md-option ng-value="option" ng-repeat="option in toneFilterOptions | limitTo: 4 : 0">
+                                                    {{option}}
+                                                </md-option>
+                                            </md-select>
+                                        </md-input-container>
+
+                                        <div flex layout="column">
+                                            <md-button aria-label="Add new smart search" md-ink-ripple class="md-button md-raised md-accent" md-ripple-size="auto" ng-click="editingPattern.push(getSmartSearchResult(newPatternPiece, state.settings.getSearchResultCount)); newPatternPiece.search_text = ''; buildAllSmartSearchComments(); illToastToThat('Pattern piece added');">
+                                                <i class="material-icons inline-icon">extension</i>
+                                                <span>Add Pattern Piece</span>
+                                                <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip" md-direction="below">
+                                                    Adds a new smart search, which will try to find 1 matching sentence
+                                                </md-tooltip>
+                                            </md-button>
+                                        </div>
                                     </div>
                                 </div>
 

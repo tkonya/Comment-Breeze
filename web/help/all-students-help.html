@@ -20,19 +20,20 @@
 
             <h4 ng-style="state.theme.highlightColor">Grading Students:</h4>
             <p ng-style="state.theme.textColor">
-                Comment Breeze allows you to grade students in various subjects quickly. The only requirement is that
-                you have a default pattern defined
-                (this would outline the subjects you want to grade them on).<br><br>
+                Comment Breeze allows you to grade students in various subjects quickly.<br><br>
 
-                All students can be graded by clicking "Grade All Students" in the All Students menu. You can also grade
-                students one at a time
+                Grading is pattern-based and will use the first pattern it can find in this order:<br>
+                1. Any pattern already applied to the student<br>
+                2. The default pattern<br>
+                3. The sample pattern<br><br>
+
+                All students can be graded by clicking "Grade All Students" in the All Students menu. You can also grade students one at a time
                 or revise your grade by clicking "Grade Student" in a student's menu.<br><br>
 
                 Click on the title of the Grade Student window to expand it into the advanced view. This would give you something that resembles the patterns page where you can see which
-                sentences are generated, remove pieces and regenerate to find more approprate matches.<br><br>
+                sentences are generated, remove pieces and regenerate to find more appropriate matches.<br><br>
 
-                Grading will apply a derivative pattern based on whatever pattern is currently assigned to the student,
-                or the default pattern if no pattern has yet been applied.<br><br>
+                Grading will save a new comment based on the grades you assign to a student. This will also assign a "Grading Pattern" to the student, so you can edit it later with the Patterns tab if desired.<br><br>
             </p>
 
             <h4 ng-style="state.theme.highlightColor">Editing:</h4>

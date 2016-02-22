@@ -287,6 +287,9 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         $scope.showGlobalDetails = true;
         $scope.showAddStudents = true;
         $scope.showAllStudents = true;
+        $scope.showAddPieces = true;
+        //$scope.showEditingSearchComments = true;
+        //$scope.showEditingPatternComments = true;
         $scope.showSelectStudentSearch = true;
         $scope.showSelectStudentPattern = true;
         $scope.showAdvancedGraderView = false;
@@ -1579,6 +1582,26 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
             $scope.editingStudentGrade.pattern[i].comment = $scope.editingStudentGrade.pattern[i].comment.substring(0, $scope.editingStudentGrade.pattern[i].comment.length - 1);
         }
     };
+
+    //$scope.refreshEditingStudentSearchTextArea = function() {
+    //    if ($scope.showEditingSearchComments) {
+    //        console.log('refreshing search comment');
+    //        $timeout(function () {
+    //            $scope.editingStudentSearch.comment = $scope.editingStudentSearch.comment + ' ';
+    //            $scope.editingStudentSearch.comment = $scope.editingStudentSearch.comment.substring(0, $scope.editingStudentSearch.comment.length - 1);
+    //        }, 500);
+    //    }
+    //};
+
+    //$scope.refreshEditingStudentPatternTextArea = function() {
+    //    if ($scope.showEditingPatternComments) {
+    //        console.log('refreshing pattern comment');
+    //        $timeout(function () {
+    //            $scope.editingStudentPattern.comment = $scope.editingStudentPattern.comment + ' ';
+    //            $scope.editingStudentPattern.comment = $scope.editingStudentPattern.comment.substring(0, $scope.editingStudentPattern.comment.length - 1);
+    //        }, 500);
+    //    }
+    //};
 
     $scope.selectTab = function() {
 
