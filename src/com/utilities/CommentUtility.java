@@ -1,5 +1,7 @@
 package com.utilities;
 
+import org.codehaus.jettison.json.JSONArray;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.PreparedStatement;
@@ -16,9 +18,11 @@ public class CommentUtility {
 
     public static void main(String args[]) {
 
-        DatabaseHandler databaseHandler = new DatabaseHandler();
+        removeDuplicates();
 
-        addStudentName("Hoon", databaseHandler);
+//        DatabaseHandler databaseHandler = new DatabaseHandler();
+
+//        addStudentName("Hoon", databaseHandler);
 //        addClassName("Universe", databaseHandler);
 //        findExtraStudentNames(databaseHandler);
 
@@ -215,36 +219,36 @@ public class CommentUtility {
 
     }
 
-    @Deprecated
-    public static void addSchoolName(String schoolName, DatabaseHandler databaseHandler) {
-        System.out.println("Adding school name: " + schoolName);
-
-        if (databaseHandler == null) {
-            databaseHandler = new DatabaseHandler();
-        }
+    public static void removeDuplicates() {
 
         PreparedStatement preparedStatement = null;
-
-        // update the comments table
-        // this isn't perfect but it's good enough
+        DatabaseHandler databaseHandler = new DatabaseHandler();
         try {
-            preparedStatement = databaseHandler.getConnection().prepareStatement("UPDATE comments SET comment_text = REPLACE(comment_text, ?, 'SCHOOL_NAME') WHERE comment_text LIKE ? OR comment_text LIKE ?");
-            preparedStatement.setString(1, schoolName);
-            preparedStatement.setString(2, "% " + schoolName + "%");
-            preparedStatement.setString(3, "%" + schoolName + " %");
-            int updated = preparedStatement.executeUpdate();
-            System.out.println(updated + " rows in comments updated");
-        } catch (SQLException e) {
-            e.printStackTrace();
+            JSONArray fetchedComments = databaseHandler.getJSONArrayFor("SELECT COUNT(*) as count, comment_id, comment_text FROM comments WHERE deleted = 0 GROUP BY comment_text ORDER BY COUNT(*) DESC");
+
+            preparedStatement = databaseHandler.getConnection().prepareStatement("UPDATE comments SET deleted = TRUE WHERE comment_text = ? AND comment_id != ?");
+
+            for (int i = 0; i < fetchedComments.length(); ++i) {
+                if (fetchedComments.getJSONObject(i).getInt("count") > 1) {
+                    System.out.println("Removing duplicates for " + fetchedComments.getJSONObject(i).getString("comment_text"));
+                    preparedStatement.setString(1, fetchedComments.getJSONObject(i).getString("comment_text"));
+                    preparedStatement.setInt(2, fetchedComments.getJSONObject(i).getInt("comment_id"));
+                    preparedStatement.addBatch();
+                } else {
+                    break;
+                }
+            }
+
+            preparedStatement.executeBatch();
+
+        } catch (Exception ignore) {
         } finally {
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException ignore) {}
+            try {
+                preparedStatement.close();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
             }
         }
-
-
     }
 
 }

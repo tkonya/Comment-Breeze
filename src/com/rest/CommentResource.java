@@ -54,7 +54,7 @@ public class CommentResource {
                 System.out.println("Has been over 1 day, will reload cache");
 
                 databaseHandler = new DatabaseHandler();
-                JSONArray fetchedComments = databaseHandler.getJSONArrayFor("SELECT comment_id, comment_text, flagged, COALESCE(verified_pos_neg, pos_neg) as pos_neg FROM comment_breeze.comments WHERE deleted = FALSE GROUP BY comment_text ORDER BY RAND()");
+                JSONArray fetchedComments = databaseHandler.getJSONArrayFor("SELECT comment_id, comment_text, flagged, COALESCE(verified_pos_neg, pos_neg) as pos_neg FROM comment_breeze.comments WHERE deleted = FALSE ORDER BY RAND()");
 
                 if (fetchedComments != null && fetchedComments.length() > 0) {
 
@@ -75,7 +75,7 @@ public class CommentResource {
                     }
 
                     // count 20 most common tags
-                    commonTags = databaseHandler.getJSONArrayFor("SELECT tag FROM comment_breeze.comment_tags WHERE deleted = FALSE GROUP BY tag ORDER BY COUNT(*) DESC LIMIT 30");
+                    commonTags = databaseHandler.getJSONArrayFor("SELECT tag FROM comment_breeze.comment_tags WHERE deleted = FALSE GROUP BY tag ORDER BY COUNT(*) DESC LIMIT 20");
 
                     comments = fetchedComments;
                     updated = false;
