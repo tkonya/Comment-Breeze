@@ -362,6 +362,10 @@ td.comment-text:hover {
     border-radius: 0 0 5px 5px;
 }
 
+.save-buttons {
+    text-align: right;
+}
+
 .dialog-content {
     padding-top: 1em;
     padding-left: 2em;

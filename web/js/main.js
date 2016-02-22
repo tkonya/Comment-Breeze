@@ -229,7 +229,7 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
                 showEditButtons: true,
                 makeSomethingUpSize: 10,
                 getSearchResultCount: false,
-                highAccuracyGenderedPronouns: true,
+                highAccuracyGenderedPronouns: false,
                 reduceCommentsSize: 10000,
                 showCommonTags: false,
                 newStudentFill: 'random',
@@ -764,8 +764,16 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         $scope.editingStudentGrade = angular.copy(student);
 
         if (!$scope.editingStudentGrade.pattern || $scope.editingStudentGrade.pattern.length < 1) {
-            $scope.editingStudentGrade.pattern = angular.copy($scope.state.global_pattern);
+            if ($scope.state.global_pattern && $scope.state.global_pattern.length > 0) {
+                console.log('using global pattern for grading');
+                $scope.editingStudentGrade.pattern = angular.copy($scope.state.global_pattern);
+            } else {
+                console.log('using sample pattern for grading');
+                $scope.editingStudentGrade.pattern = $scope.getSamplePattern(false);
+            }
         }
+
+        console.log('starting grade with pattern length ' + $scope.editingStudentGrade.pattern.length);
 
         $mdDialog.show({
             clickOutsideToClose: true,
@@ -1199,23 +1207,30 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         }
     };
 
-    $scope.editStudentWithSearch = function (student, goBackToBuild) {
+    $scope.editStudentWithSearch = function (student, goBackToBuild, index) {
         $scope.showAnnoyThisTime = true;
         $scope.goBackToBuild = goBackToBuild;
+        if (index === undefined) {
+            index = $scope.findStudentIndex(student.student_id);
+        }
+        student.index = index;
+        console.log('editing student at index ' + index + ' with search');
         $scope.editingStudentSearch = angular.copy(student);
         $scope.selectedTab = $scope.tabIndexes.search;
     };
 
-    $scope.doneEditingStudentSearch = function () {
+    $scope.doneEditingStudentSearch = function (overrideGoBack) {
         $scope.editingStudentSearch.last_modified = new Date().toISOString().slice(0, 19).replace('T', ' ');
         for (var i = 0; i < $scope.state.students.length; ++i) {
             if ($scope.state.students[i].student_id == $scope.editingStudentSearch.student_id) {
                 $scope.state.students[i] = $scope.editingStudentSearch;
                 $scope.editingStudentSearch = null;
-                if ($scope.goBackToBuild) {
+
+                if ($scope.goBackToBuild && !overrideGoBack) {
                     $scope.selectedTab = $scope.tabIndexes.build;
                     $scope.goBackToBuild = false;
                 }
+
                 $scope.illToastToThat('Saved comment changes for ' + $scope.state.students[i].name);
                 $scope.buildWholeStudentComment($scope.state.students[i]);
                 $scope.buildAllStudentComments();
@@ -1235,7 +1250,29 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         $scope.studentToEditWithSearch = null;
     };
 
-    $scope.doneEditingStudentPattern = function() {
+    $scope.findStudentIndex = function(student_id) {
+        console.log('finding index of student id ' + student_id)
+        for (var i = 0; i < $scope.state.students.length; ++i) {
+            if (student_id == $scope.state.students.student_id) {
+                return i;
+            }
+        }
+        return null;
+    };
+
+    $scope.doneEditingPatternGoToNext = function() {
+        var indexToLoad = $scope.editingStudentPattern.index + 1;
+        $scope.doneEditingStudentPattern(true);
+        $scope.editStudentWithPatterns($scope.state.students[indexToLoad], $scope.goBackToBuild, indexToLoad);
+    };
+
+    $scope.doneEditingSearchGoToNext = function() {
+        var indexToLoad = $scope.editingStudentSearch.index + 1;
+        $scope.doneEditingStudentSearch(true);
+        $scope.editStudentWithSearch($scope.state.students[indexToLoad], $scope.goBackToBuild, indexToLoad);
+    };
+
+    $scope.doneEditingStudentPattern = function(overrideGoBack) {
         $scope.editingStudentPattern.last_modified = new Date().toISOString().slice(0, 19).replace('T', ' ');
         for (var i = 0; i < $scope.state.students.length; ++i) {
             if ($scope.state.students[i].student_id == $scope.editingStudentPattern.student_id) {
@@ -1248,10 +1285,11 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
                     $scope.state.students[i].pattern_type = 'individual';
                 }
 
-                if ($scope.goBackToBuild) {
+                if ($scope.goBackToBuild && !overrideGoBack) {
                     $scope.selectedTab = $scope.tabIndexes.build;
                     $scope.goBackToBuild = false;
                 }
+
                 $scope.illToastToThat('Saved pattern changes for ' + $scope.state.students[i].name);
                 $scope.buildWholeStudentComment($scope.state.students[i]);
                 $scope.buildAllStudentComments();
@@ -1277,11 +1315,17 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
         student.pattern_type = 'global';
     };
 
-    $scope.editStudentWithPatterns = function (student, goBackToBuild) {
+    $scope.editStudentWithPatterns = function (student, goBackToBuild, index) {
+
         $scope.showAnnoyThisTime = true;
         $scope.goBackToBuild = goBackToBuild;
 
-        //console.log('Student comment length: ' + student.comment.length);
+        if (index === undefined) {
+            index = $scope.findStudentIndex(student.student_id);
+        }
+        student.index = index;
+        console.log('editing student at index ' + index + ' with patterns');
+
 
         $scope.editingStudentPattern = angular.copy(student);
 
@@ -1315,16 +1359,27 @@ commentApp.controller('CommentController', function ($scope, $http, $mdToast, $m
     };
 
     $scope.loadSampleSmartSearch = function() {
-        $scope.editingPattern = [];
-        $scope.editingPattern.push($scope.getSmartSearchResult({search_text: '', found_comment: '', tone: 'Positive'}));
-        $scope.editingPattern.push($scope.getSmartSearchResult({search_text: 'reading', found_comment: '', tone: 'Any'}));
-        $scope.editingPattern.push($scope.getSmartSearchResult({search_text: 'behavior', found_comment: '', tone: 'Any'}));
-        $scope.editingPattern.push($scope.getSmartSearchResult({search_text: 'speaking', found_comment: '', tone: 'Any'}));
-        $scope.editingPattern.push($scope.getSmartSearchResult({search_text: 'comprehension', found_comment: '', tone: 'Any'}));
-        $scope.editingPattern.push($scope.getSmartSearchResult({search_text: 'phonics', found_comment: '', tone: 'Any'}));
-        $scope.editingPattern.push($scope.getSmartSearchResult({search_text: 'writing', found_comment: '', tone: 'Any'}));
-        $scope.editingPattern.push($scope.getSmartSearchResult({search_text: '', found_comment: '', tone: 'Positive'}));
+        $scope.editingPattern = $scope.getSamplePattern(true);
         $scope.buildAllSmartSearchComments();
+    };
+
+    $scope.getSamplePattern = function(positiveCaps) {
+        var samplePattern = [];
+        if (positiveCaps) {
+            samplePattern.push($scope.getSmartSearchResult({search_text: '', found_comment: '', tone: 'Positive'}));
+        }
+        samplePattern.push($scope.getSmartSearchResult({search_text: 'reading', found_comment: '', tone: 'Any'}));
+        samplePattern.push($scope.getSmartSearchResult({search_text: 'behavior', found_comment: '', tone: 'Any'}));
+        samplePattern.push($scope.getSmartSearchResult({search_text: 'speaking', found_comment: '', tone: 'Any'}));
+        samplePattern.push($scope.getSmartSearchResult({search_text: 'comprehension', found_comment: '', tone: 'Any'}));
+        samplePattern.push($scope.getSmartSearchResult({search_text: 'participation', found_comment: '', tone: 'Any'}));
+        samplePattern.push($scope.getSmartSearchResult({search_text: 'attention', found_comment: '', tone: 'Any'}));
+        samplePattern.push($scope.getSmartSearchResult({search_text: 'effort', found_comment: '', tone: 'Any'}));
+        samplePattern.push($scope.getSmartSearchResult({search_text: 'writing', found_comment: '', tone: 'Any'}));
+        if (positiveCaps) {
+            samplePattern.push($scope.getSmartSearchResult({search_text: '', found_comment: '', tone: 'Positive'}));
+        }
+        return samplePattern;
     };
 
     $scope.reloadWithLimit = function(limit) {

@@ -524,7 +524,7 @@
                                             </md-button>
                                         </md-menu-item>
                                         <md-menu-item>
-                                            <md-button aria-label="Show Finished Comments" class="md-primary md-hue-1" ng-disabled="!state.all_student_comments" ng-click="showDialog('/finished-comments.html'); saveAnalyticsClass('Show Finished Comments');">
+                                            <md-button aria-label="Show Finished Comments" class="md-primary md-hue-1" ng-disabled="!state.all_student_comments" ng-click="showDialog('/dialogs/finished-comments.html'); saveAnalyticsClass('Show Finished Comments');">
                                                 <i class="material-icons inline-icon">view_list</i>
                                                 <span>Show Finished Comments</span>
                                             </md-button>
@@ -537,7 +537,7 @@
                                         </md-menu-item>
                                         <md-divider></md-divider>
                                         <md-menu-item>
-                                            <md-button aria-label="Grade All Students" class="md-primary md-hue-1" ng-disabled="state.global_pattern.length < 1" ng-click="gradeAllStudents(0);">
+                                            <md-button aria-label="Grade All Students" class="md-primary md-hue-1" ng-click="gradeAllStudents(0);">
                                                 <i class="material-icons inline-icon">grade</i>
                                                 <span>Grade All Students</span>
                                             </md-button>
@@ -658,13 +658,13 @@
                                                 </md-button>
                                                 <md-menu-content class="menu-content">
                                                     <md-menu-item>
-                                                        <md-button class="md-primary md-hue-1" flex ng-click="editStudentWithSearch(student, true);">
+                                                        <md-button class="md-primary md-hue-1" flex ng-click="editStudentWithSearch(student, true, $index);">
                                                             <i class="material-icons inline-icon">search</i>
                                                             <span>Edit w/ Search</span>
                                                         </md-button>
                                                     </md-menu-item>
                                                     <md-menu-item>
-                                                        <md-button class="md-primary md-hue-1" flex ng-click="editStudentWithPatterns(student, true);">
+                                                        <md-button class="md-primary md-hue-1" flex ng-click="editStudentWithPatterns(student, true, $index);">
                                                             <i class="material-icons inline-icon">extension</i>
                                                             <span>Edit w/ Patterns</span>
                                                         </md-button>
@@ -677,7 +677,7 @@
                                                     </md-menu-item>
                                                     <md-divider></md-divider>
                                                     <md-menu-item>
-                                                        <md-button class="md-primary md-hue-1" flex ng-click="gradeStudent(student, true);" ng-disabled="state.global_pattern.length < 1">
+                                                        <md-button class="md-primary md-hue-1" flex ng-click="gradeStudent(student, true);">
                                                             <i class="material-icons inline-icon">grade</i>
                                                             <span>Grade Student</span>
                                                         </md-button>
@@ -799,29 +799,11 @@
                         <section class="control-card md-whiteframe-5dp md-background md-hue-3" ng-show="editingStudentSearch">
                             <md-toolbar class="md-toolbar-tools control-card-toolbar">
                                 <h1>
-                                    <span hide-xs>Editing Comment For {{editingStudentSearch.name}}</span>
+                                    <span hide-xs>Comments for {{editingStudentSearch.name}}</span>
                                     <span hide-gt-xs>{{editingStudentSearch.name}}'s Comments</span>
                                 </h1>
 
                                 <span flex></span>
-
-                                <md-button aria-label="Done Editing" md-ink-ripple md-ripple-size="auto" ng-click="doneEditingStudentSearch();">
-                                    <i class="material-icons inline-icon">done</i>
-                                    <span hide-xs hide-sm>Done Editing</span>
-                                    <span hide-xs hide-gt-sm>Done</span>
-                                    <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
-                                        Saves the changes you've made
-                                    </md-tooltip>
-                                </md-button>
-
-                                <md-button aria-label="Cancel Editing" md-ink-ripple ng-click="cancelEditingStudentSearch();" md-ripple-size="auto">
-                                    <i class="material-icons inline-icon">cancel</i>
-                                    <span hide-xs hide-sm>Cancel Editing</span>
-                                    <span hide-xs hide-gt-sm>Cancel</span>
-                                    <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
-                                        Cancel editing and
-                                    </md-tooltip>
-                                </md-button>
 
                             </md-toolbar>
 
@@ -834,6 +816,37 @@
                                         Add comments by clicking below and edit them as needed
                                     </md-tooltip>
                                 </md-input-container>
+
+                                <div class="save-buttons" layout-xs="column" layout-gt-xs="row">
+
+                                    <span flex hide-xs></span>
+
+                                    <md-button class="md-button md-raised md-accent" aria-label="Done Editing" md-ink-ripple md-ripple-size="auto" ng-click="doneEditingStudentSearch();">
+                                        <i class="material-icons inline-icon">done</i>
+                                        <span>Save</span>
+                                        <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
+                                            Saves the changes you've made to this student's pattern
+                                        </md-tooltip>
+                                    </md-button>
+
+                                    <md-button class="md-button md-raised md-accent" md-ink-ripple ng-click="doneEditingSearchGoToNext()" ng-disabled="editingStudentSearch.index >= state.students.length - 1">
+                                        <i class="material-icons inline-icon">done</i>
+                                        <span>Save and Go To Next Student</span>
+                                        <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
+                                            Saves the changes you've made to this student's pattern and opens the next student for editing
+                                        </md-tooltip>
+                                    </md-button>
+
+                                    <md-button class="md-button md-raised md-accent" aria-label="Cancel Editing" md-ink-ripple ng-click="cancelEditingStudentSearch();" md-ripple-size="auto">
+                                        <i class="material-icons inline-icon">cancel</i>
+                                        <span>Cancel</span>
+                                        <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
+                                            Cancels editing; does not save anything
+                                        </md-tooltip>
+                                    </md-button>
+
+                                </div>
+                                <br>
 
                             </md-content>
                         </section>
@@ -1066,24 +1079,6 @@
 
                                 <span flex></span>
 
-                                <md-button aria-label="Done Editing" md-ink-ripple md-ripple-size="auto" ng-click="doneEditingStudentPattern();">
-                                    <i class="material-icons inline-icon">done</i>
-                                    <span hide-xs hide-sm>Done Editing</span>
-                                    <span hide-xs hide-gt-sm>Done</span>
-                                    <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
-                                        Saves the changes you've made and goes back to the Multi Student tab
-                                    </md-tooltip>
-                                </md-button>
-
-                                <md-button aria-label="Cancel Editing" md-ink-ripple ng-click="cancelEditingStudentPattern();" md-ripple-size="auto">
-                                    <i class="material-icons inline-icon">cancel</i>
-                                    <span hide-xs hide-sm>Cancel Editing</span>
-                                    <span hide-xs hide-gt-sm>Cancel</span>
-                                    <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
-                                        Goes back to the Multi Student tab without saving anything
-                                    </md-tooltip>
-                                </md-button>
-
                             </md-toolbar>
 
                             <md-content class="control-card-content md-background md-hue-3" layout="column" layout-fill>
@@ -1096,6 +1091,37 @@
                                     </md-tooltip>
                                 </md-input-container>
 
+                                <div class="save-buttons" layout-xs="column" layout-gt-xs="row">
+
+                                    <span flex hide-xs></span>
+
+                                    <md-button class="md-button md-raised md-accent" aria-label="Done Editing" md-ink-ripple md-ripple-size="auto" ng-click="doneEditingStudentPattern();">
+                                        <i class="material-icons inline-icon">done</i>
+                                        <span>Save</span>
+                                        <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
+                                            Saves the changes you've made to this student's pattern
+                                        </md-tooltip>
+                                    </md-button>
+
+                                    <md-button class="md-button md-raised md-accent" md-ink-ripple ng-click="doneEditingPatternGoToNext()" ng-disabled="editingStudentPattern.index >= state.students.length - 1">
+                                        <i class="material-icons inline-icon">done</i>
+                                        <span>Save and Go To Next Student</span>
+                                        <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
+                                            Saves the changes you've made to this student's pattern and opens the next student for editing
+                                        </md-tooltip>
+                                    </md-button>
+
+                                    <md-button class="md-button md-raised md-accent" aria-label="Cancel Editing" md-ink-ripple ng-click="cancelEditingStudentPattern();" md-ripple-size="auto">
+                                        <i class="material-icons inline-icon">cancel</i>
+                                        <span>Cancel</span>
+                                        <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
+                                            Cancels editing; does not save anything
+                                        </md-tooltip>
+                                    </md-button>
+
+                                </div>
+                                <br>
+
                             </md-content>
                         </section>
 
@@ -1104,7 +1130,8 @@
 
                             <md-toolbar class="md-toolbar-tools control-card-toolbar">
                                 <h2>
-                                    PATTERNS
+                                    <span hide-xs>ADD PATTERN PIECES</span>
+                                    <span hide-gt-xs>ADD PIECES</span>
                                 </h2>
 
                                 <span flex></span>
@@ -1116,28 +1143,9 @@
                                     </md-button>
                                     <md-menu-content class="menu-content">
                                         <md-menu-item>
-                                            <md-button class="md-primary md-hue-1" md-prevent-menu-close ng-disabled="editingPattern.length < 1" aria-label="Remove All Pieces" md-ink-ripple flex md-ripple-size="auto" ng-click="regenerateAllSmartSearch();">
-                                                <i class="material-icons inline-icon">autorenew</i>
-                                                <span>Regenerate All</span>
-                                            </md-button>
-                                        </md-menu-item>
-                                        <md-menu-item>
-                                            <md-button class="md-primary md-hue-1" md-prevent-menu-close ng-disabled="editingPattern.length < 1" aria-label="Reset Comments" md-ink-ripple flex md-ripple-size="auto" ng-click="shuffleSmartSearch()">
-                                                <i class="material-icons inline-icon">shuffle</i>
-                                                <span>Shuffle Pattern</span>
-                                            </md-button>
-                                        </md-menu-item>
-                                        <md-divider></md-divider>
-                                        <md-menu-item>
                                             <md-button class="md-primary md-hue-1" ng-click="loadSampleSmartSearch()">
                                                 <i class="material-icons inline-icon">flip_to_front</i>
                                                 <span>Load Sample Pattern</span>
-                                            </md-button>
-                                        </md-menu-item>
-                                        <md-menu-item ng-hide="editingStudentPattern">
-                                            <md-button class="md-primary md-hue-1" ng-disabled="editingPattern.length < 1 || state.students.length < 1" aria-label="Remove All Searches" md-ink-ripple flex md-ripple-size="auto" ng-click="applyGlobalToAll();">
-                                                <i class="material-icons inline-icon">group</i>
-                                                <span>Apply to All Students</span>
                                             </md-button>
                                         </md-menu-item>
                                         <md-divider></md-divider>
@@ -1148,22 +1156,15 @@
                                             </md-button>
                                         </md-menu-item>
                                         <md-menu-item hide-gt-sm>
-                                            <md-button class="md-primary md-hue-1" ng-click="showDialog('/help/patterns-help.html');">
+                                            <md-button class="md-primary md-hue-1" ng-click="showDialog('/help/add-pattern-pieces-help.html');">
                                                 <i class="material-icons inline-icon">help</i>
                                                 <span>Help</span>
-                                            </md-button>
-                                        </md-menu-item>
-                                        <md-divider></md-divider>
-                                        <md-menu-item>
-                                            <md-button class="md-primary md-hue-1" aria-label="Remove All Searches" ng-disabled="editingPattern.length < 1" md-ink-ripple flex md-ripple-size="auto" ng-click="removeAllPatternPieces();">
-                                                <i class="material-icons inline-icon">clear_all</i>
-                                                <span>Remove All Searches</span>
                                             </md-button>
                                         </md-menu-item>
                                     </md-menu-content>
                                 </md-menu>
 
-                                <md-button hide-xs ng-click="showDialog('/help/patterns-help.html');">
+                                <md-button hide-xs ng-click="showDialog('/help/add-pattern-pieces-help.html');">
                                     <i class="material-icons inline-icon">help</i>
                                     <!--<span hide-xs>Help</span>-->
                                     <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip" md-direction="left">
@@ -1176,9 +1177,8 @@
                             <md-content class="comment-bank-content md-background md-hue-3" layout="column" layout-fill>
 
                                 <md-subheader class="md-primary md-hue-1 md-background md-hue-3">
-                                    <span ng-show="editingStudentPattern == null">Now editing default pattern</span>
-                                    <span ng-hide="editingStudentPattern == null">Now editing individual pattern for {{editingStudentPattern.name}}</span>
-                                    <span ng-hide="editingPattern.length < 1"><br>Pattern length: {{editingPattern.length}}</span>
+                                    <span ng-show="editingStudentPattern == null">Add pattern piece to the default pattern</span>
+                                    <span ng-hide="editingStudentPattern == null">Add pattern piece to the individual pattern for {{editingStudentPattern.name}}</span>
                                 </md-subheader>
 
                                 <div layout-xs="column" layout-sm="column" layout-md="row" layout-gt-md="row" layout-fill>
@@ -1216,6 +1216,79 @@
 
                                 <br>
 
+                            </md-content>
+
+                        </section>
+
+                        <section ng-hide="editingPattern.length < 1" class="control-card md-background md-hue-3 md-whiteframe-5dp">
+
+                            <md-toolbar class="md-toolbar-tools control-card-toolbar">
+                                <h2>
+                                    <span ng-show="editingStudentPattern == null">DEFAULT PATTERN</span>
+                                    <span ng-hide="editingStudentPattern == null">INDIVIDUAL PATTERN</span>
+                                </h2>
+
+                                <span flex></span>
+
+                                <md-menu class="menu">
+                                    <md-button ng-click="$mdOpenMenu($event);">
+                                        <i class="material-icons inline-icon">menu</i>
+                                        <span hide-xs>Menu</span>
+                                    </md-button>
+                                    <md-menu-content class="menu-content">
+                                        <md-menu-item>
+                                            <md-button class="md-primary md-hue-1" md-prevent-menu-close ng-disabled="editingPattern.length < 1" aria-label="Remove All Pieces" md-ink-ripple flex md-ripple-size="auto" ng-click="regenerateAllSmartSearch();">
+                                                <i class="material-icons inline-icon">autorenew</i>
+                                                <span>Regenerate All</span>
+                                            </md-button>
+                                        </md-menu-item>
+                                        <md-menu-item>
+                                            <md-button class="md-primary md-hue-1" md-prevent-menu-close ng-disabled="editingPattern.length < 1" aria-label="Reset Comments" md-ink-ripple flex md-ripple-size="auto" ng-click="shuffleSmartSearch()">
+                                                <i class="material-icons inline-icon">shuffle</i>
+                                                <span>Shuffle Pattern</span>
+                                            </md-button>
+                                        </md-menu-item>
+                                        <md-divider></md-divider>
+                                        <md-menu-item ng-hide="editingStudentPattern">
+                                            <md-button class="md-primary md-hue-1" ng-disabled="editingPattern.length < 1 || state.students.length < 1" aria-label="Remove All Searches" md-ink-ripple flex md-ripple-size="auto" ng-click="applyGlobalToAll();">
+                                                <i class="material-icons inline-icon">group</i>
+                                                <span>Apply to All Students</span>
+                                            </md-button>
+                                        </md-menu-item>
+                                        <md-divider></md-divider>
+                                        <md-menu-item hide-gt-sm>
+                                            <md-button class="md-primary md-hue-1" ng-click="showDialog('/help/patterns-help.html');">
+                                                <i class="material-icons inline-icon">help</i>
+                                                <span>Help</span>
+                                            </md-button>
+                                        </md-menu-item>
+                                        <md-divider></md-divider>
+                                        <md-menu-item>
+                                            <md-button class="md-primary md-hue-1" aria-label="Remove All Searches" ng-disabled="editingPattern.length < 1" md-ink-ripple flex md-ripple-size="auto" ng-click="removeAllPatternPieces();">
+                                                <i class="material-icons inline-icon">delete</i>
+                                                <span>Delete Pattern</span>
+                                            </md-button>
+                                        </md-menu-item>
+                                    </md-menu-content>
+                                </md-menu>
+
+                                <md-button hide-xs ng-click="showDialog('/help/patterns-help.html');">
+                                    <i class="material-icons inline-icon">help</i>
+                                    <!--<span hide-xs>Help</span>-->
+                                    <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip" md-direction="left">
+                                        Show the help document for Patterns
+                                    </md-tooltip>
+                                </md-button>
+
+                            </md-toolbar>
+
+                            <md-content class="comment-bank-content md-background md-hue-3" layout="column" layout-fill>
+
+                                <md-subheader class="md-primary md-hue-1 md-background md-hue-3">
+                                    <span ng-hide="editingStudentPattern == null">Pattern for {{editingStudentPattern.name}}<br></span>
+                                    <span>Pattern length: {{editingPattern.length}}</span>
+                                </md-subheader>
+
                                 <table class="comment-bank-table">
                                     <tr ng-repeat="search in editingPattern" ng-style="getAltBackgroundColor($even)" class="multi-student-comment-row repeated-item pattern-piece-row" layout-fill layout-xs="column" layout-sm="column" layout-gt-sm="row">
                                         <td flex-xs flex-sm flex-gt-sm="50">
@@ -1249,10 +1322,7 @@
                                                 <md-input-container flex class="search-and-filter">
                                                     <label>Filter on Tone</label>
                                                     <md-select ng-model="search.tone" md-on-close="resubmitSearch(search);  buildAllSmartSearchComments();">
-                                                        <md-option ng-value="option"
-                                                                   ng-repeat="option in limitedToneFilterOptions">
-                                                            {{option}}
-                                                        </md-option>
+                                                        <md-option ng-value="option" ng-repeat="option in toneFilterOptions | limitTo : 4 : 0">{{option}}</md-option>
                                                     </md-select>
                                                 </md-input-container>
                                             </div>
@@ -1276,27 +1346,6 @@
                                         </td>
                                     </tr>
                                 </table>
-
-                                <div class="center-aligned quick-instructions-container" ng-hide="editingPattern.length > 0">
-                                    <md-divider></md-divider>
-                                    <div ng-style="state.theme.textColor" class="quick-instructions" style="margin: auto;">
-                                        <br>
-                                        Patterns allows you to build a sentence-by-sentence template that your comment or comments will conform to.
-                                        This could be a default pattern applied to all students, or an individual pattern for just one student.
-                                        Each pattern piece you add will look for one sentence matching the search criteria you set.<br><br>
-                                        Add pattern pieces one by one, each piece represents 1 sentence, in the order you add them.<br><br>
-                                        Example: If you want your first sentence to be about "behavior" then type that in and hit "Add Pattern Piece"<br><br>
-                                        If you don't care what type of comment goes in a certain position just leave the
-                                        Search Text empty and the filter set to "Any"<br><br>
-                                        Repeat until you have added and configured as many pieces as you want sentences.<br><br>
-
-                                        <span ng-click="loadSampleSmartSearch()" class="cursor-pointer">Load sample search pattern</span><br><br>
-
-                                        <span ng-click="showDialog('help/patterns-help.html');" class="cursor-pointer">See the help for more details</span>
-                                        <br><br>
-                                    </div>
-                                    <br><br>
-                                </div>
 
                             </md-content>
 
