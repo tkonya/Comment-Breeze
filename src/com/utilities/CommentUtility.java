@@ -138,21 +138,6 @@ public class CommentUtility {
 
         PreparedStatement preparedStatement = null;
 
-        // insert the name into the student_names table
-        try {
-            preparedStatement = databaseHandler.getConnection().prepareStatement("INSERT INTO student_names (student_name) VALUES (?)");
-            preparedStatement.setString(1, studentName);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException ignore) {}
-            }
-        }
-
         // update the comments table
         // this isn't perfect but it's good enough
         try {
@@ -208,21 +193,6 @@ public class CommentUtility {
 
         PreparedStatement preparedStatement = null;
 
-        // insert the name into the student_names table
-        try {
-            preparedStatement = databaseHandler.getConnection().prepareStatement("INSERT INTO class_names (class_name) VALUES (?)");
-            preparedStatement.setString(1, className);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException ignore) {}
-            }
-        }
-
         // update the comments table
         // this isn't perfect but it's good enough
         try {
@@ -254,21 +224,6 @@ public class CommentUtility {
         }
 
         PreparedStatement preparedStatement = null;
-
-        // insert the name into the student_names table
-        try {
-            preparedStatement = databaseHandler.getConnection().prepareStatement("INSERT INTO school_names (school_name) VALUES (?)");
-            preparedStatement.setString(1, schoolName);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException ignore) {}
-            }
-        }
 
         // update the comments table
         // this isn't perfect but it's good enough

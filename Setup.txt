@@ -16,15 +16,34 @@ editing-password = asdf1234
 
 Here are the tables contained in the database:
 
-
-CREATE TABLE comment_breeze.class_names (
-  class_name varchar(255) NOT NULL DEFAULT '',
-  added_on datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (class_name)
+CREATE TABLE comment_breeze.analytics (
+  student_id char(32) binary NOT NULL,
+  class_id char(32) binary NOT NULL DEFAULT '',
+  ip_hash char(32) binary NOT NULL COMMENT 'md5 of the ip address',
+  created datetime DEFAULT NULL,
+  last_modified datetime DEFAULT NULL,
+  pattern_type varchar(255) binary DEFAULT NULL,
+  sentences_count int(11) DEFAULT NULL,
+  trigger_action varchar(255) binary DEFAULT NULL COMMENT 'What caused us to do save this?',
+  PRIMARY KEY (student_id, class_id)
 )
 ENGINE = INNODB
 CHARACTER SET utf8
-COLLATE utf8_general_ci;
+COLLATE utf8_bin;
+
+
+CREATE TABLE comment_breeze.contact (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  name varchar(255) binary DEFAULT NULL,
+  email varchar(255) binary DEFAULT NULL,
+  message varchar(1000) binary DEFAULT NULL,
+  submitted_time datetime DEFAULT NULL,
+  `read` bit(1) DEFAULT b'0',
+  PRIMARY KEY (id)
+)
+ENGINE = INNODB
+CHARACTER SET utf8
+COLLATE utf8_bin;
 
 
 CREATE TABLE comment_breeze.comment_tags (
@@ -55,30 +74,10 @@ COLLATE utf8_general_ci
 ROW_FORMAT = DYNAMIC;
 
 
-CREATE TABLE comment_breeze.school_names (
-  school_name varchar(50) NOT NULL,
-  added_on datetime DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (school_name)
-)
-ENGINE = INNODB
-CHARACTER SET utf8
-COLLATE utf8_general_ci;
-
-
-CREATE TABLE comment_breeze.student_names (
-  student_name varchar(255) NOT NULL,
-  added_on datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (student_name)
-)
-ENGINE = INNODB
-CHARACTER SET utf8
-COLLATE utf8_general_ci;
-
-
-CREATE TABLE comment_breeze.user_accounts (
-  id int(11) DEFAULT NULL,
-  user_name varchar(50) DEFAULT NULL,
-  hashed_password varchar(255) DEFAULT NULL
+CREATE TABLE comment_breeze.password_fails (
+  ip varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  time datetime NOT NULL,
+  PRIMARY KEY (ip, time)
 )
 ENGINE = INNODB
 CHARACTER SET utf8
