@@ -14,27 +14,23 @@
                 Patterns allows you to build a sentence-by-sentence template that your comment or comments will conform to.
                 This could be a default pattern applied to all students, a pattern to base grading off of, or an individual pattern for just one student.
                 Each pattern piece you add will look for one sentence matching the search criteria you set.<br><br>
-
-                Add pattern pieces one by one, each piece represents 1 sentence, in the order you add them.<br><br>
-
-                Example: If you want your first sentence to be about "behavior" then type that in and hit "Add Pattern Piece"<br><br>
-
-                If you just want a piece to be totally random then leave the Search Text empty and the filter set to "Any".<br><br>
-
-                Repeat until you have added and configured one piece for each sentences you would like in the comment.<br><br>
             </p>
 
             <h4 ng-style="state.theme.highlightColor">Setup:</h4>
             <p ng-style="state.theme.textColor">
                 The default pattern can be created or edited by just selecting the tab, as long as you are not currently editing a student's individual pattern.
                 Text above the search box will tell you what pattern you are currently editing.
-                A student's individual pattern can be added or edited by selecting "Edit w/ Patterns" from their menu, or selecting them from the box at the top (assuming you have added students by this point).
+                A student's individual pattern can be added or edited by selecting "Edit w/ Patterns" from their menu on the build tab, or selecting them from the box at the top (assuming you have added students by this point).
             </p>
 
             <h4 ng-style="state.theme.highlightColor">Building a pattern:</h4>
             <p ng-style="state.theme.textColor">
-                You can build the comment pattern sentence-by-sentence. So for your first sentence enter text you would
-                like to search for, if any, on the "Search Text" line.
+                Add pattern pieces one by one, each piece represents 1 sentence, in the order you add them.
+                If you just want a piece to be totally random then leave the Search Text empty and the filter set to "Any".
+                Repeat until you have added and configured one piece for each sentences you would like in the comment.<br><br>
+
+                Example: If you want your first sentence to be about "behavior" then type that in and hit "Add Pattern Piece"<br><br>
+
                 Search Text looks in both the comment text and any tags that have been added to the comment for matches.
                 Select if you would like this comment to have a certain tone (positive, neutral or negative).
                 Hit "Add Pattern Piece" and repeat for all other sentences you would like to add.
@@ -43,7 +39,7 @@
 
                 When building the default pattern the specific comment search results are not important, as new results
                 will be generated when the pattern is applied to a new or existing user. For individual patterns they
-                represent an actual part of a comment, and changing them would change the comment.
+                represent an actual part of a comment, and changing them would change the comment.<br><br>
             </p>
 
             <h4 ng-style="state.theme.highlightColor">Grading Students:</h4>
@@ -54,26 +50,17 @@
                 To do this follow these steps:<br><br>
 
                 1. Create a default pattern that contains one pattern piece with search text for each subject you want
-                to cover.<br><br>
+                to cover. You can optionally skip this step and the grading function will just use a default pattern.<br><br>
 
-                2. Set the tone for each pattern piece as close to the class average as possible. You will be able to
-                set the tone for each piece on a student-by-student basis later, but
-                if most of your students are positive in one subject it would be easier to set that here than do it for
-                each one.<br><br>
+                2. Add all of your students on the build tab, filling in class name, and introduction and conclusion if
+                desired.<br><br>
 
-                3. Add all of your students on the build tab, filling in class name, and introduction and conclusion if
-                desired..<br><br>
+                3. Go to the "All Students" menu and click "Grade All Students".<br><br>
 
-                4. Go to the "All Students" menu and click "Grade All Students". This will apply a derivative of the
-                default pattern to each student*, allowing you to set the tone for each one.<br><br>
+                4. Select the tone for each pattern piece in the default pattern for current student.<br><br>
 
-                5. Select the tone for each pattern piece in the default pattern for current student.<br><br>
-
-                6. Hit save when you are done. Another window will be opened up for the next student, until you complete
+                5. Hit save when you are done. Another window will be opened up for the next student, until you complete
                 the last student.<br><br>
-
-                *If you already have a pattern built for a student it will not overwrite it with the default pattern.
-                You will be grading them on whatever pattern you had assigned to them before.
             </p>
 
             <br>
