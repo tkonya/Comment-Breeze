@@ -10,9 +10,7 @@
     <md-dialog-content>
         <md-content class="dialog-content">
             <p>
-                You navigated away from {{annoySource}}, but you left <span ng-show="annoySource == 'search'"
-                                                                            ng-bind="editingStudentSearch.name"></span><span
-                    ng-show="annoySource == 'patterns'" ng-bind="editingStudentPattern.name"></span> being edited
+                You navigated away from {{annoySource}}, but you left <span ng-show="annoySource == 'patterns'" ng-bind="editingStudentPattern.name"></span> being edited
                 without saving or cancelling.<br><br>
                 Your changes will be there if you go back to {{annoySource}} now, but they could be accidentally
                 overwritten later if you start editing another student on {{annoySource}} before saving.

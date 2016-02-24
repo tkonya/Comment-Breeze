@@ -362,8 +362,32 @@ td.comment-text:hover {
     border-radius: 0 0 5px 5px;
 }
 
+.more-padding {
+    padding-bottom: 1em;
+}
+
 .save-buttons {
     text-align: right;
+}
+
+.student-card-content {
+    padding-top: 0;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-bottom: 1em;
+}
+
+.student-details {
+    padding-top: 1.5em;
+}
+
+.tabs-content > md-tabs-content-wrapper {
+    top: 0 !important;
+}
+
+.tabs-wrapper > md-tabs-wrapper {
+    height: 0 !important;
+    visibility: hidden !important;
 }
 
 .dialog-content {
@@ -428,6 +452,10 @@ td.comment-text:hover {
 
 .all-students-content {
     border-radius: 0 0 5px 5px;
+}
+
+.shallow-input {
+    margin-bottom: 0;
 }
 
 .student-index {

@@ -8,20 +8,11 @@
         </md-button>
     </md-toolbar>
     <md-dialog-content>
+
         <md-content class="dialog-content">
 
-            <md-input-container class="almost-full-width">
-                <label>
-                    All Comments
-                </label>
-            <textarea readonly ng-model="state.all_student_comments" placeholder="There's nothing here!"
-                      class="almost-full-width"></textarea>
-            </md-input-container>
-
-            <div class="center-aligned  close-modal-elements">
-                <md-button aria-label="Copy All Comments" md-ink-ripple flex class="md-button md-raised md-accent"
-                           md-ripple-size="auto" ng-click="illToastToThat('All comments copied to clipboard'); saveAnalyticsClass('Copy All Comments - Finished Comments');"
-                           clipboard text="state.all_student_comments">
+            <div class="close-modal-elements" layout="row" layout-fill>
+                <md-button aria-label="Copy All Comments" md-ink-ripple class="md-button md-raised md-accent" md-ripple-size="auto" ng-click="illToastToThat('All comments copied to clipboard'); saveAnalyticsClass('Copy All Comments - Finished Comments');" clipboard text="state.all_student_comments">
                     <i class="material-icons inline-icon">content_copy</i>
                     <span>Copy All Comments</span>
                     <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip"
@@ -33,7 +24,34 @@
                            class="md-accent md-raised">
                     <i class="material-icons inline-icon">file_download</i>
                     <span>Save Comments</span>
+                    <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip"
+                                md-direction="below">
+                        Save the comments as you see them here to a plain text file
+                    </md-tooltip>
                 </md-button>
+                <span flex></span>
+            </div>
+
+            <md-input-container class="almost-full-width">
+                <textarea readonly ng-model="state.all_student_comments" class="almost-full-width"></textarea>
+            </md-input-container>
+
+            <div class="center-aligned  close-modal-elements">
+                <!--<md-button aria-label="Copy All Comments" md-ink-ripple flex class="md-button md-raised md-accent"-->
+                           <!--md-ripple-size="auto" ng-click="illToastToThat('All comments copied to clipboard'); saveAnalyticsClass('Copy All Comments - Finished Comments');"-->
+                           <!--clipboard text="state.all_student_comments">-->
+                    <!--<i class="material-icons inline-icon">content_copy</i>-->
+                    <!--<span>Copy All Comments</span>-->
+                    <!--<md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip"-->
+                                <!--md-direction="below">-->
+                        <!--Copy comments for all students including introduction and conclusion if applicable-->
+                    <!--</md-tooltip>-->
+                <!--</md-button>-->
+                <!--<md-button ng-click="saveComments(); saveAnalyticsClass('Save Comments - Finished Comments');" ng-disabled="!state.all_student_comments"-->
+                           <!--class="md-accent md-raised">-->
+                    <!--<i class="material-icons inline-icon">file_download</i>-->
+                    <!--<span>Save Comments</span>-->
+                <!--</md-button>-->
                 <md-button ng-click="closeDialog()">Close</md-button>
             </div>
         </md-content>

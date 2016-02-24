@@ -125,31 +125,24 @@
             </table>
 
             <div class="center-aligned close-modal-elements">
-                <md-button class="md-accent md-button md-raised" ng-hide="gradingIndex != null" ng-click="saveGrade()">
+                <md-button class="md-accent md-button md-raised" ng-click="saveGrade()">
                     <i class="material-icons inline-icon">done</i>
                     Save
-                    <md-tooltip ng-style="state.theme.tooltips"
-                                ng-show="state.settings.showTooltips && editingStudentGrade"
-                                class="tooltip">
+                    <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips && editingStudentGrade" class="tooltip">
                         Saves these grades as a pattern and regenerates the comment accordingly
                     </md-tooltip>
                 </md-button>
-                <md-button class="md-accent md-button md-raised" ng-show="gradingIndex != null"
-                           ng-click="saveGrade(); gradeAllStudents(gradingIndex + 1);">
+                <md-button class="md-accent md-button md-raised" ng-disabled="editingStudentGrade.index >= state.students.length - 1" ng-click="doneEditingGradeGoToNext(); saveGrade();">
                     <i class="material-icons inline-icon">done</i>
-                    Save
-                    <md-tooltip ng-style="state.theme.tooltips"
-                                ng-show="state.settings.showTooltips && editingStudentGrade"
-                                class="tooltip">
+                    Save and Grade Next Student
+                    <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips && editingStudentGrade" class="tooltip">
                         Saves these grades as a pattern, regenerates the comment accordingly and opens the next student
                     </md-tooltip>
                 </md-button>
                 <md-button ng-click="closeDialog()">
                     <i class="material-icons inline-icon">cancel</i>
                     Cancel
-                    <md-tooltip ng-style="state.theme.tooltips"
-                                ng-show="state.settings.showTooltips && editingStudentGrade"
-                                class="tooltip">
+                    <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips && editingStudentGrade" class="tooltip">
                         Do not save these grades and stops grading
                     </md-tooltip>
                 </md-button>

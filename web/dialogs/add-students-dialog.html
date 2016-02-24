@@ -1,0 +1,119 @@
+<md-dialog flex="80" md-theme="{{ state.theme.colorTheme }}" class="dialog-top-level">
+    <md-toolbar class="md-toolbar-tools dialog-toolbar">
+        <h1>
+            Add Students
+        </h1>
+        <span flex></span>
+        <md-button ng-click="closeDialog()">
+            <i class="material-icons inline-icon">close</i>
+        </md-button>
+    </md-toolbar>
+    <md-dialog-content>
+        <md-content class="dialog-content">
+            <br>
+            <div layout-xs="column" layout-sm="column" layout-gt-sm="row" layout-fill>
+                <div flex layout="column" class="add-student-divs">
+                    <form ng-submit="addStudent()" autocomplete="off" flex>
+                        <md-input-container class="input-container full-width">
+                            <label>New Student Name</label>
+                            <input type="text" ng-model="newStudentName">
+                        </md-input-container>
+                        <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip">
+                            Add all the students that you would like to make comments for today
+                        </md-tooltip>
+                    </form>
+
+                    <md-button aria-label="Add" md-ink-ripple flex ng-disabled="newStudentName == ''" class="help-button md-button md-raised md-accent button-min-size" ng-click="addStudent()" md-ripple-size="auto">
+                        <i class="material-icons inline-icon">person_add</i>
+                        <span>Add</span>
+                        <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip">
+                            Adds <span ng-bind="newStudentName" ng-hide="newStudentName == ''"></span><span ng-show="newStudentName == ''">student</span> to the list
+                        </md-tooltip>
+                    </md-button>
+                </div>
+
+                <div flex class="radio-button-container add-student-divs center-aligned" layout="column">
+
+                    <md-radio-group ng-model="gender" hide-xs hide-sm class="md-primary radio-button-group" layout="column" aria-label="Default Gender">
+
+                        <md-radio-button ng-style="state.theme.textColor" ng-model="gender" value="male" class="gender-radio">
+                            M<span hide-xs>ale</span>
+                            <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips && gender != 'male'" class="tooltip">
+                                Set default gender to male
+                            </md-tooltip>
+                        </md-radio-button>
+                        <md-radio-button ng-style="state.theme.textColor" ng-model="gender" value="female" class="gender-radio">
+                            F<span hide-xs>emale</span>
+                            <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips && gender != 'female'" class="tooltip">
+                                Set default gender to female
+                            </md-tooltip>
+                        </md-radio-button>
+                    </md-radio-group>
+
+                    <md-radio-group ng-model="gender" hide-gt-sm class="md-primary" layout="row" aria-label="Default Gender">
+
+                        <md-radio-button flex ng-model="gender" value="male" class="gender-radio">
+                            Male
+                            <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips && gender != 'male'" class="tooltip">
+                                Set default gender to male
+                            </md-tooltip>
+                        </md-radio-button>
+                        <md-radio-button flex ng-model="gender" value="female" class="gender-radio">
+                            Female
+                            <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips && gender != 'female'" class="tooltip">
+                                Set default gender to female
+                            </md-tooltip>
+                        </md-radio-button>
+                    </md-radio-group>
+
+                </div>
+
+                <br hide-gt-sm>
+                <br hide-gt-sm>
+                <md-divider hide-gt-sm></md-divider>
+                <br hide-gt-sm>
+                <br hide-gt-sm>
+
+                <div class="radio-button-container add-student-divs" flex>
+                    <md-radio-group flex ng-model="state.settings.newStudentFill" class="md-primary radio-button-group" layout="column" aria-label="New student fill">
+                        <md-radio-button ng-style="state.theme.textColor" ng-model="newStudentFill" value="blank">
+                            Start Blank
+                            <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
+                                Start with nothing
+                            </md-tooltip>
+                        </md-radio-button>
+                        <md-radio-button ng-style="state.theme.textColor" ng-model="state.settings.newStudentFill" value="random">
+                            Generate Random Comment
+                            <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
+                                Start with a random comment {{state.settings.makeSomethingUpSize}} sentences long
+                            </md-tooltip>
+                        </md-radio-button>
+                        <md-radio-button ng-style="state.theme.textColor" ng-show="state.global_pattern.length > 0" ng-disabled="state.global_pattern.length < 1" ng-model="state.settings.newStudentFill" value="default_pattern">
+                            <span>Generate w/ Default Pattern</span>
+                            <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
+                                Start with a comment generated conforming to the default pattern
+                            </md-tooltip>
+                        </md-radio-button>
+                    </md-radio-group>
+
+                    <md-button aria-label="Add" md-ink-ripple flex ng-show="state.global_pattern.length < 1" class="md-button md-raised md-accent button-min-size add-pattern-button" ng-click="editingPattern = []; selectedTab = tabIndexes.patterns" md-ripple-size="auto">
+                        <i class="material-icons inline-icon">extension</i>
+                        <span>Add Default Pattern</span>
+                        <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip">
+                            Create a default pattern that you can apply to new students by default, or existing students retroactively
+                        </md-tooltip>
+                    </md-button>
+
+                </div>
+            </div>
+
+            <div class="center-aligned ">
+                <md-button ng-click="closeDialog()" class="md-primary">OK, I'm done adding students</md-button>
+                <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip">
+                    You can always add students again later
+                </md-tooltip>
+            </div>
+
+        </md-content>
+    </md-dialog-content>
+</md-dialog>

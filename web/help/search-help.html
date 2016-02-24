@@ -11,12 +11,10 @@
             <h4 ng-style="state.theme.highlightColor">Prerequisites:</h4>
             <p ng-style="state.theme.textColor">
                 Without any students added the search will only allow you to view, rate and tag comments.
-                If you want to build report card comments you need to start on the Build tab.
-                Add at least one student there and then click their menu and go to "Edit w/ Search" or select them at
-                the top of this tab.<br><br>
+                Once students have been added, clicking on a comment will add it to whichever student is currently selected.<br><br>
             </p>
 
-            <h4 ng-style="state.theme.highlightColor">Finding a Comment:</h4>
+            <h4 ng-style="state.theme.highlightColor">Finding and Adding Comments:</h4>
             <p ng-style="state.theme.textColor">
                 Search for a comment you would like to add by typing a word or short phrase on the "Search Comments"
                 line above the list of comments.
@@ -25,26 +23,19 @@
                 "writing" is not in the comment text. If you are looking for a comment with a certain tone you can
                 select that in the box to the right of the
                 search.<br><br>
+
                 Click the comment text in the list to add it to your comments, or hit enter inside the search box to add
                 the first search result and clear the search.<br><br>
-                Searching may be slow for mobile users or users with limited processing power (you have a crappy
-                computer). Setting comments per page at the minimum value can help, you can also load only a partial set
-                of the comments; these are both done on the settings page.<br><br>
-            </p>
 
-            <h4 ng-style="state.theme.highlightColor">Editing Your Comment:</h4>
-            <p ng-style="state.theme.textColor">
-                Edit comment manually as needed or use the shuffle button to scramble the order of the sentences in
-                it.<br><br>
+                When a comment is added the system will attempt to replace STUDENT_NAME and CLASS_NAME with the appropriate values, and fix gendered pronouns to match the student that the comment is being added to.<br><br>
+
                 Please remember that the gendered pronouns in English are not symmetrical so the site can get conversion wrong.
-                Proofreading is strongly advised.
-                If you would like to reduce the amount of proofreading and correction you have to do, at the expense of fewer comments, turn on
-                "High Accuracy Gendered Pronouns" in Class Details settings.<br><br>
-                When you're done adding comments here press the "Done Editing" button at the upper right. If you don't
-                like the changes you made you can press "Cancel Editing" and your changes will not be saved to your
-                student.<br><br>
-            </p>
+                For example the female equivalent of "his" could be either "her" or "hers"; the male equivalent of "her" could be either "him" or "his".
+                If you would like to reduce the amount of proofreading and correction you have to do, at the expense of fewer comments, turn on "High Accuracy Gendered Pronouns" in Class Details settings.<br><br>
 
+                Searching may be slow for mobile users or users with limited processing power (you have a crappy computer).
+                Setting comments per page at the minimum value can help, or you can load only a partial set of the comments on the settings page.<br><br>
+            </p>
 
             <h4 ng-style="state.theme.highlightColor">Rating and Editing Comments:</h4>
             <p ng-style="state.theme.textColor">
