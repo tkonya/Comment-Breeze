@@ -1,0 +1,63 @@
+<md-dialog flex="90" md-theme="{{ state.theme.colorTheme }}" class="dialog-top-level">
+    <md-toolbar class="md-toolbar-tools dialog-toolbar">
+        <h1>Site Help</h1>
+        <span flex></span>
+        <md-button ng-click="closeDialog()">
+            <i class="material-icons inline-icon">close</i>
+        </md-button>
+    </md-toolbar>
+    <md-dialog-content>
+        <md-content class="dialog-content">
+
+            <h4 ng-style="state.theme.highlightColor">Save and Load:</h4>
+            <p ng-style="state.theme.textColor">
+                All of your progress can be saved in the site menu. The save file includes your class name,
+                introduction, conclusion, all of your students and their comments, any patterns and
+                settings for each tab.
+                The save file is a normal txt file so your comments can be recovered even if you cannot access Comment
+                Breeze.<br><br>
+
+                You should always save your file after you are done. It will allow you to come back and edit easily if necessary, and it will be another copy of your work.<br><br>
+
+                Note: Windows notepad may not open the save file in an easily human-readable way. Try opening it with basically
+                any other document editor such as <a href="https://www.libreoffice.org/" target="_blank">Libre Office</a>, <a href="https://www.openoffice.org/" target="_blank">Open Office</a>, MS Word, <a href="https://notepad-plus-plus.org/" target="_blank">Notepad++</a>, Wordpad, etc...<br><br>
+
+                Loading your saved file will restore all of the things it saved. A good paradigm to follow would be to
+                make a save file for every class you have. This way the next time report cards are due you can just
+                reopen that file and all of your students will be there. You can just regenerate the comments and edit
+                as necessary.<br><br>
+            </p>
+
+            <h4 ng-style="state.theme.highlightColor">Themes:</h4>
+            <p ng-style="state.theme.textColor">
+                Color themes are a way to lighten the mood while performing the soul-crushing task of writing report card comments.
+                I hate pure white websites! That's why there are several themes to choose from, including a couple dark themes for people who like to work in a dark room or just don't want their eyeballs burned out.<br><br>
+
+                Just click on the themes button in the site menu and a section will pop up showing several options. Click done at the top right when you have settled on a theme.<br><br>
+
+                The theme is encoded in the URL, so if you would like to always return to a certain color theme just bookmark the site while you are on the theme you like.
+                It will be automatically loaded when you return.
+                Save files also include theme information, so loading a file will reload the theme that was being used when the save was made.<br><br>
+            </p>
+
+            <h4 ng-style="state.theme.highlightColor">Reset App:</h4>
+            <p ng-style="state.theme.textColor">
+                You can reset the application in the Global Details menu. This can be helpful if you already loaded the
+                page but you now have low or no network connectivity. This will reset all fields and erase all students,
+                but will not need to reload the comments from the server. If you are on a shared computer you should clear
+                the cache when done; Reset App has an option to also clear the cache.<br><br>
+            </p>
+
+            <h4 ng-style="state.theme.highlightColor">More Help:</h4>
+            <p ng-style="state.theme.textColor">
+                Most sections of the site have their own help document with information specific to that section.
+                Just look for the <i class="material-icons inline-icon">help</i> icon at the top right of any section.
+                If anything wasn't clear, or you have questions about how something works, please don't hesitate to use the contact form on the main page to tell me about it.<br><br>
+            </p>
+
+            <div class="center-aligned ">
+                <md-button class="md-primary" ng-click="closeDialog()">OK, I got it</md-button>
+            </div>
+        </md-content>
+    </md-dialog-content>
+</md-dialog>

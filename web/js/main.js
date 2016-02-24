@@ -1197,7 +1197,7 @@ commentApp.controller('CommentController', ['$scope', '$http', '$mdToast', '$mdD
         var indexToLoad = $scope.editingStudentGrade.index + 1;
         $timeout(function() {
             $scope.gradeStudent($scope.state.students[indexToLoad], indexToLoad);
-        }, 500);
+        }, 400);
     };
 
     $scope.doneEditingStudentPattern = function(overrideGoBack) {

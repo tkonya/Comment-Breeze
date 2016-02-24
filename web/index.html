@@ -169,8 +169,8 @@
                                 <span>Settings</span>
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item hide-gt-sm>
-                            <md-button ng-click="showDialog('help/class-details-help.html');" class="md-primary md-hue-1">
+                        <md-menu-item>
+                            <md-button ng-click="showDialog('help/site-help.html');" class="md-primary md-hue-1">
                                 <i class="material-icons inline-icon">help</i>
                                 <span>Help</span>
                             </md-button>
@@ -446,22 +446,13 @@
                             <md-content class="center-aligned md-background md-hue-3 all-students-content" layout-fill>
 
                                 <div layout-xs="column" layout-sm="column" layout-gt-sm="row" layout-fill>
-                                    <div layout-xs="column" layout-gt-xs="row">
-                                        <md-button class="md-button md-raised md-accent" ng-click="showDialog('dialogs/add-students-dialog.html');">
-                                            <i class="material-icons inline-icon">person_add</i>
-                                            <span>Add Students</span>
-                                            <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
-                                                Add student(s) to your list of students
-                                            </md-tooltip>
-                                        </md-button>
-                                        <!--<md-button class="md-button md-accent md-raised" ng-disabled="state.students.length < 1" aria-label="Show Finished Comments" ng-click="buildAllStudentComments(); showDialog('/dialogs/finished-comments.html'); saveAnalyticsClass('Show Finished Comments');">-->
-                                            <!--<i class="material-icons inline-icon">description</i>-->
-                                            <!--<span>Show Finished Comments</span>-->
-                                            <!--<md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">-->
-                                                <!--Displays all student's comments together and allows you to copy or save them-->
-                                            <!--</md-tooltip>-->
-                                        <!--</md-button>-->
-                                    </div>
+                                    <md-button class="md-button md-raised md-accent" ng-click="showDialog('dialogs/add-students-dialog.html');">
+                                        <i class="material-icons inline-icon">person_add</i>
+                                        <span>Add Students</span>
+                                        <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
+                                            Add student(s) to your list of students
+                                        </md-tooltip>
+                                    </md-button>
                                     <md-tabs flex ng-hide="state.students.length < 1" md-selected="selectedStudentTab" class="full-width tabs-content">
                                         <md-tab ng-repeat="student in state.students" label="{{student.name}}"></md-tab>
                                     </md-tabs>
