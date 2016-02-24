@@ -139,22 +139,6 @@ var commentApp = angular.module('commentApp', ['angular-clipboard', 'ngMaterial'
                 'hue-3': '100' // cards background
             });
 
-        $mdThemingProvider.theme('brownie')
-            .primaryPalette('brown', {
-                'default': '900', // toolbars / card headers
-                'hue-1': '900', // non-disabled menu items, menu button on individual students, text that should stand out from the background more than primary default
-                'hue-2': '400',
-                'hue-3': '600'
-            })
-            .accentPalette('brown')
-            .backgroundPalette('brown', {
-                'default': '200', // default, menu box
-                'hue-1': '600', // background background
-                'hue-2': '50', // no idea what is wrong with this hue
-                'hue-3': '500' // cards background
-            }).dark();
-
-
         $mdThemingProvider.alwaysWatchTheme(true);
     });
 
@@ -343,15 +327,26 @@ commentApp.controller('CommentController', ['$scope', '$http', '$mdToast', '$mdD
                     $scope.illToastToThat('Loaded full comment set');
                 } else {
                     $scope.illToastToThat('Loaded ' + $scope.formatNumber($scope.comments.length) + ' comments');
-                    }
                 }
+            }
 
-                $scope.changeCommentsPerPage();
+            $scope.changeCommentsPerPage();
+
+            if ($scope.state.global_pattern.length < 1) {
+                $scope.state.global_pattern = $scope.getSamplePattern(true);
+                //if ($scope.selectedTab == $scope.tabIndexes.patterns) {
+                    $scope.editingPattern = $scope.state.global_pattern;
+                //}
+            }
 
             }).
             error(function () {
                 $scope.illToastToThat('Error loading comments');
             });
+    };
+
+    $scope.goToTab = function(index) {
+        $scope.selectedTab = index;
     };
 
     $scope.toggleColorThemesVisibility = function () {
@@ -1223,10 +1218,13 @@ commentApp.controller('CommentController', ['$scope', '$http', '$mdToast', '$mdD
                     $scope.goBackToBuild = false;
                 }
 
+                $scope.editingPattern = $scope.state.global_pattern;
+
                 $scope.illToastToThat('Saved pattern changes for ' + $scope.state.students[i].name);
                 $scope.buildWholeStudentComment($scope.state.students[i]);
                 $scope.buildAllStudentComments();
                 $scope.studentToEditWithPattern = null;
+
                 return;
             }
         }
@@ -1418,6 +1416,12 @@ commentApp.controller('CommentController', ['$scope', '$http', '$mdToast', '$mdD
         $scope.buildAllSmartSearchComments();
     };
 
+    $scope.movePatternPiece = function(index, indexToMoveTo) {
+        var pieceToMove = $scope.editingPattern.splice(index, 1);
+        $scope.editingPattern.splice(indexToMoveTo, 0, pieceToMove[0]);
+        $scope.buildAllSmartSearchComments();
+    };
+
     $scope.buildAllSmartSearchComments = function() {
         //console.log('building smart search comments start length ' + $scope.editingStudentPattern.comment.length);
         if ($scope.editingStudentPattern != null) {
@@ -1503,15 +1507,14 @@ commentApp.controller('CommentController', ['$scope', '$http', '$mdToast', '$mdD
             //console.log('tab selected : smart_search');
             $location.search('tab', 'patterns');
 
-            if ($scope.editingStudentPattern == null) {
-                $scope.editingPattern = $scope.state.global_pattern;
-            }
+            //if ($scope.editingStudentPattern == null) {
+            //    $scope.editingPattern = $scope.state.global_pattern;
+            //}
 
         }
 
         // maybe save the global pattern when we switch off this tab
-        if ($scope.selectedTab != $scope.tabIndexes.patterns && $scope.editingPattern.length > 0 && !$scope.editingStudentPattern) {
-            $scope.state.settings.newStudentFill = 'default_pattern';
+        if ($scope.selectedTab != $scope.tabIndexes.patterns && !$scope.editingStudentPattern) {
             $scope.state.global_pattern = angular.copy($scope.editingPattern);
         }
 
@@ -1521,6 +1524,12 @@ commentApp.controller('CommentController', ['$scope', '$http', '$mdToast', '$mdD
             $scope.showAnnoyDialog();
         }
 
+    };
+
+    $scope.checkPatternIsAllowed = function() {
+        if ($scope.state.global_pattern.length < 1 && $scope.state.settings.newStudentFill == 'default_pattern') {
+            $scope.state.settings.newStudentFill = 'blank';
+        }
     };
 
     $scope.readAndDealWithParams = function() {
@@ -1690,15 +1699,6 @@ commentApp.controller('CommentController', ['$scope', '$http', '$mdToast', '$mdD
             neutralColor = '#9E9E9E';
             unratedColor = '#E0E0E0';
             tooltipsFontColor = '#FFFFFF';
-        } else if (theme == 'brownie') {
-            primaryColor = '#3E2723';
-            altBackgroundColor = '#8D6E63';
-            positiveColor = '#D7CCC8';
-            negativeColor = '#D7CCC8';
-            neutralColor = '#D7CCC8';
-            unratedColor = '#D7CCC8';
-            textColor = '#D7CCC8';
-            tooltipsFontColor = '#5D4037';
         }
 
         $scope.state.theme.highlightColor = {

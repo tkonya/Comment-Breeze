@@ -9,6 +9,23 @@
     <md-dialog-content>
         <md-content class="dialog-content">
 
+            <h4 ng-style="state.theme.highlightColor">Default Pattern:</h4>
+            <p ng-style="state.theme.textColor">
+                The default pattern is a pattern that can be applied to new students or existing students, or it can be used as a basis to grade student off of.
+                For the default pattern the search results it displays are just samples.
+                This is because when the default pattern is applied to new or existing students we want to regenerate it for each one to get comments are unique.<br><br>
+            </p>
+
+            <h4 ng-style="state.theme.highlightColor">Individual Patterns:</h4>
+            <p ng-style="state.theme.textColor">
+                Individual patterns are a way to build student comments in a modular way. You can edit a student's individual pattern by selecting "Edit w/ Patterns" in their menu on the build tab, or selecting them at the top of the Patterns tab.<br><br>
+
+                When you first start editing an individual student with patterns the system will import their current comment into pattern format.
+                The comment will not be erased or changed until you modify the pieces that make up that pattern.
+
+                When editing a student's individual pattern the search result is the comment that will be used.
+            </p>
+
             <h4 ng-style="state.theme.highlightColor">Search Results:</h4>
             <p ng-style="state.theme.textColor">
                 For the default pattern the search results it displays are just samples.

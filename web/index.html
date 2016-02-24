@@ -83,8 +83,160 @@
 
         <div id="toastBounds">
 
-            <md-tabs md-dynamic-height="true" md-center-tabs="true" md-selected="selectedTab"
-                     md-swipe-content="{{ state.settings.tabSwipe }}">
+            <div layout="row" layout-fill>
+                <md-tabs hide-xs flex md-center-tabs="true" md-dynamic-height="true" md-selected="selectedTab" class="full-width tabs-content" md-swipe-content="{{ state.settings.tabSwipe }}">
+                    <md-tab md-on-select="selectTab();">
+                        <md-tab-label>
+                            <i class="material-icons inline-icon">comment</i>
+                            Comment Breeze
+                        </md-tab-label>
+                    </md-tab>
+                    <md-tab md-on-select="selectTab();">
+                        <md-tab-label>
+                            <i class="material-icons inline-icon">build</i>
+                            Build
+                        </md-tab-label>
+                    </md-tab>
+                    <md-tab md-on-select="selectTab();">
+                        <md-tab-label>
+                            <i class="material-icons inline-icon">extension</i>
+                            Patterns
+                        </md-tab-label>
+                    </md-tab>
+                </md-tabs>
+                <md-menu class="menu">
+                    <md-button ng-click="$mdOpenMenu($event);">
+                        <i class="material-icons inline-icon">menu</i>
+                        <span>Site Menu</span>
+                        <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
+                            Settings and stuff that affect the entire application
+                        </md-tooltip>
+                    </md-button>
+                    <md-menu-content class="menu-content">
+                        <md-menu-item hide-gt-xs>
+                            <md-button ng-click="goToTab(tabIndexes.main_page);" class="md-primary md-hue-1" ng-disabled="selectedTab == tabIndexes.main_page">
+                                <i class="material-icons inline-icon">comment</i>
+                                <span>Comment Breeze Tab</span>
+                            </md-button>
+                            <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
+                                Save your work to a file for backup or to continue working on it later
+                            </md-tooltip>
+                        </md-menu-item>
+                        <md-menu-item hide-gt-xs>
+                            <md-button ng-click="goToTab(tabIndexes.build);" class="md-primary md-hue-1" ng-disabled="selectedTab == tabIndexes.build">
+                                <i class="material-icons inline-icon">build</i>
+                                <span>Build Tab</span>
+                            </md-button>
+                            <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
+                                Save your work to a file for backup or to continue working on it later
+                            </md-tooltip>
+                        </md-menu-item>
+                        <md-menu-item hide-gt-xs>
+                            <md-button ng-click="goToTab(tabIndexes.patterns);" class="md-primary md-hue-1" ng-disabled="selectedTab == tabIndexes.patterns">
+                                <i class="material-icons inline-icon">extension</i>
+                                <span>Patterns Tab</span>
+                            </md-button>
+                            <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
+                                Save your work to a file for backup or to continue working on it later
+                            </md-tooltip>
+                        </md-menu-item>
+                        <md-divider hide-gt-xs></md-divider>
+                        <md-menu-item>
+                            <md-button ng-click="saveState(); saveAnalyticsClass('Save State');" class="md-primary md-hue-1">
+                                <i class="material-icons inline-icon">file_download</i>
+                                <span>Save</span>
+                            </md-button>
+                            <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
+                                Save your work to a file for backup or to continue working on it later
+                            </md-tooltip>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button choose-file-button="file-upload-input" class="md-primary md-hue-1">
+                                <i class="material-icons inline-icon">file_upload</i>
+                                <span>Load</span>
+                            </md-button>
+                        </md-menu-item>
+                        <md-divider></md-divider>
+                        <md-menu-item>
+                            <md-button ng-click="toggleColorThemesVisibility()" class="md-primary md-hue-1">
+                                <i class="material-icons inline-icon">color_lens</i>
+                                <span>Themes</span>
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="showDialog('/settings/settings.html');" class="md-primary md-hue-1">
+                                <i class="material-icons inline-icon">settings</i>
+                                <span>Settings</span>
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item hide-gt-sm>
+                            <md-button ng-click="showDialog('help/class-details-help.html');" class="md-primary md-hue-1">
+                                <i class="material-icons inline-icon">help</i>
+                                <span>Help</span>
+                            </md-button>
+                        </md-menu-item>
+                        <md-divider></md-divider>
+                        <md-menu-item>
+                            <md-button class="md-primary md-hue-1" ng-click="showResetDialog();">
+                                <i class="material-icons inline-icon">power_settings_new</i>
+                                <span>Reset App</span>
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </div>
+
+            <md-divider></md-divider>
+
+            <section ng-show="showColorThemes"
+                     class="control-card md-whiteframe-5dp md-background md-hue-3">
+                <md-toolbar class="md-toolbar-tools control-card-toolbar" layout-xs="column"
+                            layout-sm="column" layout-gt-sm="row">
+                    <span>Color Themes</span>
+                    <span flex></span>
+                    <md-button ng-click="showColorThemes = false;">
+                        <i class="material-icons inline-icon">done</i>
+                        Done
+                    </md-button>
+                </md-toolbar>
+                <md-content
+                        class="theme-card-content md-background md-background md-hue-3 colors-buttons">
+                    <md-subheader class="md-primary md-background md-hue-3">
+                        Set the color theme below. If you bookmark this page while on your favorite theme it will be set automatically when you return.
+                    </md-subheader>
+                    <div layout-xs="column" layout-gt-xs="row">
+                        <md-button class="md-accent md-raised" ng-click="setTheme('breezy');" ng-disabled="state.theme.colorTheme == 'breezy'">
+                            Breezy
+                        </md-button>
+                        <md-button class="md-accent md-raised" ng-click="setTheme('darkula');" ng-disabled="state.theme.colorTheme == 'darkula'">
+                            Darkula
+                            <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
+                                Based on your favorite IDE's dark theme
+                            </md-tooltip>
+                        </md-button>
+                        <md-button class="md-accent md-raised" ng-click="setTheme('grass');" ng-disabled="state.theme.colorTheme == 'grass'">
+                            Grass
+                        </md-button>
+                        <md-button class="md-accent md-raised" ng-click="setTheme('prince');" ng-disabled="state.theme.colorTheme == 'prince'">
+                            Prince
+                        </md-button>
+                        <md-button class="md-accent md-raised" ng-click="setTheme('matrix');" ng-disabled="state.theme.colorTheme == 'matrix'">
+                            Matrix
+                            <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
+                                What if I told you this is the best website for report card comments
+                            </md-tooltip>
+                        </md-button>
+                        <md-button class="md-accent md-raised" ng-click="setTheme('adventure');" ng-disabled="state.theme.colorTheme == 'adventure'">Adventure
+                            <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
+                                Time
+                            </md-tooltip>
+                        </md-button>
+                    </div>
+                    <br>
+                </md-content>
+            </section>
+
+            <md-tabs md-dynamic-height="true" md-center-tabs="true" md-selected="selectedTab" class="tabs-wrapper" md-swipe-content="{{ state.settings.tabSwipe }}">
                 <md-tab md-on-select="selectTab();">
                     <md-tab-label>
                         Comment Breeze
@@ -134,8 +286,7 @@
                                     <h2 ng-style="state.theme.highlightColor">OK, how do I use it?</h2>
 
                                     <p ng-style="state.theme.textColor" class="paragraphs">
-                                        Start on the Build tab, there is a help button at the upper right with detailed
-                                        instructions and tips.<br>
+                                        Start on the Build tab, there are help buttons on each section to guide you through the process.<br>
                                         <span ng-show="isMobile">(this may be moved inside the drop down menu on smaller screens)<br></span>
                                         <br>
 
@@ -173,11 +324,6 @@
 
                                     <br><br>
 
-                                    <!--<a href="https://github.com/tkonya/Comment-Breeze" target="_blank">-->
-                                    <!--<img src="images/OctoMark.png">-->
-                                    <!--</a>-->
-
-
                                     <h3>
                                         <span ng-style="state.theme.highlightColor" class="cursor-pointer"
                                               ng-click="showDialog('/dialogs/privacy-policy.html')">Privacy Policy</span>
@@ -206,63 +352,12 @@
                     </md-tab-body>
                 </md-tab>
 
-                <md-tab md-on-select="selectMultiStudentTab(); selectTab();">
+                <md-tab md-on-select="selectTab();">
                     <md-tab-label>
                         <i class="material-icons inline-icon">build</i>
                         Build
                     </md-tab-label>
                     <md-tab-body class="center-aligned">
-
-                        <section ng-show="showColorThemes"
-                                 class="control-card md-whiteframe-5dp md-background md-hue-3">
-                            <md-toolbar class="md-toolbar-tools control-card-toolbar" layout-xs="column"
-                                        layout-sm="column" layout-gt-sm="row">
-                                <span>Color Themes</span>
-                                <span flex></span>
-                                <md-button ng-click="showColorThemes = false;">
-                                    <i class="material-icons inline-icon">done</i>
-                                    Done
-                                </md-button>
-                            </md-toolbar>
-                            <md-content
-                                    class="theme-card-content md-background md-background md-hue-3 colors-buttons">
-                                <md-subheader class="md-primary md-background md-hue-3">
-                                    Set the color theme below. If you bookmark this page while on your favorite theme it will be set automatically when you return.
-                                </md-subheader>
-                                <div layout-xs="column" layout-gt-xs="row">
-                                    <md-button class="md-accent md-raised" ng-click="setTheme('breezy');" ng-disabled="state.theme.colorTheme == 'breezy'">
-                                        Breezy
-                                    </md-button>
-                                    <md-button class="md-accent md-raised" ng-click="setTheme('darkula');" ng-disabled="state.theme.colorTheme == 'darkula'">
-                                        Darkula
-                                        <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
-                                            Based on your favorite IDE's dark theme
-                                        </md-tooltip>
-                                    </md-button>
-                                    <md-button class="md-accent md-raised" ng-click="setTheme('grass');" ng-disabled="state.theme.colorTheme == 'grass'">
-                                        Grass
-                                    </md-button>
-                                    <md-button class="md-accent md-raised" ng-click="setTheme('prince');" ng-disabled="state.theme.colorTheme == 'prince'">
-                                        Prince
-                                    </md-button>
-                                    <md-button class="md-accent md-raised" ng-click="setTheme('matrix');" ng-disabled="state.theme.colorTheme == 'matrix'">
-                                        Matrix
-                                        <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
-                                            What if I told you this is the best website for report card comments
-                                        </md-tooltip>
-                                    </md-button>
-                                    <md-button class="md-accent md-raised" ng-click="setTheme('adventure');" ng-disabled="state.theme.colorTheme == 'adventure'">Adventure
-                                        <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
-                                            Time
-                                        </md-tooltip>
-                                    </md-button>
-                                    <!--<md-button class="md-accent md-raised" ng-click="setTheme('brownie');"-->
-                                    <!--ng-disabled="state.theme.colorTheme == 'brownie'">Brownie-->
-                                    <!--</md-button>-->
-                                </div>
-                                <br>
-                            </md-content>
-                        </section>
 
                         <section class="control-card md-whiteframe-5dp md-background md-hue-3">
                             <md-toolbar class="md-toolbar-tools control-card-toolbar" layout-xs="column" layout-sm="column" layout-gt-sm="row">
@@ -274,56 +369,6 @@
                                 </md-button>
 
                                 <span flex></span>
-
-                                <md-menu class="menu">
-                                    <md-button ng-click="$mdOpenMenu($event);" class="full-width">
-                                        <i class="material-icons inline-icon">menu</i>
-                                        <span hide-xs>Menu</span>
-                                    </md-button>
-                                    <md-menu-content class="menu-content">
-                                        <md-menu-item>
-                                            <md-button ng-click="saveState(); saveAnalyticsClass('Save State');" class="md-primary md-hue-1">
-                                                <i class="material-icons inline-icon">file_download</i>
-                                                <span>Save</span>
-                                            </md-button>
-                                            <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip">
-                                                Save your work to a file for backup or to continue working on it later
-                                            </md-tooltip>
-                                        </md-menu-item>
-                                        <md-menu-item>
-                                            <md-button choose-file-button="file-upload-input" class="md-primary md-hue-1">
-                                                <i class="material-icons inline-icon">file_upload</i>
-                                                <span>Load</span>
-                                            </md-button>
-                                        </md-menu-item>
-                                        <md-divider></md-divider>
-                                        <md-menu-item>
-                                            <md-button ng-click="toggleColorThemesVisibility()" class="md-primary md-hue-1">
-                                                <i class="material-icons inline-icon">color_lens</i>
-                                                <span>Themes</span>
-                                            </md-button>
-                                        </md-menu-item>
-                                        <md-menu-item>
-                                            <md-button ng-click="showDialog('/settings/settings.html');" class="md-primary md-hue-1">
-                                                <i class="material-icons inline-icon">settings</i>
-                                                <span>Settings</span>
-                                            </md-button>
-                                        </md-menu-item>
-                                        <md-menu-item hide-gt-sm>
-                                            <md-button ng-click="showDialog('help/class-details-help.html');" class="md-primary md-hue-1">
-                                                <i class="material-icons inline-icon">help</i>
-                                                <span>Help</span>
-                                            </md-button>
-                                        </md-menu-item>
-                                        <md-divider></md-divider>
-                                        <md-menu-item>
-                                            <md-button class="md-primary md-hue-1" ng-click="showResetDialog();">
-                                                <i class="material-icons inline-icon">refresh</i>
-                                                <span>Reset App</span>
-                                            </md-button>
-                                        </md-menu-item>
-                                    </md-menu-content>
-                                </md-menu>
 
                                 <md-button hide-xs hide-sm ng-click="showDialog('help/class-details-help.html');">
                                     <i class="material-icons inline-icon">help</i>
@@ -348,14 +393,6 @@
                                                 Will replace instances of CLASS_NAME in comments
                                             </md-tooltip>
                                         </form>
-
-                                        <!--<div layout-fill>-->
-                                            <!--<md-button class="md-button md-raised md-accent" ng-click="showDialog('dialogs/add-students-dialog.html');">-->
-                                                <!--<i class="material-icons inline-icon">person_add</i>-->
-                                                <!--<span>Add Students</span>-->
-                                            <!--</md-button>-->
-                                            <!--<span flex></span>-->
-                                        <!--</div>-->
 
                                         <input id="file-upload-input" type="file" on-read-file="loadState($fileContent);" ng-hide="true">
 
@@ -413,19 +450,19 @@
                                         <md-button class="md-button md-raised md-accent" ng-click="showDialog('dialogs/add-students-dialog.html');">
                                             <i class="material-icons inline-icon">person_add</i>
                                             <span>Add Students</span>
-                                            <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip">
+                                            <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
                                                 Add student(s) to your list of students
                                             </md-tooltip>
                                         </md-button>
                                         <!--<md-button class="md-button md-accent md-raised" ng-disabled="state.students.length < 1" aria-label="Show Finished Comments" ng-click="buildAllStudentComments(); showDialog('/dialogs/finished-comments.html'); saveAnalyticsClass('Show Finished Comments');">-->
                                             <!--<i class="material-icons inline-icon">description</i>-->
                                             <!--<span>Show Finished Comments</span>-->
-                                            <!--<md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip">-->
+                                            <!--<md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">-->
                                                 <!--Displays all student's comments together and allows you to copy or save them-->
                                             <!--</md-tooltip>-->
                                         <!--</md-button>-->
                                     </div>
-                                    <md-tabs flex ng-hide="state.students.length < 1" md-selected="selectedStudentTab" class="full-width tabs-content" md-border-bottom>
+                                    <md-tabs flex ng-hide="state.students.length < 1" md-selected="selectedStudentTab" class="full-width tabs-content">
                                         <md-tab ng-repeat="student in state.students" label="{{student.name}}"></md-tab>
                                     </md-tabs>
                                 </div>
@@ -578,7 +615,7 @@
                                     <md-button class="md-button md-accent md-raised" aria-label="Show Finished Comments" ng-click="buildAllStudentComments(); showDialog('/dialogs/finished-comments.html'); saveAnalyticsClass('Show Finished Comments');">
                                         <i class="material-icons inline-icon">description</i>
                                         <span>Show Finished Comments</span>
-                                        <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip">
+                                        <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
                                             Displays all student's comments together and allows you to copy or save them
                                         </md-tooltip>
                                     </md-button>
@@ -821,7 +858,7 @@
                                 <md-input-container class="input-container">
                                     <label>Your Comments</label>
                                     <textarea ng-model="editingStudentPattern.comment" class="almost-full-width"></textarea>
-                                    <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip" md-direction="right">
+                                    <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip" md-direction="right">
                                         Add comments by clicking below and edit them as needed
                                     </md-tooltip>
                                 </md-input-container>
@@ -930,7 +967,7 @@
                                                 <input type="text"
                                                        autocomplete="off" ng-model="newPatternPiece.search_text">
                                             </md-input-container>
-                                            <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip" md-direction="below">
+                                            <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip" md-direction="below">
                                                 Search for this value in comment text and tags
                                             </md-tooltip>
                                         </form>
@@ -948,7 +985,7 @@
                                             <md-button aria-label="Add new smart search" md-ink-ripple class="md-button md-raised md-accent" md-ripple-size="auto" ng-click="editingPattern.push(getSmartSearchResult(newPatternPiece, state.settings.getSearchResultCount)); newPatternPiece.search_text = ''; buildAllSmartSearchComments(); illToastToThat('Pattern piece added');">
                                                 <i class="material-icons inline-icon">extension</i>
                                                 <span>Add Pattern Piece</span>
-                                                <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip" md-direction="below">
+                                                <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip" md-direction="below">
                                                     Adds a new smart search, which will try to find 1 matching sentence
                                                 </md-tooltip>
                                             </md-button>
@@ -1071,18 +1108,32 @@
 
                                         </td>
                                         <td flex layout-xs="column" layout-sm="row" layout-gt-sm="column">
-                                            <md-button aria-label="Remove All Students" md-ink-ripple flex class="cursor-pointer full-width" md-ripple-size="auto" ng-click="resubmitSearch(search, false);  buildAllSmartSearchComments();">
+                                            <md-button aria-label="Regenerate" md-ink-ripple flex class="cursor-pointer full-width" md-ripple-size="auto" ng-click="resubmitSearch(search, false);  buildAllSmartSearchComments();">
                                                 <i class="material-icons inline-icon">autorenew</i>
                                                 <span>Regenerate</span>
-                                                <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip" md-direction="below">
+                                                <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip" md-direction="below">
                                                     Regenerate this search result
                                                 </md-tooltip>
                                             </md-button>
-                                            <md-button aria-label="Remove Search" md-ink-ripple flex class="cursor-pointer full-width" md-ripple-size="auto" ng-click="editingPattern.splice($index, 1);  buildAllSmartSearchComments();">
+                                            <md-button aria-label="Remove Pattern Piece" md-ink-ripple flex class="cursor-pointer full-width" md-ripple-size="auto" ng-click="editingPattern.splice($index, 1);  buildAllSmartSearchComments();">
                                                 <i class="material-icons inline-icon">delete</i>
-                                                <span>Remove Pattern Piece</span>
-                                                <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip" md-direction="below">
+                                                <span>Remove</span>
+                                                <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip" md-direction="below">
                                                     Clear this search
+                                                </md-tooltip>
+                                            </md-button>
+                                        </td>
+                                        <td layout-xs="row" layout-sm="row" layout-gt-sm="column">
+                                            <md-button aria-label="Move Up" md-ink-ripple class="cursor-pointer" md-ripple-size="auto" ng-click="movePatternPiece($index, $index - 1);" ng-disabled="$index == 0">
+                                                <i class="material-icons inline-icon">arrow_upward</i>
+                                                <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip" md-direction="top">
+                                                    Move this piece up
+                                                </md-tooltip>
+                                            </md-button>
+                                            <md-button aria-label="Move Down" md-ink-ripple class="cursor-pointer" md-ripple-size="auto" ng-click="movePatternPiece($index, $index + 1);" ng-disabled="$index == editingPattern.length - 1">
+                                                <i class="material-icons inline-icon">arrow_downward</i>
+                                                <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip" md-direction="bottom">
+                                                    Move this piece down
                                                 </md-tooltip>
                                             </md-button>
                                         </td>

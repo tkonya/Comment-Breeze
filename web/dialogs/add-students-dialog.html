@@ -88,21 +88,13 @@
                                 Start with a random comment {{state.settings.makeSomethingUpSize}} sentences long
                             </md-tooltip>
                         </md-radio-button>
-                        <md-radio-button ng-style="state.theme.textColor" ng-show="state.global_pattern.length > 0" ng-disabled="state.global_pattern.length < 1" ng-model="state.settings.newStudentFill" value="default_pattern">
-                            <span>Generate w/ Default Pattern</span>
+                        <md-radio-button ng-style="state.theme.textColor" ng-disabled="state.global_pattern.length < 1" ng-model="state.settings.newStudentFill" value="default_pattern">
+                            <span>Generate with Default Pattern</span>
                             <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip">
                                 Start with a comment generated conforming to the default pattern
                             </md-tooltip>
                         </md-radio-button>
                     </md-radio-group>
-
-                    <md-button aria-label="Add" md-ink-ripple flex ng-show="state.global_pattern.length < 1" class="md-button md-raised md-accent button-min-size add-pattern-button" ng-click="editingPattern = []; selectedTab = tabIndexes.patterns" md-ripple-size="auto">
-                        <i class="material-icons inline-icon">extension</i>
-                        <span>Add Default Pattern</span>
-                        <md-tooltip ng-style="state.theme.tooltips" ng-show="showTooltips" class="tooltip">
-                            Create a default pattern that you can apply to new students by default, or existing students retroactively
-                        </md-tooltip>
-                    </md-button>
 
                 </div>
             </div>
