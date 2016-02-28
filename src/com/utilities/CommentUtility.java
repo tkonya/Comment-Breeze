@@ -1,9 +1,15 @@
 package com.utilities;
 
+import edu.stanford.nlp.ling.HasWord;
+import edu.stanford.nlp.ling.Sentence;
+import edu.stanford.nlp.ling.TaggedWord;
+import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -18,14 +24,58 @@ public class CommentUtility {
 
     public static void main(String args[]) {
 
-        removeDuplicates();
+        DatabaseHandler databaseHandler = new DatabaseHandler();
+        partOfSpeechTagger(databaseHandler);
+//        removeDuplicates();
 
-//        DatabaseHandler databaseHandler = new DatabaseHandler();
 
 //        addStudentName("Hoon", databaseHandler);
 //        addClassName("Universe", databaseHandler);
 //        findExtraStudentNames(databaseHandler);
 
+    }
+
+    private static void partOfSpeechTagger(DatabaseHandler databaseHandler) {
+
+        MaxentTagger maxentTagger = new MaxentTagger("C:\\Users\\Trevor\\IdeaProjects\\Comment Breeze 4\\src\\stanford_nlp\\stanford-postagger-2015-12-09\\models\\english-left3words-distsim.tagger");
+
+
+        JSONArray jsonArray = databaseHandler.getJSONArrayFor("SELECT comment_id, comment_text FROM comments WHERE deleted = FALSE ORDER BY RAND() LIMIT 1000");
+
+        for (int i = 0; i < jsonArray.length(); ++i) {
+
+            try {
+                int commentID = jsonArray.getJSONObject(i).getInt("comment_id");
+                String commentText = jsonArray.getJSONObject(i).getString("comment_text");
+
+                List<List<HasWord>> list = MaxentTagger.tokenizeText(new StringReader(commentText));
+                List<TaggedWord> tSentence = maxentTagger.tagSentence(list.get(0));
+
+                boolean changeHerToHisHer = false;
+                for (TaggedWord taggedWord : tSentence) {
+                    String [] word = taggedWord.toString("|").split("\\|");
+//                    System.out.println(word[0] + "\t\t" + word[1]);
+
+                    if ("her".equals(word[0]) && "PRP".equals(word[1])) {
+                        changeHerToHisHer = true;
+                    }
+
+                }
+
+                if (changeHerToHisHer) {
+                    String newCommentText = commentText.replace(" her ", " HIM/HER ");
+                    if (!commentText.equals(newCommentText)) {
+                        System.out.println(commentText);
+                        System.out.println(newCommentText);
+                        System.out.println();
+                    }
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     private static void findNames(DatabaseHandler databaseHandler) {
