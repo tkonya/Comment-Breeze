@@ -25,7 +25,8 @@ public class CommentUtility {
     public static void main(String args[]) {
 
         DatabaseHandler databaseHandler = new DatabaseHandler();
-        partOfSpeechTagger(databaseHandler);
+//        replaceHer(databaseHandler);
+        replaceHis(databaseHandler);
 //        removeDuplicates();
 
 
@@ -35,57 +36,213 @@ public class CommentUtility {
 
     }
 
-    private static void partOfSpeechTagger(DatabaseHandler databaseHandler) {
+    private static void replaceHer(DatabaseHandler databaseHandler) {
 
-        MaxentTagger maxentTagger = new MaxentTagger("C:\\Users\\Trevor\\IdeaProjects\\Comment Breeze 4\\src\\stanford_nlp\\stanford-postagger-2015-12-09\\models\\english-left3words-distsim.tagger");
+        MaxentTagger maxentTagger = new MaxentTagger("C:\\Users\\Trevor\\IdeaProjects\\Comment Breeze 4\\src\\stanford_nlp\\stanford-postagger-2015-12-09\\models\\wsj-0-18-bidirectional-nodistsim.tagger");
 
 
-        JSONArray jsonArray = databaseHandler.getJSONArrayFor("SELECT comment_id, comment_text FROM comments WHERE deleted = FALSE " +
-//                "(comment_text LIKE '%%' OR comment_text LIKE '%%' OR comment_text LIKE '%%' OR comment_text LIKE '%%' OR comment_text LIKE '%%') " +
-                "ORDER BY RAND() LIMIT 20000");
+        JSONArray jsonArray = databaseHandler.getJSONArrayFor("SELECT comment_id, comment_text FROM comments WHERE deleted = FALSE AND (comment_text LIKE '%her%' OR comment_text LIKE '%Her%') AND comment_text NOT LIKE '%/%'");
 
-        Map<String, Integer> her = new HashMap<>();
-        Map<String, Integer> him = new HashMap<>();
-        Map<String, Integer> his = new HashMap<>();
-        Map<String, Integer> hers = new HashMap<>();
+        // iterate over comments
+        int correct = 0;
+        int total = 0;
         for (int i = 0; i < jsonArray.length(); ++i) {
 
             try {
                 int commentID = jsonArray.getJSONObject(i).getInt("comment_id");
                 String commentText = jsonArray.getJSONObject(i).getString("comment_text");
+                String correctedText = jsonArray.getJSONObject(i).getString("comment_text");
 
                 List<List<HasWord>> list = MaxentTagger.tokenizeText(new StringReader(commentText));
                 List<TaggedWord> tSentence = maxentTagger.tagSentence(list.get(0));
 
-                for (TaggedWord taggedWord : tSentence) {
-                    String [] word = taggedWord.toString("|").split("\\|");
-//                    System.out.println(word[0] + "\t\t" + word[1]);
+                // iterate through the tokens (words / punctuation)
+                int increment = 0;
+                for (int j = 0; j < tSentence.size(); ++j) {
+                    String word = tSentence.get(j).toString("|").split("\\|")[0];
+                    String label = tSentence.get(j).toString("|").split("\\|")[1];
 
-                    if ("her".equals(word[0].toLowerCase())) {
-                        if (!her.containsKey(word[1])) {
-                            her.put(word[1], 0);
+                    if ("her".equals(word.toLowerCase())) {
+                        int beginPosition = tSentence.get(j).beginPosition();
+                        int endPosition = tSentence.get(j).endPosition();
+
+//                        System.out.println(word + " - " + beginPosition + " - " + endPosition);
+
+                        String firstHalf = correctedText.substring(0, beginPosition + increment);
+                        String secondHalf = correctedText.substring(beginPosition + increment);
+                        increment += 3;
+
+                        if ("PRP$".equals(label)) {
+                            if ("her".equals(word)) {
+                                correctedText = firstHalf + secondHalf.replaceFirst("her|Her", "his/her");
+                            } else if ("Her".equals(word)) {
+                                correctedText = firstHalf + secondHalf.replaceFirst("her|Her", "His/Her");
+                            }
+                        } else if ("PRP".equals(label)) {
+                            if ("her".equals(word)) {
+                                correctedText = firstHalf + secondHalf.replaceFirst("her|Her", "him/her");
+                            } else if ("Her".equals(word)) {
+                                correctedText = firstHalf + secondHalf.replaceFirst("her|Her", "Him/Her");
+                            }
                         }
-                        her.put(word[1], her.get(word[1]) + 1);
-                    }
-                    if ("him".equals(word[0].toLowerCase())) {
-                        if (!him.containsKey(word[1])) {
-                            him.put(word[1], 0);
-                        }
-                        him.put(word[1], him.get(word[1]) + 1);
-                    }
-                    if ("his".equals(word[0].toLowerCase())) {
-                        if (!his.containsKey(word[1])) {
-                            his.put(word[1], 0);
-                        }
-                        his.put(word[1], his.get(word[1]) + 1);
-                    }
-                    if ("hers".equals(word[0].toLowerCase())) {
-                        if (!hers.containsKey(word[1])) {
-                            hers.put(word[1], 0);
-                        }
-                        hers.put(word[1], hers.get(word[1]) + 1);
+
                     }
 
+                }
+
+                if (!commentText.equals(correctedText)) {
+                    System.out.println(++correct + " - " + commentID + " - " + correctedText);
+                    correctSentence(databaseHandler, commentID, correctedText);
+                }
+
+//                if (!commentText.equals(correctedText)) {
+//                    System.out.println(commentText);
+//                    System.out.println(correctedText);
+//                    System.out.println("Is this correct? y/n");
+//
+//                    String readLine = readLine();
+//                    if ("y".equals(readLine.toLowerCase())) {
+//                        System.out.println("Correcting comment ID " + commentID);
+//                        correctSentence(databaseHandler, commentID, correctedText);
+//                        ++correct;
+//                    }
+//                    ++total;
+//
+//                    System.out.println(correct + "/" + total + " correct");
+//                    System.out.println();
+//                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+        System.out.println();
+    }
+
+    private static void replaceHis(DatabaseHandler databaseHandler) {
+
+        Map<String, String> typeMap = new HashMap<>();
+        typeMap.put("CC","Coordinating conjunction");
+        typeMap.put("CD","Cardinal number");
+        typeMap.put("DT","Determiner");
+        typeMap.put("EX","Existential there");
+        typeMap.put("FW","Foreign word");
+        typeMap.put("IN","Preposition or subordinating conjunction");
+        typeMap.put("JJ","Adjective");
+        typeMap.put("JJR","Adjective, comparative");
+        typeMap.put("JJS","Adjective, superlative");
+        typeMap.put("LS","List item marker");
+        typeMap.put("MD","Modal");
+        typeMap.put("NN","Noun, singular or mass");
+        typeMap.put("NNS","Noun, plural");
+        typeMap.put("NNP","Proper noun, singular");
+        typeMap.put("NNPS","Proper noun, plural");
+        typeMap.put("PDT","Predeterminer");
+        typeMap.put("POS","Possessive ending");
+        typeMap.put("PRP","Personal pronoun");
+        typeMap.put("PRP$","Possessive pronoun");
+        typeMap.put("RB","Adverb");
+        typeMap.put("RBR","Adverb, comparative");
+        typeMap.put("RBS","Adverb, superlative");
+        typeMap.put("RP","Particle");
+        typeMap.put("SYM","Symbol");
+        typeMap.put("TO","to");
+        typeMap.put("UH","Interjection");
+        typeMap.put("VB","Verb, base form");
+        typeMap.put("VBD","Verb, past tense");
+        typeMap.put("VBG","Verb, gerund or present participle");
+        typeMap.put("VBN","Verb, past participle");
+        typeMap.put("VBP","Verb, non-3rd person singular present");
+        typeMap.put("VBZ","Verb, 3rd person singular present");
+        typeMap.put("WDT","Wh-determiner");
+        typeMap.put("WP","Wh-pronoun");
+        typeMap.put("WP$","Possessive wh-pronoun");
+        typeMap.put("WRB","Wh-adverb");
+
+
+        MaxentTagger maxentTagger = new MaxentTagger("C:\\Users\\Trevor\\IdeaProjects\\Comment Breeze 4\\src\\stanford_nlp\\stanford-postagger-2015-12-09\\models\\wsj-0-18-bidirectional-nodistsim.tagger");
+
+
+        JSONArray jsonArray = databaseHandler.getJSONArrayFor("SELECT comment_id, comment_text FROM comments WHERE deleted = FALSE AND (comment_text LIKE '%his%' OR comment_text LIKE '%His%') AND comment_text NOT LIKE '%/%' LIMIT 100");
+
+        // iterate over comments
+        int correct = 0;
+        int total = 0;
+        for (int i = 0; i < jsonArray.length(); ++i) {
+
+            try {
+                int commentID = jsonArray.getJSONObject(i).getInt("comment_id");
+                String commentText = jsonArray.getJSONObject(i).getString("comment_text");
+                String correctedText = jsonArray.getJSONObject(i).getString("comment_text");
+
+                List<List<HasWord>> list = MaxentTagger.tokenizeText(new StringReader(commentText));
+                List<TaggedWord> tSentence = maxentTagger.tagSentence(list.get(0));
+
+                // iterate through the tokens (words / punctuation)
+                int increment = 0;
+                for (int j = 0; j < tSentence.size(); ++j) {
+                    String word = tSentence.get(j).toString("|").split("\\|")[0];
+                    String label = tSentence.get(j).toString("|").split("\\|")[1];
+
+                    System.out.println(word + "\t\t\t" + label + " (" + typeMap.get(label) + ")");
+
+
+//                    if ("his".equals(word.toLowerCase())) {
+//                        int beginPosition = tSentence.get(j).beginPosition();
+////                        int endPosition = tSentence.get(j).endPosition();
+//
+////                        System.out.println(word + " - " + beginPosition + " - " + endPosition);
+//
+//                        String firstHalf = correctedText.substring(0, beginPosition + increment);
+//                        String secondHalf = correctedText.substring(beginPosition + increment);
+//                        increment += 3;
+//
+//                        boolean shouldBeHers = false;
+//
+//
+//
+//
+//
+//                        if (shouldBeHers) {
+//                            if ("his".equals(word)) {
+//                                correctedText = firstHalf + secondHalf.replaceFirst("her|Her", "his/hers");
+//                            } else if ("His".equals(word)) {
+//                                correctedText = firstHalf + secondHalf.replaceFirst("her|Her", "His/Hers");
+//                            }
+//                        } else if ("PRP".equals(label)) {
+//                            if ("his".equals(word)) {
+//                                correctedText = firstHalf + secondHalf.replaceFirst("her|Her", "his/her");
+//                            } else if ("His".equals(word)) {
+//                                correctedText = firstHalf + secondHalf.replaceFirst("her|Her", "His/Her");
+//                            }
+//                        }
+//
+//                    }
+
+                }
+                System.out.println("\n\n");
+
+//                if (!commentText.equals(correctedText)) {
+//                    System.out.println(++correct + " - " + commentID + " - " + correctedText);
+//                    correctSentence(databaseHandler, commentID, correctedText);
+//                }
+
+                if (!commentText.equals(correctedText)) {
+                    System.out.println(commentText);
+                    System.out.println(correctedText);
+                    System.out.println("Is this correct? y/n");
+
+                    String readLine = readLine();
+                    if ("y".equals(readLine.toLowerCase())) {
+                        System.out.println("Correcting comment ID " + commentID);
+                        correctSentence(databaseHandler, commentID, correctedText);
+                        ++correct;
+                    }
+                    ++total;
+
+                    System.out.println(correct + "/" + total + " correct");
+                    System.out.println();
                 }
 
             } catch (JSONException e) {
@@ -94,6 +251,24 @@ public class CommentUtility {
 
         }
         System.out.println();
+    }
+
+    private static void correctSentence(DatabaseHandler databaseHandler, int commentID, String commentText) {
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = databaseHandler.getConnection().prepareStatement("UPDATE comments SET comment_text = ? WHERE comment_id = ?");
+            preparedStatement.setString(1, commentText);
+            preparedStatement.setInt(2, commentID);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException ignore) {}
+            }
+        }
     }
 
     private static void findNames(DatabaseHandler databaseHandler) {
