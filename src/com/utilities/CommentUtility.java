@@ -40,8 +40,14 @@ public class CommentUtility {
         MaxentTagger maxentTagger = new MaxentTagger("C:\\Users\\Trevor\\IdeaProjects\\Comment Breeze 4\\src\\stanford_nlp\\stanford-postagger-2015-12-09\\models\\english-left3words-distsim.tagger");
 
 
-        JSONArray jsonArray = databaseHandler.getJSONArrayFor("SELECT comment_id, comment_text FROM comments WHERE deleted = FALSE ORDER BY RAND() LIMIT 1000");
+        JSONArray jsonArray = databaseHandler.getJSONArrayFor("SELECT comment_id, comment_text FROM comments WHERE deleted = FALSE " +
+//                "(comment_text LIKE '%%' OR comment_text LIKE '%%' OR comment_text LIKE '%%' OR comment_text LIKE '%%' OR comment_text LIKE '%%') " +
+                "ORDER BY RAND() LIMIT 20000");
 
+        Map<String, Integer> her = new HashMap<>();
+        Map<String, Integer> him = new HashMap<>();
+        Map<String, Integer> his = new HashMap<>();
+        Map<String, Integer> hers = new HashMap<>();
         for (int i = 0; i < jsonArray.length(); ++i) {
 
             try {
@@ -51,24 +57,35 @@ public class CommentUtility {
                 List<List<HasWord>> list = MaxentTagger.tokenizeText(new StringReader(commentText));
                 List<TaggedWord> tSentence = maxentTagger.tagSentence(list.get(0));
 
-                boolean changeHerToHisHer = false;
                 for (TaggedWord taggedWord : tSentence) {
                     String [] word = taggedWord.toString("|").split("\\|");
 //                    System.out.println(word[0] + "\t\t" + word[1]);
 
-                    if ("her".equals(word[0]) && "PRP".equals(word[1])) {
-                        changeHerToHisHer = true;
+                    if ("her".equals(word[0].toLowerCase())) {
+                        if (!her.containsKey(word[1])) {
+                            her.put(word[1], 0);
+                        }
+                        her.put(word[1], her.get(word[1]) + 1);
+                    }
+                    if ("him".equals(word[0].toLowerCase())) {
+                        if (!him.containsKey(word[1])) {
+                            him.put(word[1], 0);
+                        }
+                        him.put(word[1], him.get(word[1]) + 1);
+                    }
+                    if ("his".equals(word[0].toLowerCase())) {
+                        if (!his.containsKey(word[1])) {
+                            his.put(word[1], 0);
+                        }
+                        his.put(word[1], his.get(word[1]) + 1);
+                    }
+                    if ("hers".equals(word[0].toLowerCase())) {
+                        if (!hers.containsKey(word[1])) {
+                            hers.put(word[1], 0);
+                        }
+                        hers.put(word[1], hers.get(word[1]) + 1);
                     }
 
-                }
-
-                if (changeHerToHisHer) {
-                    String newCommentText = commentText.replace(" her ", " HIM/HER ");
-                    if (!commentText.equals(newCommentText)) {
-                        System.out.println(commentText);
-                        System.out.println(newCommentText);
-                        System.out.println();
-                    }
                 }
 
             } catch (JSONException e) {
@@ -76,6 +93,7 @@ public class CommentUtility {
             }
 
         }
+        System.out.println();
     }
 
     private static void findNames(DatabaseHandler databaseHandler) {
