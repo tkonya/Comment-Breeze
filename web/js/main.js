@@ -403,43 +403,26 @@ commentApp.controller('CommentController', ['$scope', '$http', '$mdToast', '$mdD
 
         if (gender == undefined) {
             gender = $scope.gender;
-            //console.log('using single student gender of ' + $scope.gender);
         }
-
-        var subject;
-        var object;
-        var possessiveAdjectives;
-        var possessivePronouns;
-        var reflexivePronouns;
-        var girlBoyChild;
-        var manLadyAdult;
-
         //console.log('Changing gender to ' + gender + ' for the text:\n' + text);
+
         if (gender == 'male') {
-            subject = 'he';
-            object = 'him';
-            possessiveAdjectives = 'his';
-            possessivePronouns = 'his';
-            reflexivePronouns = 'himself';
-            girlBoyChild = 'boy';
-            manLadyAdult = 'man';
+
+            text = text.replace(/\bhis\/hers\b|\bhis\/her\b/g,'his').replace(/\bHis\/Hers\b|\bHis\/Her\b/g,'His').replace(/\bhim\/her\b/g,'him').replace(/\bHim\/Her\b/g,'Him')
+                .replace(/\bshe\b/g,'he').replace(/\bher\b/g,'him').replace(/\bhers\b|\bher\b/g,'his').replace(/\bherself\b/g,'himself').replace(/\bgirl\b/g,'boy')
+                .replace(/\bShe\b/g,'He').replace(/\bHer\b/g,'Him').replace(/\bHers\b|\bHer\b/g,'His').replace(/\bHerself\b/g,'Himself').replace(/\bGirl\b/g,'Boy');
+
+            // his is more common than him by 3:1
+
         } else if (gender == 'female') {
-            subject = 'she';
-            object = 'her';
-            possessiveAdjectives = 'her';
-            possessivePronouns = 'hers';
-            reflexivePronouns = 'herself ';
-            girlBoyChild = 'girl';
-            manLadyAdult = 'lady';
+
+            text = text.replace(/\bhis\/hers\b/g,'hers').replace(/\bhim\/her\b|\bhis\/her\b/g,'her').replace(/\bHim\/Her\b|\bHis\/Her\b/g,'Her').replace(/\bHis\/Hers\b/g,'Hers')
+                .replace(/\bhe\b/g,'she').replace(/\bhis\b|\bhim\b/g,'her').replace(/\bhis\b/g,'hers').replace(/\bhimself\b/g,'herself').replace(/\bboy\b/g,'girl')
+                .replace(/\bHe\b/g,'She').replace(/\bHis\b|\bHim\b/g,'Her').replace(/\bHis\b/g,'Hers').replace(/\bHimself\b/g,'Herself').replace(/\bBoy\b/g,'Girl');
+
         } else {
             return text;
         }
-
-        text = text.replace(/\bboy\b|\bgirl\b/g,girlBoyChild).replace(/\bBoy\b|\bGirl\b/g,$scope.capitalizeFirstLetter(girlBoyChild));
-        text = text.replace(/\bman\b|\blady\b/g,girlBoyChild).replace(/\bMan\b|\bLady\b/g,$scope.capitalizeFirstLetter(manLadyAdult));
-        text = text.replace(/\bhe\b|\bshe\b/g,subject).replace(/\bhis\b|\bhers\b/g,possessivePronouns).replace(/\bhim\b|\bher\b/g,object).replace(/\bhis\b|\bher\b/g,possessiveAdjectives).replace(/\bhimself\b|\bherself\b/g,reflexivePronouns);
-        text = text.replace(/\bHe\b|\bShe\b/g,$scope.capitalizeFirstLetter(subject)).replace(/\bHim\b|\bHer\b/g,$scope.capitalizeFirstLetter(object)).replace(/\bHis\b|\bHers\b/g,$scope.capitalizeFirstLetter(possessivePronouns)).replace(/\bHis\b|\bHer\b/g,$scope.capitalizeFirstLetter(possessiveAdjectives)).replace(/\bHimself\b|\bHerself\b/g,$scope.capitalizeFirstLetter(reflexivePronouns));
-
 
         //console.log('Gender Fixed text length: ' + text.length);
         return text;
