@@ -40,24 +40,6 @@
 
             <md-divider></md-divider>
 
-            <h3 class="settings-header" ng-style="state.theme.highlightColor">Gender Pronoun Exclusion</h3>
-            <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
-                <div flex-gt-sm="25" class="setting-control-container">
-                    <md-checkbox ng-model="state.settings.highAccuracyGenderedPronouns" class="setting-control"
-                                 aria-label="Avoid comments with the 'her' pronoun">
-                        High Accuracy <br hide-xs hide-sm>Gendered Pronouns
-                    </md-checkbox>
-                </div>
-                <p ng-style="state.theme.textColor" flex-gt-sm="75" class="settings-text">
-                    When generating comments the system cannot know for sure which pronoun to replace "her" or "his" with if the gender does not match the pronoun on the original comment.
-                    This means it will get it wrong about 50% of the time and you would be required to fix it manually.
-                    Turning on High Accuracy Gendered Pronouns avoid selecting comments with those pronouns if it would have to change the gender for them to match the student's gender.
-                    This will reduce the number of comments available to each gender, but also reduce the number of corrections necessary.
-                </p>
-            </div>
-
-            <md-divider></md-divider>
-
             <h3 class="settings-header" ng-style="state.theme.highlightColor">Switching Tabs</h3>
             <div layout-xs="column" layout-sm="row" layout-gt-sm="row" layout-fill>
                 <div flex-gt-sm="25" class="setting-control-container">

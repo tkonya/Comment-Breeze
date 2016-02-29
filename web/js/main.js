@@ -213,7 +213,6 @@ commentApp.controller('CommentController', ['$scope', '$http', '$mdToast', '$mdD
                 showEditButtons: true,
                 makeSomethingUpSize: 10,
                 getSearchResultCount: false,
-                highAccuracyGenderedPronouns: false,
                 reduceCommentsSize: 10000,
                 showCommonTags: false,
                 newStudentFill: 'blank',
@@ -1049,13 +1048,6 @@ commentApp.controller('CommentController', ['$scope', '$http', '$mdToast', '$mdD
         for (var i = 0; i < size; ++i) {
             var randomComment = $scope.comments[Math.floor(Math.random() * $scope.comments.length)];
 
-            if ($scope.state.settings.highAccuracyGenderedPronouns &&
-                (($scope.gender != 'female' && (randomComment.comment_text.indexOf(' her ') > 0 || randomComment.comment_text.startsWith('Her') || randomComment.comment_text.endsWith(' her.'))) ||
-                ($scope.gender != 'male' && (randomComment.comment_text.indexOf(' his ') > 0 || randomComment.comment_text.startsWith('His') || randomComment.comment_text.endsWith(' his.'))))) {
-                --i;
-                continue;
-            }
-
             //console.log('Found random comment ' + randomComment.comment_id);
 
             if (fullRandomComment == '') {
@@ -1336,12 +1328,6 @@ commentApp.controller('CommentController', ['$scope', '$http', '$mdToast', '$mdD
             var index = i;
             if (index >= $scope.comments.length) {
                 index -= $scope.comments.length;
-            }
-
-            if ($scope.state.settings.highAccuracyGenderedPronouns &&
-                (($scope.gender != 'female' && ($scope.comments[index].comment_text.indexOf(' her ') > 0 || $scope.comments[index].comment_text.startsWith('Her') || $scope.comments[index].comment_text.endsWith(' her.'))) ||
-                ($scope.gender != 'male' && ($scope.comments[index].comment_text.indexOf(' his ') > 0 || $scope.comments[index].comment_text.startsWith('His') || $scope.comments[index].comment_text.endsWith(' his.'))))) {
-                continue;
             }
 
             if ((search.tone == 'Positive' && $scope.comments[index].pos_neg != 1) || (search.tone == 'Neutral' && $scope.comments[index].pos_neg != 0) || (search.tone == 'Negative' && $scope.comments[index].pos_neg != -1)) {
