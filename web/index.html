@@ -34,7 +34,7 @@
     <!--meta tags-->
     <meta name="title" content="Comment Breeze | ESL Report Card Comment Generator">
     <meta name="description" content="A web-app to help ESL teachers build report card comments. 20k+ usable comments, intelligent pattern-based generation, fast multi-student generation, powerful live search.">
-    <meta name="keywords" content="report card comments, esl comments, esl reports, esl report cards, tesol reports, comment builder, comment generator">
+    <meta name="keywords" content="report card comments, comment generator, esl comments, esl reports, esl report cards, tesol reports, comment builder">
 
     <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
@@ -254,8 +254,7 @@
                                         If you're an ESL teacher, I hope this makes your life easier!
                                     </p>
 
-                                    <h2 ng-style="state.theme.highlightColor">What's different about Comment
-                                        Breeze?</h2>
+                                    <h2 ng-style="state.theme.highlightColor">What's different about Comment Breeze?</h2>
 
                                     <p ng-style="state.theme.textColor" class="paragraphs">
                                         <span ng-bind="formatNumber(totalCommentsSize);"></span> unique comments<span
@@ -294,6 +293,17 @@
                                                    ng-click="selectedTab = tabIndexes.build">
                                             <i class="material-icons inline-icon">build</i>
                                             Start Building Comments!
+                                        </md-button>
+                                    </p>
+
+                                    <h2 ng-style="state.theme.highlightColor" ng-show="staticMode">The Site is in Static Mode</h2>
+
+                                    <p ng-style="state.theme.textColor" class="paragraphs" ng-show="staticMode">
+                                        The site is in a feature-limited state right now to save money.<br><br>
+
+                                        <md-button ng-click="showDialog('dialogs/static-mode.html')">
+                                            <i class="material-icons inline-icon">help</i>
+                                            More Info
                                         </md-button>
                                     </p>
 

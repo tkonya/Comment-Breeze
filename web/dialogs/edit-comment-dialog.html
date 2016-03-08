@@ -13,6 +13,16 @@
     </md-toolbar>
     <md-dialog-content>
         <md-content class="dialog-content">
+
+            <p ng-show="staticMode">
+                This feature is currently disabled
+
+                <md-button ng-click="showDialog('dialogs/static-mode.html')">
+                    <i class="material-icons inline-icon">help</i>
+                    More Info
+                </md-button>
+            </p>
+
             <p>
                 A password is currently required to edit comment text or delete comments, but anybody can edit comment
                 tone or flag a comment.<br><br>
@@ -89,8 +99,7 @@
             <br>
 
             <div class="center-aligned">
-                <md-button md-ink-ripple flex class="md-button md-raised md-accent" ng-click="saveDialog()">Save
-                </md-button>
+                <md-button md-ink-ripple flex class="md-button md-raised md-accent" ng-click="saveDialog()" ng-disabled="staticMode">Save</md-button>
                 <md-button ng-click="closeDialog()">Cancel</md-button>
             </div>
         </md-content>

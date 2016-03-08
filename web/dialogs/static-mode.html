@@ -1,0 +1,39 @@
+<md-dialog flex="90" md-theme="{{ state.theme.colorTheme }}" class="dialog-top-level">
+    <md-toolbar class="md-toolbar-tools dialog-toolbar">
+        <h1>Static Mode</h1>
+    </md-toolbar>
+    <md-dialog-content>
+        <md-content class="dialog-content">
+
+            <h4 ng-style="state.theme.highlightColor">What is Static Mode?</h4>
+            <p ng-style="state.theme.textColor">
+                Static mode is a feature-limited version of the site I made that does not require a database to run.<br>
+            </p>
+
+            <h4 ng-style="state.theme.highlightColor">Why is the site in static mode?</h4>
+            <p ng-style="state.theme.textColor">
+                1. I have to pay for the servers<br>
+                2. There have never been any donations to help pay for the servers<br>
+                3. It's cheaper to run the site without a database, so I lose less money every month<br>
+            </p>
+
+            <h4 ng-style="state.theme.highlightColor">What is different about static mode?</h4>
+            <p ng-style="state.theme.textColor">
+                Nobody can rate, tag or edit comments. The contact form doesn't work.<br>
+                Essentially comments will not be updated while the site is like this.
+            </p>
+
+            <h4 ng-style="state.theme.highlightColor">When will the site go back into non-static mode?</h4>
+            <p ng-style="state.theme.textColor">
+                When there are more monthly users or there are some donations.<br>
+            </p>
+
+            <br>
+
+            <div class="center-aligned ">
+                <md-button ng-click="closeDialog()" class="md-primary">OK, I got it</md-button>
+            </div>
+        </md-content>
+
+    </md-dialog-content>
+</md-dialog>

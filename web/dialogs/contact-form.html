@@ -1,0 +1,55 @@
+<md-dialog flex="80" md-theme="{{ state.theme.colorTheme }}">
+    <md-dialog-content style="padding: 2em;">
+
+        <md-content>
+            <div class="center-aligned ">
+                <h2 ng-style="state.theme.highlightColor">Contact Form</h2>
+            </div>
+
+            <br>
+
+            <p ng-show="staticMode">
+                This feature is currently disabled
+
+                <md-button ng-click="showDialog('dialogs/static-mode.html')">
+                    <i class="material-icons inline-icon">help</i>
+                    More Info
+                </md-button>
+            </p>
+
+            <p>
+                Submit any comments, questions, complaints, suggestions or other feedback here:
+            </p>
+            <br>
+
+            <md-input-container class="input-container full-width" flex="100">
+                <label>Name (optional)</label>
+                <input md-maxlength="255" type="text" ng-model="contact.name">
+            </md-input-container>
+
+            <md-input-container class="input-container full-width" flex="100">
+                <label>Email Address (recommended)</label>
+                <input md-maxlength="255" type="text" ng-model="contact.email">
+            </md-input-container>
+
+            <md-input-container class="input-container full-width" flex="100">
+                <label>Message (required)</label>
+                <textarea md-maxlength="1000" ng-model="contact.message"></textarea>
+            </md-input-container>
+
+            <p>
+                I will never share your name or email address with anybody.
+            </p>
+
+
+            <div class="center-aligned">
+                <md-button ng-disabled="staticMode" md-ink-ripple ng-disabled="!contact.message" flex class="md-button md-raised md-primary"
+                           ng-click="saveDialog()">Submit
+                </md-button>
+                <md-button ng-click="closeDialog(); contact = {};">Cancel</md-button>
+            </div>
+        </md-content>
+
+
+    </md-dialog-content>
+</md-dialog>

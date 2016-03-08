@@ -185,6 +185,9 @@ commentApp.directive('chooseFileButton', function() {
 
 commentApp.controller('CommentController', ['$scope', '$http', '$mdToast', '$mdDialog', '$mdMedia', '$location', '$timeout', '$localStorage', '$interval', '$window', '$document', function ($scope, $http, $mdToast, $mdDialog, $mdMedia, $location, $timeout, $localStorage, $interval, $window, $document) {
 
+    // static mode
+    $scope.staticMode = true;
+
     // comments
     $scope.comments = [];
     $scope.allComments = []; // when 'filtering', put all comments in here, then we'll pull them back out when we switch back
@@ -301,47 +304,58 @@ commentApp.controller('CommentController', ['$scope', '$http', '$mdToast', '$mdD
 
     $scope.getComments = function (showLoadedMessage) {
 
-        var commentsToGet = $scope.commentSizeToGet;
+        if ($scope.staticMode) {
 
-        // see if we got a limit in the url params
-        var params = $location.search();
-        if (params.limit != null) {
-            commentsToGet = params.limit;
-            if (commentsToGet == 0) {
-                $scope.illToastToThat('Reloaded all comments');
-            }
-        }
+            $http.get('comments.json').success(function(commentData) {
+                $scope.comments = commentData.comments;
+                $scope.totalCommentsSize = commentData.total_size;
+                $scope.commonTags = commentData.common_tags;
+            });
 
-        $location.search('limit', null);
+        } else {
+            var commentsToGet = $scope.commentSizeToGet;
 
-        $http.get('/rest/comments?size=' + commentsToGet).
-            success(function (data) {
-
-                $scope.comments = data.comments;
-                $scope.totalCommentsSize = data.total_size;
-                $scope.commonTags = data.common_tags;
-
-            if (showLoadedMessage) {
-                if ($scope.comments.length == $scope.totalCommentsSize) {
-                    $scope.illToastToThat('Loaded full comment set');
-                } else {
-                    $scope.illToastToThat('Loaded ' + $scope.formatNumber($scope.comments.length) + ' comments');
+            // see if we got a limit in the url params
+            var params = $location.search();
+            if (params.limit != null) {
+                commentsToGet = params.limit;
+                if (commentsToGet == 0) {
+                    $scope.illToastToThat('Reloaded all comments');
                 }
             }
 
-            $scope.changeCommentsPerPage();
+            $location.search('limit', null);
 
-            if ($scope.state.global_pattern.length < 1) {
-                $scope.state.global_pattern = $scope.getSamplePattern(true);
-                //if ($scope.selectedTab == $scope.tabIndexes.patterns) {
+            $http.get('/rest/comments?size=' + commentsToGet).
+            success(function (commentData) {
+
+                $scope.comments = commentData.comments;
+                $scope.totalCommentsSize = commentData.total_size;
+                $scope.commonTags = commentData.common_tags;
+
+                if (showLoadedMessage) {
+                    if ($scope.comments.length == $scope.totalCommentsSize) {
+                        $scope.illToastToThat('Loaded full comment set');
+                    } else {
+                        $scope.illToastToThat('Loaded ' + $scope.formatNumber($scope.comments.length) + ' comments');
+                    }
+                }
+
+                $scope.changeCommentsPerPage();
+
+                if ($scope.state.global_pattern.length < 1) {
+                    $scope.state.global_pattern = $scope.getSamplePattern(true);
+                    //if ($scope.selectedTab == $scope.tabIndexes.patterns) {
                     $scope.editingPattern = $scope.state.global_pattern;
-                //}
-            }
+                    //}
+                }
 
             }).
             error(function () {
                 $scope.illToastToThat('Error loading comments');
             });
+        }
+
     };
 
     $scope.goToTab = function(index) {
@@ -573,7 +587,7 @@ commentApp.controller('CommentController', ['$scope', '$http', '$mdToast', '$mdD
             clickOutsideToClose: true,
             scope: $scope,        // use parent scope in template
             preserveScope: true,  // do not forget this if use parent scope
-            templateUrl: '/contact-form.html',
+            templateUrl: '/dialogs/contact-form.html',
             controller: function DialogController($scope, $mdDialog) {
                 $scope.closeDialog = function () {
                     $mdDialog.hide();

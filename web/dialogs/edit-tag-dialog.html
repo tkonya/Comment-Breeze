@@ -13,6 +13,16 @@
     </md-toolbar>
     <md-dialog-content>
         <md-content class="dialog-content">
+
+            <p ng-show="staticMode">
+                This feature is currently disabled
+
+                <md-button ng-click="showDialog('dialogs/static-mode.html')">
+                    <i class="material-icons inline-icon">help</i>
+                    More Info
+                </md-button>
+            </p>
+
             <p>"<span ng-bind="editingComment.comment_text"></span>"</p>
 
             <md-chips class="chip-style" ng-model="editingComment.tags"
@@ -32,7 +42,7 @@
         </span>
 
             <div class="center-aligned">
-                <md-button md-ink-ripple flex class="md-button md-raised md-primary" ng-click="saveDialog()">Save
+                <md-button ng-disabled="staticMode" md-ink-ripple flex class="md-button md-raised md-primary" ng-click="saveDialog()">Save
                 </md-button>
                 <md-button ng-click="closeDialog()">Cancel</md-button>
             </div>

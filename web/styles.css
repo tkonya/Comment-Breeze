@@ -129,6 +129,10 @@ td.comment-text:hover {
     color: black;
 }
 
+.static-mode-info {
+    font-weight: bold;
+}
+
 .waiting-spinner {
     margin:auto;
 }
