@@ -310,6 +310,15 @@ commentApp.controller('CommentController', ['$scope', '$http', '$mdToast', '$mdD
                 $scope.comments = commentData.comments;
                 $scope.totalCommentsSize = commentData.total_size;
                 $scope.commonTags = commentData.common_tags;
+
+                $scope.changeCommentsPerPage();
+
+                if ($scope.state.global_pattern.length < 1) {
+                    $scope.state.global_pattern = $scope.getSamplePattern(true);
+                    //if ($scope.selectedTab == $scope.tabIndexes.patterns) {
+                    $scope.editingPattern = $scope.state.global_pattern;
+                    //}
+                }
             });
 
         } else {
