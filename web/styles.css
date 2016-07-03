@@ -1,5 +1,5 @@
 .comment-text {
-    padding: .4em;
+    padding: .7em;
     cursor: pointer;
 }
 
@@ -486,6 +486,10 @@ td.comment-text:hover {
 
 .comment-bank-content {
     border-radius: 0 0 5px 5px;
+}
+
+.comment-bank-row {
+    min-height: 10em;
 }
 
 .new-pattern-input {

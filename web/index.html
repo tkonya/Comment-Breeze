@@ -719,7 +719,7 @@
 
                                 <div ng-show="comments.length > 0">
                                     <table class="comment-bank-table">
-                                        <tr ng-style="getAltBackgroundColor($even)" ng-repeat="comment in comments | filter:searchComments | limitTo : commentViewLimit : commentViewBegin">
+                                        <tr class="comment-bank-row" ng-style="getAltBackgroundColor($even)" ng-repeat="comment in comments | filter:searchComments | limitTo : commentViewLimit : commentViewBegin">
                                             <td ng-click="showEditToneDialog(comment)" ng-show="state.settings.showTone">
                                                 <span ng-show="comment.pos_neg == -1" ng-style="state.theme.negativeColor" class="edit-tone">
                                                     <i class="material-icons">thumb_down</i>
@@ -742,7 +742,7 @@
                                                 <span ng-show="!comment.pos_neg && comment.pos_neg != 0" ng-style="state.theme.unratedColor" class="edit-tone">
                                                     <i class="material-icons">rate_review</i>
                                                     <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip" md-direction="right">
-                                                        This comment has not yet been rated, click to edit
+                                                        This comment has not yet been rated<span ng-hide="staticMode">, click to edit</span>
                                                     </md-tooltip>
                                                 </span>
                                             </td>
@@ -750,14 +750,14 @@
                                                 <span ng-show="comment.hasOwnProperty('tags')" class="cursor-pointer">
                                                 <i class="material-icons">label</i>
                                                 <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip" md-direction="right">
-                                                    This comment has tags, click to add or remove
+                                                    This comment has tags<span ng-hide="staticMode">, click to add or remove</span>
                                                 </md-tooltip>
                                                 </span>
                                                 <span ng-hide="comment.hasOwnProperty('tags')" class="cursor-pointer"
                                                       ng-style="state.theme.unratedColor">
                                                 <i class="material-icons">label_outline</i>
                                                 <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip" md-direction="right">
-                                                    This comment does not have tags, click to add
+                                                    This comment does not have tags<span ng-hide="staticMode">, click to add</span>
                                                 </md-tooltip>
                                                 </span>
                                             </td>

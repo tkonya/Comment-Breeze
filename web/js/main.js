@@ -299,17 +299,28 @@ commentApp.controller('CommentController', ['$scope', '$http', '$mdToast', '$mdD
         };
 
         $scope.stats = null;
+        
+        if ($scope.staticMode) {
+            $scope.state.settings.showEditButtons = false;
+            $scope.state.settings.showTags = false;
+        }
+        
     };
 
 
     $scope.getComments = function (showLoadedMessage) {
 
         if ($scope.staticMode) {
-
+            
             $http.get('comments.json').success(function(commentData) {
                 $scope.comments = commentData.comments;
                 $scope.totalCommentsSize = commentData.total_size;
                 $scope.commonTags = commentData.common_tags;
+                for(var j, x, i = $scope.comments.length; i; j = Math.floor(Math.random() * i), x = $scope.comments[--i], $scope.comments[i] = $scope.comments[j], $scope.comments[j] = x) {}
+
+                if ($scope.commentSizeToGet > 0) {
+                    $scope.comments.length = $scope.commentSizeToGet;
+                }
 
                 $scope.changeCommentsPerPage();
 
@@ -1808,7 +1819,21 @@ commentApp.controller('CommentController', ['$scope', '$http', '$mdToast', '$mdD
                     students: angular.copy(localState.students.length),
                     date_created: angular.copy(localState.date_created)
                 };
-                $scope.showSavedStateDialog();
+
+                // expire the local state after 2 weeks
+                var cachedDate = new Date($scope.cachedComments.date_created);
+                var currentDate = new Date();
+
+                console.log('cached date: ' + cachedDate);
+                console.log('current date: ' + currentDate);
+
+                // only show the cached comments dialog if the comments are not older than 2 weeks
+                if (cachedDate.getTime() + 1209600000 > currentDate.getTime()) {
+                    $scope.showSavedStateDialog();
+                } else {
+                    console.log('cached comments are too old, not showing')
+                }
+
             }
         } else {
             $scope.state.settings.autoCache = false;
