@@ -255,10 +255,9 @@
                                     <p ng-style="state.theme.textColor" class="paragraphs">
                                         <span ng-bind="formatNumber(totalCommentsSize);"></span> unique comments<span
                                             ng-show="isMobile" ng-style="state.theme.highlightColor">*</span><br>
-                                        Powerful live search<br>
                                         Blazing fast multi-student comment building<br>
+                                        Powerful live search<br>
                                         Customizable pattern-based generation<br>
-                                        Designed for both smartphones and desktops<br>
                                     </p>
 
                                     <div ng-show="isMobile">
@@ -292,16 +291,16 @@
                                         </md-button>
                                     </p>
 
-                                    <h2 ng-style="state.theme.highlightColor" ng-show="staticMode">The Site is in Static Mode</h2>
+                                    <!--<h2 ng-style="state.theme.highlightColor" ng-show="staticMode">The Site is in Static Mode</h2>-->
 
-                                    <p ng-style="state.theme.textColor" class="paragraphs" ng-show="staticMode">
-                                        The site is in a feature-limited state right now to save money.<br><br>
+                                    <!--<p ng-style="state.theme.textColor" class="paragraphs" ng-show="staticMode">-->
+                                        <!--The site is in a feature-limited state right now to save money.<br><br>-->
 
-                                        <md-button ng-click="showDialog('dialogs/static-mode.html')">
-                                            <i class="material-icons inline-icon">help</i>
-                                            More Info
-                                        </md-button>
-                                    </p>
+                                        <!--<md-button ng-click="showDialog('dialogs/static-mode.html')">-->
+                                            <!--<i class="material-icons inline-icon">help</i>-->
+                                            <!--More Info-->
+                                        <!--</md-button>-->
+                                    <!--</p>-->
 
                                     <h2 ng-style="state.theme.highlightColor">
                                         Donate
@@ -321,7 +320,7 @@
                                         <input type="hidden" name="encrypted"
                                                value="-----BEGIN PKCS7-----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-----END PKCS7-----">
                                         <input type="image"
-                                               src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"
+                                               src="/paypal-donate.gif"
                                                border="0" name="submit"
                                                alt="PayPal - The safer, easier way to pay online!">
                                         <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif"
@@ -724,19 +723,19 @@
                                                 <span ng-show="comment.pos_neg == -1" ng-style="state.theme.negativeColor" class="edit-tone">
                                                     <i class="material-icons">thumb_down</i>
                                                     <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip" md-direction="right">
-                                                        This comment has been rated as negative, click to edit
+                                                        This comment has been rated as negative<span ng-hide="staticMode">, click to edit</span>
                                                     </md-tooltip>
                                                 </span>
                                                 <span ng-show="comment.pos_neg == 0" ng-style="state.theme.neutralColor" class="edit-tone">
                                                     <i class="material-icons">thumbs_up_down</i>
                                                     <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip" md-direction="right">
-                                                        This comment has been rated as neutral, click to edit
+                                                        This comment has been rated as neutral<span ng-hide="staticMode">, click to edit</span>
                                                     </md-tooltip>
                                                 </span>
                                                 <span ng-show="comment.pos_neg == 1" ng-style="state.theme.positiveColor" class="edit-tone">
                                                     <i class="material-icons">thumb_up</i>
                                                     <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips" class="tooltip" md-direction="right">
-                                                        This comment has been rated as positive, click to edit
+                                                        This comment has been rated as positive<span ng-hide="staticMode">, click to edit</span>
                                                     </md-tooltip>
                                                 </span>
                                                 <span ng-show="!comment.pos_neg && comment.pos_neg != 0" ng-style="state.theme.unratedColor" class="edit-tone">
