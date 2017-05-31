@@ -1,26 +1,21 @@
 package com.rest;
 
-import com.sun.org.apache.bcel.internal.util.BCELifier;
 import com.utilities.AppProperties;
 import com.utilities.LockoutHandler;
 import org.codehaus.jettison.json.JSONArray;
 import com.utilities.DatabaseHandler;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.text.NumberFormat;
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * Created by Trevor on 10/16/2015.

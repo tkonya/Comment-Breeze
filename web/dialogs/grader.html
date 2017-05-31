@@ -132,7 +132,7 @@
                         Saves these grades as a pattern and regenerates the comment accordingly
                     </md-tooltip>
                 </md-button>
-                <md-button class="md-accent md-button md-raised" ng-disabled="editingStudentGrade.index >= state.students.length - 1" ng-click="doneEditingGradeGoToNext(); saveGrade();">
+                <md-button class="md-accent md-button md-raised" ng-disabled="editingStudentGrade.index >= state.students.length - 1" ng-click="saveGrade(); doneEditingGradeGoToNext();">
                     <i class="material-icons inline-icon">done</i>
                     Save and Grade Next Student
                     <md-tooltip ng-style="state.theme.tooltips" ng-show="state.settings.showTooltips && editingStudentGrade" class="tooltip">
