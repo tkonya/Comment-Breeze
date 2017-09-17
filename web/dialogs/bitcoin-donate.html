@@ -1,0 +1,30 @@
+<md-dialog flex="90" md-theme="{{ state.theme.colorTheme }}" class="dialog-top-level">
+    <md-toolbar class="md-toolbar-tools dialog-toolbar">
+        <h1>Donate with Bitcoin</h1>
+        <span flex></span>
+        <md-button ng-click="closeDialog()">
+            <i class="material-icons inline-icon">close</i>
+        </md-button>
+    </md-toolbar>
+    <md-dialog-content>
+        <md-content class="dialog-content center-aligned">
+
+            <p>Send using whatever transfer method you prefer. If you have never used Bitcoin before, <a href="https://www.coinbase.com/join/594b1fde9b662e01ea88f8fa">Coinbase</a> is a popular exchange.</p>
+
+            <img src="/images/bitcoin-address.jpg">
+
+            <div>
+                <p>Bitcoin Wallet Address: <span ng-bind="bitcoinAddress"></span></p>
+                <md-button aria-label="Copy All Comments" md-ink-ripple class="md-button md-raised md-accent" md-ripple-size="auto" ng-click="illToastToThat('Bitcoin address copied to clipboard'); " clipboard text="bitcoinAddress">
+                    <i class="material-icons inline-icon">content_copy</i>
+                    <span>Copy Address</span>
+                </md-button>
+                <span flex></span>
+            </div>
+
+            <!--<div class="center-aligned ">-->
+                <!--<md-button class="md-primary" ng-click="closeDialog()">OK, I'm done here</md-button>-->
+            <!--</div>-->
+        </md-content>
+    </md-dialog-content>
+</md-dialog>

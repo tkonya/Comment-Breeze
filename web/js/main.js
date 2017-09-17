@@ -197,6 +197,8 @@ commentApp.controller('CommentController', ['$scope', '$http', '$mdToast', '$mdD
     $scope.totalCommentsSize = '20000';
     $scope.commonTags = [];
 
+    $scope.bitcoinAddress = '13gTgzqUAMW6QGEKxYid8rp7fRKrxmbrAs';
+
     $scope.setInitialApplicationState = function() {
         // application state - this is the object that gets saved or loaded
         $scope.state = {
@@ -227,7 +229,9 @@ commentApp.controller('CommentController', ['$scope', '$http', '$mdToast', '$mdD
             },
             theme: {
                 colorTheme: 'breezy'
-            }
+            },
+            showDonate: false,
+            naggedForDonationsYet: false
         };
 
         // local storage of the state object
@@ -1927,6 +1931,30 @@ commentApp.controller('CommentController', ['$scope', '$http', '$mdToast', '$mdD
         }
     };
 
+    $scope.nagInterval = null;
+    $scope.startDonationNagInterval = function() {
+        $scope.nagInterval = $interval(function () {
+            console.log('checking nag');
+
+            // nag if they have more than one student and either the 1st or 2nd student has some comments
+            if (!$scope.state.naggedForDonationsYet && $scope.state.students.length > 1 && ($scope.state.students[0].comment.length > 10 || $scope.state.students[1].comment.length > 10)) {
+                console.log('nagging');
+
+                // don't nag again
+                $interval.cancel($scope.nagInterval);
+                $scope.nagInterval = undefined;
+                $scope.state.naggedForDonationsYet = true;
+
+                // set a random time to show the nag
+                var timeTillNag = Math.floor(Math.random() * 300000) + 20000;
+                console.log('nagging in ' + (timeTillNag / 1000) + ' seconds');
+                $timeout(function() {
+                    $scope.state.showDonate = true;
+                }, timeTillNag);
+            }
+        }, 10000)
+    };
+
     // $scope.saveAnalyticsClass = function(triggerAction) {
     //     if ($scope.state.students.length > 0) {
     //         var analytics = {
@@ -2016,5 +2044,9 @@ commentApp.controller('CommentController', ['$scope', '$http', '$mdToast', '$mdD
         $scope.checkLocalState();
     }, 500);
     $scope.startAutoCaching();
+    $scope.startDonationNagInterval();
+    // $timeout(function() {
+    //     $scope.showDonate = true;
+    // }, 5000);
 
 }]);

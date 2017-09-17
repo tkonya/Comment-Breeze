@@ -336,6 +336,12 @@
                                     <br><br>
 
                                     <h3>
+                                        <a ng-style="state.theme.highlightColor" class="cursor-pointer"
+                                           ng-href="https://www.paypal.me/TKonya" target="_blank">Donate with PayPal</a>
+                                        -
+                                        <span ng-style="state.theme.highlightColor" class="cursor-pointer"
+                                              ng-click="showDialog('/dialogs/bitcoin-donate.html')">Donate with Bitcoin</span>
+                                        <br><br>
                                         <span ng-style="state.theme.highlightColor" class="cursor-pointer"
                                               ng-click="showDialog('/dialogs/privacy-policy.html')">Privacy Policy</span>
                                         -
@@ -358,14 +364,12 @@
                                         -
                                         <a ng-style="state.theme.highlightColor" class="cursor-pointer"
                                            ng-href="https://www.linkedin.com/in/trevorkonya" target="_blank">LinkedIn</a>
-                                        -
-
+                                        <br><br>
                                         <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"
                                            target="_blank"><img alt="Creative Commons License" style="border-width:0"
                                                                 src="https://i.creativecommons.org/l/by-nc/4.0/80x15.png"/></a>
 
                                     </h3>
-
 
                                     <br><br>
                                 </md-content>
@@ -635,6 +639,27 @@
                                     </md-button>
                                 </div>
                             </md-content>
+                        </section>
+
+                        <section class="control-card md-whiteframe-5dp md-background md-hue-3" ng-show="showDonate">
+
+                            <md-toolbar class="md-toolbar-tools control-card-toolbar">
+                                <h1>DONATE  🍕🍕🍕</h1>
+                                <span flex></span>
+                                <md-button ng-click="state.showDonate = false;">
+                                    <i class="material-icons inline-icon">close</i>
+                                </md-button>
+                            </md-toolbar>
+
+                            <md-content class="center-aligned md-background md-hue-3 all-students-content" layout-fill>
+
+                                <p>Has this site saved you time or effort?</p>
+                                <p>I am committed to keeping it and free to use and ad-free. If you find this site useful, please consider a small donation.</p>
+
+                                <md-button class="md-button md-raised md-accent" href="https://www.paypal.me/TKonya" target="_blank" ng-click="state.showDonate = false">Donate with <strong>PayPal</strong></md-button>
+                                <md-button class="md-button md-raised md-accent" ng-click="showDialog('/dialogs/bitcoin-donate.html')" style="bottom: 1.39em;">Donate with <strong>Bitcoin</strong></md-button>
+                            </md-content>
+
                         </section>
 
                         <section class="control-card md-whiteframe-5dp md-background md-hue-3">
