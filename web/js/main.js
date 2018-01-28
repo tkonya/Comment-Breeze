@@ -198,6 +198,9 @@ commentApp.controller('CommentController', ['$scope', '$http', '$mdToast', '$mdD
     $scope.commonTags = [];
 
     $scope.bitcoinAddress = '13gTgzqUAMW6QGEKxYid8rp7fRKrxmbrAs';
+    $scope.bitcoinCashAddress = '1Da99p5DwKHD8eHFPhfsppKdX5kn74KYnb';
+    $scope.ethereumAddress = '0x610F53a8D0475dFf5Be112b2dAcEF06B110C1Aca';
+    $scope.litecoinAddress = 'LSKqDKimTvxvXsDShqWEtpYXv5tSvVmS2c';
 
     $scope.setInitialApplicationState = function() {
         // application state - this is the object that gets saved or loaded
